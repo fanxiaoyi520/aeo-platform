@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-29  
 **当前阶段：** W3 — MS2 待批准；MS3 S3-03 为下一任务  
-**Git：** 已 `git init`；功能分支 `feat/{任务ID}-{简述}`；合并前 `launch-aeo\scripts\test.ps1` 全绿  
+**Git：** `main` 已首次提交 `b3e5a78`；功能分支 `feat/{任务ID}-{简述}`；合并前 `launch-aeo\scripts\test.ps1` 全绿  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -26,7 +26,7 @@
 | 步骤 | 命令 / 动作 |
 |------|-------------|
 | 初始化（一次性） | `git init` ✅ 已完成 |
-| 首次提交 | `git add . && git commit -m "..."`（用户确认后） |
+| 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 开功能分支 | `git checkout -b feat/s3-02-research-agent` |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 云端 CI | `git push` → GitHub Actions |
