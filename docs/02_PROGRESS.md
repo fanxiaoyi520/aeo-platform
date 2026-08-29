@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-29  
-**当前阶段：** W3 — MS2 待批准；MS3 S3-03 为下一任务  
-**Git：** `main` 已首次提交 `b3e5a78`；功能分支 `feat/{任务ID}-{简述}`；合并前 `launch-aeo\scripts\test.ps1` 全绿  
+**当前阶段：** W3 — MS2 待批准；MS3 S3-04 为下一任务  
+**Git：** `main` @ `a162802`；当前分支 `feat/s3-03-rules-agent`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -27,7 +27,7 @@
 |------|-------------|
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
-| 开功能分支 | `git checkout -b feat/s3-02-research-agent` |
+| 开功能分支 | `git checkout -b feat/s3-03-rules-agent` ✅ 进行中 |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 云端 CI | `git push` → GitHub Actions |
 
@@ -54,7 +54,7 @@
 |------|------|------|--------|------|
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
-| M03 | Agent 编排引擎 | `in_progress` | 35% | S3-01/02 ✅；下一 S3-03 |
+| M03 | Agent 编排引擎 | `in_progress` | 45% | S3-01/02/03 ✅；下一 S3-04 |
 | M05 | 运营工作台 | `in_progress` | 40% | S5-01/06 ✅；待 S5-02 |
 | M04 | 浏览器自动化 | `blocked` | 0% | MS3 后 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
@@ -66,7 +66,7 @@
 | 泳道 | 当前任务 | 包/目录所有权 | 状态 |
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
-| **Lane B** | S3-02 research_agent 已完成 | `apps/orchestrator/`、`packages/shared`（只读优先） | `done` |
+| **Lane B** | S3-03 rules_agent 已完成 | `apps/orchestrator/`、`packages/shared`（只读优先） | `done` |
 | **Lane D** | S5-01 + S5-06 已完成 | `apps/web/` | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
@@ -90,6 +90,7 @@
 |---------|------|--------|------------|----------|----------|----------|----------|--------|------------------|----------|
 | S3-01 | B | 1 | 是 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 工人-B | 2026-08-29 11:07 | TaskState + 5 节点 stub + LangGraph 图（HITL interrupt） |
 | S3-02 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:20 | research_agent 无浏览器版：用户竞品输入 + LLM 关键词降级 |
+| S3-03 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:32 | rules_agent：RAG 检索平台规则/产品资料/范例 |
 | S5-01 | D | 2 | 是 | S5-06 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | Next.js 14 + AppShell 布局 + 导航 |
 | S5-06 | D | 2 | 是 | S5-01 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | `/knowledge` 页 + API 代理对接 knowledge |
 | S2-05 | A/E | 9 | 否 | — | `M01-infrastructure.md` | `infra/`、`scripts/dev-up*` | `done` | 总控 | 2026-08-29 11:02 | Docker 三容器 healthy；`/ready` database+redis true；test.ps1 13/13 |
@@ -155,8 +156,8 @@
 |----|------|------|------|------|------|
 | S3-01 | LangGraph 状态模型定义 | M03 | B | `completed` | MS1 + S2-03 |
 | S3-02 | research_agent 实现（无浏览器版） | M03 | B | `completed` | S3-01 |
-| S3-03 | rules_agent（RAG 工具调用） | M03 | B | `pending` | S3-01 |
-| S3-04 | generate_agent | M03 | B | `pending` | S3-03 |
+| S3-03 | rules_agent（RAG 工具调用） | M03 | B | `completed` | S3-01 |
+| S3-04 | generate_agent | M03 | B | `in_progress` | S3-03 |
 | S3-05 | compliance_agent + 重试回路 | M03 | B | `pending` | S3-04 |
 | S3-06 | HITL 中断/恢复 + PostgreSQL checkpoint | M03 | B | `pending` | S3-05 |
 | S3-07 | review_agent + 任务 API | M03 | B | `pending` | S3-06 |
@@ -239,3 +240,5 @@
 | 2026-08-29 | **CR-20260829-002**：默认 **单总控 + Git 分支 + CI**；test/CI 纳入 orchestrator（17 项） |
 | 2026-08-29 | S3-01 completed；S3-02 in_progress；Git 仓库 init |
 | 2026-08-29 | S3-02 completed：research_agent 无浏览器版；test.ps1 **19/19** 全绿 |
+| 2026-08-29 | 远程仓库上线：`fanxiaoyi520/launch-aeo`；`main` push 完成 |
+| 2026-08-29 | S3-03 completed：rules_agent RAG 集成；test.ps1 **21/21** 全绿 |
