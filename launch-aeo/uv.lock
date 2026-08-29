@@ -90,6 +90,7 @@ version = "0.1.0"
 source = { editable = "apps/orchestrator" }
 dependencies = [
     { name = "aeo-llm" },
+    { name = "aeo-rag" },
     { name = "aeo-shared" },
     { name = "langgraph" },
 ]
@@ -97,6 +98,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "aeo-llm", editable = "packages/llm" },
+    { name = "aeo-rag", editable = "packages/rag" },
     { name = "aeo-shared", editable = "packages/shared" },
     { name = "langgraph", specifier = ">=0.2.0" },
 ]
