@@ -1,0 +1,65 @@
+---
+description: Launch AEO 项目治理 — 任何任务前必须先读计划文件
+alwaysApply: true
+---
+
+# Launch AEO 治理规则
+
+本项目采用**计划锁定制**。未经用户明确同意，不得变更总计划。
+
+## 强制步骤（每次会话开始）
+
+1. 阅读 `AGENTS.md`（默认：**单总控 + Git 分支 + CI**）
+2. 阅读 `docs/01_MASTER_PLAN.md`，确认 `plan_status`
+3. 阅读 `docs/03_DEV_ENVIRONMENT.md`、`04_ARCHITECTURE_STANDARDS.md`、`05_PERFORMANCE_STANDARDS.md`
+4. 阅读 `docs/02_PROGRESS.md`，仅执行 `in_progress` 或用户点名任务
+5. 功能开发使用 `feat/{任务ID}-*` 分支；合并前 `launch-aeo\scripts\test.ps1` 全绿
+
+## 禁止事项
+
+- `plan_status` 为 `DRAFT` 时禁止编写业务代码（仅可修改计划文档）
+- 未经用户批准不得修改 `docs/01_MASTER_PLAN.md` 的范围、技术栈、里程碑
+- 不得虚假更新 `docs/02_PROGRESS.md` 完成状态
+
+## 变更控制
+
+范围/技术/进度变更须输出 CR（见 `docs/00_GOVERNANCE.md`），用户回复「同意变更」后方可执行。
+
+## 用户批准指令
+
+- 「批准总计划」→ 将总计划状态改为 `APPROVED`，按 Sprint 1 开工
+- 「修改：{意见}」→ 修订计划后重新提交
+- 「驳回」→ 保持 DRAFT
+
+## 用户口令（免粘贴 — 新会话直接说即可）
+
+用户**无需粘贴任何提示词**。听到下列口令后，Agent **必须先读** `AGENTS.md` 与 `docs/02_PROGRESS.md` §任务认领登记簿，再按协议执行。
+
+### 「领取空闲任务」→ 工人模式
+
+（先登记 `docs/SESSIONS.md`，再读 `02_PROGRESS` §任务认领登记簿领任务。）
+
+### 「验收」/「验收 MSx」→ 验收模式（不领开发任务）
+
+（先登记 `docs/SESSIONS.md`，角色=验收。）
+
+### 「总控」/「集成」→ 总控模式
+
+（先登记 `docs/SESSIONS.md`，角色=总控。）
+
+### 「释放会话」
+
+将本窗口在 `docs/SESSIONS.md` 中标为 `idle`。
+
+### 「搞混了」/「会话状态」/「我是谁」
+
+读 `SESSIONS.md` + `02_PROGRESS` 认领登记簿，汇报全部分工，并协助用户对齐本窗口角色。
+
+### 「重置会话登记」（仅总控）
+
+将所有 SESSIONS 行标 `idle`，提示用户各窗口重新说口令。
+
+### 其他
+
+- 「批准 MSx」→ 仅总控可更新对应里程碑为 `completed`
+- 用户未说明角色且说「领取空闲任务」→ **默认工人模式**

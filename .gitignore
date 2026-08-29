@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Launch AEO (see launch-aeo/.gitignore)
+launch-aeo/.env
+launch-aeo/.env.*
+!launch-aeo/.env.example
+launch-aeo/.venv/
+launch-aeo/**/__pycache__/
+launch-aeo/**/*.py[cod]
+launch-aeo/**/*.egg-info/
+launch-aeo/.pytest_cache/
+launch-aeo/.mypy_cache/
+launch-aeo/.ruff_cache/
+launch-aeo/htmlcov/
+launch-aeo/.coverage
+launch-aeo/node_modules/
+launch-aeo/**/.next/
+launch-aeo/**/out/
+launch-aeo/.pnpm-store/
+launch-aeo/data/
+!launch-aeo/data/.gitkeep

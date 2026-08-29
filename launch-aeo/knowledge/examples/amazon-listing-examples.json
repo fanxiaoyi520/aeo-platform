@@ -1,0 +1,15 @@
+[
+  {
+    "platform": "amazon",
+    "category": "obd2_scanner",
+    "title": "LAUNCH X431 Pro OBD2 Scanner Diagnostic Tool Full System Code Reader",
+    "bullets": [
+      "FULL SYSTEM DIAGNOSIS: Read and clear engine, ABS, SRS, transmission codes on most OBD2 vehicles",
+      "LIVE DATA STREAM: Real-time sensor data helps pinpoint faults faster than basic code readers",
+      "WIDE VEHICLE COVERAGE: Works with most 1996+ OBD2/EOBD compliant cars and light trucks in the US",
+      "PROFESSIONAL GRADE: Trusted by mechanics worldwide — LAUNCH 30 years of diagnostic expertise",
+      "EASY TO USE: Plug into OBD-II 16-pin port, intuitive menu, no complicated setup required"
+    ],
+    "notes": "Good example: brand first, features, coverage, trust, ease of use"
+  }
+]

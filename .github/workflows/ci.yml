@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.4.18"
+
+      - name: Set up Python
+        run: uv python install 3.11.9
+
+      - name: Install dependencies
+        working-directory: launch-aeo
+        run: uv sync --all-packages --group dev
+
+      - name: Ruff check
+        working-directory: launch-aeo
+        run: uv run ruff check apps packages
+
+      - name: Ruff format
+        working-directory: launch-aeo
+        run: uv run ruff format --check apps packages
+
+      - name: Mypy
+        working-directory: launch-aeo
+        run: uv run python -m mypy apps packages
+
+      - name: Pytest
+        working-directory: launch-aeo
+        env:
+          DB_URL: postgresql+asyncpg://aeo:aeo@localhost:5432/aeo
+          DB_URL_SYNC: postgresql+psycopg://aeo:aeo@localhost:5432/aeo
+          REDIS_URL: redis://localhost:6379/0
+          LLM_BASE_URL: https://api.openai.com/v1
+          LLM_API_KEY: test-key
+          EMBED_BASE_URL: https://api.openai.com/v1
+          EMBED_API_KEY: test-key
+          AUTH_API_KEY: test-key
+          RAG_USE_HASH_EMBEDDINGS: "true"
+          RAG_SCORE_THRESHOLD: "0.0"
+        run: uv run pytest apps/api/tests apps/orchestrator/tests packages/shared/tests packages/llm/tests packages/rag/tests
+
+      - name: Docker build
+        working-directory: launch-aeo
+        run: docker compose -f infra/compose/docker-compose.dev.yml build api

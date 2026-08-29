@@ -1,0 +1,20 @@
+[project]
+name = "aeo-orchestrator"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "aeo-shared",
+    "aeo-llm",
+    "langgraph>=0.2.0",
+]
+
+[tool.uv.sources]
+aeo-shared = { workspace = true }
+aeo-llm = { workspace = true }
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
