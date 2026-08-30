@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W11–W12 — S7-04 已完成；**MS7 待用户批准**  
-**Git：** `main` @ `a025f61`  
+**当前阶段：** **Phase 1 收官** — MS0~MS7 全部 `completed`；Phase 2 MV1 待 SP-API（MV0-02）  
+**Git：** `main` @ `613e2ca`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -49,7 +49,7 @@
 | MS4 浏览器调研 | `pending` | W7 | — |
 | MS5 运营工作台 | `completed` | W8–W9 | 2026-08-30 |
 | MS6 生产加固 | `completed` | W10 | 2026-08-30 |
-| MS7 试点验收 | `pending` | W11–W12 | — |
+| MS7 试点验收 | `completed` | W11–W12 | 2026-08-30 |
 
 ---
 
@@ -63,7 +63,7 @@
 | M05 | 运营工作台 | `completed` | 100% | MS5 已批准（2026-08-30） |
 | M06 | 部署与安全 | `completed` | 100% | MS6 已批准（2026-08-30） |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
-| M07 | 可观测与商业指标 | `completed` | 100% | MS7 试点指标路径完成（仪表盘 Phase 2） |
+| M07 | 可观测与商业指标 | `completed` | 100% | MS7 已批准（2026-08-30） |
 
 ---
 
@@ -222,16 +222,16 @@
 
 ---
 
-## 管理岗 Phase 2 — 生产商业级扩展（**已批准**，MV1 待 MS7）
+## 管理岗 Phase 2 — 生产商业级扩展（**已批准**，MV1 待 SP-API）
 
-> Phase 2 计划 **已 `APPROVED`**（2026-08-30）。MV1 编码仍 blocked，须 **MS7 通过 + SP-API 确认**。
+> Phase 2 计划 **已 `APPROVED`**（2026-08-30）。**MS7 已通过**（2026-08-30）；MV1 编码仍须 **MV0-02（SP-API）** 确认。
 
 | 文档 | 状态 |
 |------|------|
 | [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | `APPROVED` — 生产商业级 Phase 2 |
-| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | MV0 ✅；MV1–MV5 blocked |
+| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | MV0 ✅；MS7 ✅；MV1 blocked（SP-API） |
 
-**当前主执行：** Phase 1 `02_PROGRESS`（**MS7 进行中**）→ S7-01~04 → 再开 MV1。
+**当前主执行：** Phase 1 **已完成** → Phase 2 **MV0-02 / MV1**（见 `10_MANAGER_VISION_PROGRESS.md`）。
 
 ---
 
@@ -305,3 +305,4 @@
 | 2026-08-30 | S7-03 merged：PR #12 pilot report + demo script；test.ps1 **160/160**；CI ✅ |
 | 2026-08-30 | S7-04：MS7 验收报告 + `test_ms7_acceptance.py`；MS7 待用户批准 |
 | 2026-08-30 | S7-04 merged：PR #13 MS7 acceptance；test.ps1 **169/169**；CI ✅ |
+| 2026-08-30 | **用户批准 MS7**：里程碑 `completed`；**Phase 1 收官**；MV1 待 SP-API |
