@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W10 — S6-06 已完成；**MS6 待用户批准**  
-**Git：** `main` @ `0c3227a`  
+**当前阶段：** W11 — **MS6 已批准**；下一 **S7-01** 元征 SKU 测试集  
+**Git：** `main` @ `baeeea4`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -48,8 +48,8 @@
 | MS3 Agent 核心 | `completed` | W4–W6 | 2026-08-30 |
 | MS4 浏览器调研 | `pending` | W7 | — |
 | MS5 运营工作台 | `completed` | W8–W9 | 2026-08-30 |
-| MS6 生产加固 | `pending` | W10 | — |
-| MS7 试点验收 | `blocked` | W11–W12 | — |
+| MS6 生产加固 | `completed` | W10 | 2026-08-30 |
+| MS7 试点验收 | `pending` | W11–W12 | — |
 
 ---
 
@@ -61,8 +61,9 @@
 | M02 | RAG 知识库 | `completed` | 100% | MS2 已批准（2026-08-30） |
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
 | M05 | 运营工作台 | `completed` | 100% | MS5 已批准（2026-08-30） |
+| M06 | 部署与安全 | `completed` | 100% | MS6 已批准（2026-08-30） |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
-| M07 | 可观测与商业指标 | `blocked` | 0% | — |
+| M07 | 可观测与商业指标 | `pending` | 0% | MS6 已批准，待 S7-02 |
 
 ---
 
@@ -230,7 +231,7 @@
 | [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | `APPROVED` — 生产商业级 Phase 2 |
 | [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | MV0 ✅；MV1–MV5 blocked |
 
-**当前主执行：** Phase 1 `02_PROGRESS`（MS6 进行中）→ 完成后 MS7 → 再开 MV1。
+**当前主执行：** Phase 1 `02_PROGRESS`（**MS7 进行中**）→ S7-01~04 → 再开 MV1。
 
 ---
 
@@ -294,4 +295,5 @@
 | 2026-08-30 | S6-03 merged：PR #6 log redaction + audit API；test.ps1 **88/88**；CI ✅ |
 | 2026-08-30 | S6-04 merged：PR #7 coverage gate 70% + core tests；test.ps1 **102/102**，覆盖率 **86%**；CI ✅ |
 | 2026-08-30 | S6-05 merged：PR #8 DEPLOYMENT.md + backup/demo scripts；test.ps1 **106/106**；CI ✅ |
-| 2026-08-30 | S6-06：MS6 验收报告 + `test_ms6_acceptance.py`；test.ps1 **126/126**；MS6 待用户批准 |
+| 2026-08-30 | S6-06 merged：PR #9 MS6 验收报告 + acceptance tests；test.ps1 **126/126**；CI ✅ |
+| 2026-08-30 | **用户批准 MS6**：里程碑 `completed`；MS7 解除阻塞；下一 **S7-01** |
