@@ -14,7 +14,6 @@ from aeo_orchestrator.nodes.rules import rules_node
 from aeo_orchestrator.state import TaskState
 
 HUMAN_REVIEW_NODE = "human_review"
-MAX_COMPLIANCE_RETRIES = 3
 
 
 def build_graph(

@@ -2,12 +2,12 @@
 
 > **唯一任务执行来源。** AI Agent 仅可执行本表中 `in_progress` 或用户明确指名的任务。  
 > **总计划状态：** `APPROVED` — 2026-08-29 批准开工  
-> **执行模式：** **单总控 + Git 分支 + CI**（CR-20260829-002，用户 2026-08-29 批准）  
+> **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-29  
-**当前阶段：** W3 — MS2 待批准；MS3 S3-05 为下一任务  
-**Git：** `main` @ `523f521`；当前分支 `feat/s3-04-generate-agent`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
+**当前阶段：** W3 — MS2 待批准；MS3 S3-06 为下一任务  
+**Git：** `main` @ `cec3b5d`；当前分支 `feat/s3-05-compliance-agent`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -17,19 +17,24 @@
 ```
 用户 ──► 单总控对话（本对话）
            │
-           ├─► git checkout -b feat/s3-02-research-agent
-           ├─► 开发 + 本地 test.ps1
-           ├─► git merge → main（总控）
-           └─► push → CI 绿 = 可标任务 completed
+           ├─► 输出任务 Spec（06_TASK_SPEC.md）→ 用户「开始」
+           ├─► git checkout -b feat/s3-05-compliance-agent
+           ├─► 开发 + commit + 本地 test.ps1
+           ├─► push → 开 PR → CI 绿 → 看 diff
+           ├─► merge PR → main
+           └─► 更新 02_PROGRESS.md = 任务 completed
 ```
 
 | 步骤 | 命令 / 动作 |
 |------|-------------|
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
-| 开功能分支 | `git checkout -b feat/s3-04-generate-agent` ✅ 进行中 |
+| 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
+| 开功能分支 | `git checkout -b feat/s3-06-hitl-checkpoint`（下一任务） |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
-| 云端 CI | `git push` → GitHub Actions |
+| 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
+| 云端 CI | PR / push to `main` → GitHub Actions |
+| 合并 | CI 绿 + 看 diff → merge PR → 更新进度表 |
 
 ---
 
@@ -54,7 +59,7 @@
 |------|------|------|--------|------|
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
-| M03 | Agent 编排引擎 | `in_progress` | 55% | S3-01~04 ✅；下一 S3-05 |
+| M03 | Agent 编排引擎 | `in_progress` | 65% | S3-01~05 ✅；下一 S3-06 |
 | M05 | 运营工作台 | `in_progress` | 40% | S5-01/06 ✅；待 S5-02 |
 | M04 | 浏览器自动化 | `blocked` | 0% | MS3 后 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
@@ -66,7 +71,7 @@
 | 泳道 | 当前任务 | 包/目录所有权 | 状态 |
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
-| **Lane B** | S3-04 generate_agent 已完成 | `apps/orchestrator/`、`packages/shared`（只读优先） | `done` |
+| **Lane B** | S3-05 compliance_agent 已完成 | `apps/orchestrator/`、`packages/shared`（只读优先） | `done` |
 | **Lane D** | S5-01 + S5-06 已完成 | `apps/web/` | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
@@ -92,6 +97,7 @@
 | S3-02 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:20 | research_agent 无浏览器版：用户竞品输入 + LLM 关键词降级 |
 | S3-03 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:32 | rules_agent：RAG 检索平台规则/产品资料/范例 |
 | S3-04 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:38 | generate_agent：Amazon/TikTok LLM 模板 + JSON 输出 |
+| S3-05 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:46 | compliance_agent：规则校验 + 自动修复 + generate 重试回路 |
 | S5-01 | D | 2 | 是 | S5-06 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | Next.js 14 + AppShell 布局 + 导航 |
 | S5-06 | D | 2 | 是 | S5-01 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | `/knowledge` 页 + API 代理对接 knowledge |
 | S2-05 | A/E | 9 | 否 | — | `M01-infrastructure.md` | `infra/`、`scripts/dev-up*` | `done` | 总控 | 2026-08-29 11:02 | Docker 三容器 healthy；`/ready` database+redis true；test.ps1 13/13 |
@@ -159,8 +165,8 @@
 | S3-02 | research_agent 实现（无浏览器版） | M03 | B | `completed` | S3-01 |
 | S3-03 | rules_agent（RAG 工具调用） | M03 | B | `completed` | S3-01 |
 | S3-04 | generate_agent | M03 | B | `completed` | S3-03 |
-| S3-05 | compliance_agent + 重试回路 | M03 | B | `in_progress` | S3-04 |
-| S3-06 | HITL 中断/恢复 + PostgreSQL checkpoint | M03 | B | `pending` | S3-05 |
+| S3-05 | compliance_agent + 重试回路 | M03 | B | `completed` | S3-04 |
+| S3-06 | HITL 中断/恢复 + PostgreSQL checkpoint | M03 | B | `in_progress` | S3-05 |
 | S3-07 | review_agent + 任务 API | M03 | B | `pending` | S3-06 |
 | S3-08 | MS3 验收（CLI + API 演示） | M03 | B | `pending` | S3-01~07 |
 
@@ -211,9 +217,12 @@
 
 | 说 | 效果 |
 |----|------|
-| **推进 W3** / **做 S3-02** | 总控在 `feat/s3-02-*` 分支开发 |
+| **做 S3-05** | 先输出 Spec（`06_TASK_SPEC.md`），不写代码 |
+| **开始** | 在 `feat/s3-05-*` 按 Spec 开发 |
+| **合并检查** | 跑 test.ps1，是否可开 PR |
+| **开 PR** | push + 创建 PR，等 CI 绿 |
+| **合 PR** | merge 后更新进度表 |
 | **验收 MS2** | 实测 + test.ps1 报告 |
-| **合并检查** | 跑 test.ps1，是否可合 main |
 | **批准 MS2** | 关闭 MS2 里程碑（须实测通过） |
 
 可选多窗口：见 [`SESSIONS.md`](SESSIONS.md)。协议见 [`AGENTS.md`](../AGENTS.md)。
@@ -244,3 +253,6 @@
 | 2026-08-29 | 远程仓库上线：`fanxiaoyi520/launch-aeo`；`main` push 完成 |
 | 2026-08-29 | S3-03 completed：rules_agent RAG 集成；test.ps1 **21/21** 全绿 |
 | 2026-08-29 | S3-03 合并 push `main`；S3-04 completed：generate_agent；test.ps1 **23/23** 全绿 |
+| 2026-08-29 | 新增 `06_TASK_SPEC.md`：任务 Spec 模板 + S3-05 示例；接入 AGENTS 工作流 |
+| 2026-08-29 | **进阶档**：PR 模板、Issue 模板、commit 规范；工作流改为 Spec → PR → merge |
+| 2026-08-29 | S3-05 completed：compliance_agent 校验/自动修复/重试回路；test.ps1 **29/29** 全绿 |
