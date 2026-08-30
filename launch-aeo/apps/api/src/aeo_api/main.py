@@ -6,12 +6,14 @@ from aeo_shared.errors import ErrorCode
 from aeo_shared.responses import error_response
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from aeo_api.config import get_settings
+from aeo_api.config import get_settings, validate_production_settings
 from aeo_api.db.redis import close_redis
 from aeo_api.logging_setup import setup_logging
+from aeo_api.middleware.rate_limit import RateLimitMiddleware
 from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
 from aeo_api.routers import health, knowledge, metrics, root, tasks
 
@@ -21,6 +23,7 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    validate_production_settings(settings)
     setup_logging(debug=settings.app_debug)
     logger.info("starting", app=settings.app_name, env=settings.app_env)
     yield
@@ -36,8 +39,16 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    app.add_middleware(RateLimitMiddleware, limit_per_minute=settings.rate_limit_per_minute)
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(ApiKeyMiddleware, api_key=settings.auth_api_key)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.get_cors_origins(),
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     app.include_router(root.router)
     app.include_router(health.router)
