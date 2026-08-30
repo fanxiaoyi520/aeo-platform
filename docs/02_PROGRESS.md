@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W10 — S6-04 已完成；下一 **S6-05** 部署文档 + 演示脚本  
-**Git：** `main` @ `efaff88`  
+**当前阶段：** W10 — S6-06 已完成；**MS6 待用户批准**  
+**Git：** `main` @ `0c3227a`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -207,8 +207,8 @@
 | S6-02 | 认证与 API 限流 | M06 | `completed` | S6-01 |
 | S6-03 | 日志脱敏与审计日志 | M06/M07 | `completed` | S6-01 |
 | S6-04 | 核心模块测试补齐（≥70%） | ALL | `completed` | MS5 |
-| S6-05 | 部署文档 + 演示脚本 | M06 | `pending` | S6-01~04 |
-| S6-06 | MS6 验收 | ALL | `pending` | S6-01~05 |
+| S6-05 | 部署文档 + 演示脚本 | M06 | `completed` | S6-01~04 |
+| S6-06 | MS6 验收 | ALL | `completed` | S6-01~05 |
 
 ### Sprint 9–10 — 试点验收（MS7）
 
@@ -293,3 +293,5 @@
 | 2026-08-30 | S6-02 merged：PR #5 rate limit + CORS + prod key guard；test.ps1 **80/80**；CI ✅ |
 | 2026-08-30 | S6-03 merged：PR #6 log redaction + audit API；test.ps1 **88/88**；CI ✅ |
 | 2026-08-30 | S6-04 merged：PR #7 coverage gate 70% + core tests；test.ps1 **102/102**，覆盖率 **86%**；CI ✅ |
+| 2026-08-30 | S6-05 merged：PR #8 DEPLOYMENT.md + backup/demo scripts；test.ps1 **106/106**；CI ✅ |
+| 2026-08-30 | S6-06：MS6 验收报告 + `test_ms6_acceptance.py`；test.ps1 **126/126**；MS6 待用户批准 |
