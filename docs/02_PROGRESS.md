@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W6 — 下一 S5-05 Listing 导出  
-**Git：** `feat/s5-04-hitl-review`（待 merge）；`main` @ `b6e2f2d`  
+**当前阶段：** W6 — 下一 S5-07 MS5 验收  
+**Git：** `feat/s5-05-listing-export`（待 merge PR）；`main` @ `14759df`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -30,7 +30,7 @@
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
-| 开功能分支 | `git checkout -b feat/s5-05-listing-export`（下一任务） |
+| 开功能分支 | `git checkout -b feat/s5-07-ms5-acceptance`（下一任务） |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
 | 云端 CI | PR / push to `main` → GitHub Actions |
@@ -60,7 +60,7 @@
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
-| M05 | 运营工作台 | `in_progress` | 85% | S5-01~04/06 ✅；下一 S5-05 |
+| M05 | 运营工作台 | `in_progress` | 95% | S5-01~06 ✅；下一 S5-07 验收 |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
 
@@ -72,7 +72,7 @@
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
 | **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
-| **Lane D** | S5-04 HITL 审核页已完成（待 merge） | `apps/web/`、`apps/api/`（HITL） | `done` |
+| **Lane D** | S5-05 Listing 导出已完成（待 merge） | `apps/web/` | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
 ### Agent 认领规则
@@ -105,6 +105,7 @@
 | S5-02 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/` | `done` | 总控 | 2026-08-30 09:10 | `/tasks` 列表 + `/tasks/new` 创建 + BFF 代理 |
 | S5-03 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:20 | SSE Trace 时间线 + `/tasks/{id}/events` |
 | S5-04 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:30 | `/tasks/{id}/review` HITL 审核 + approve/reject BFF |
+| S5-05 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/` | `done` | 总控 | 2026-08-30 09:42 | `/tasks/{id}/result` 复制 + JSON/CSV 导出 |
 | S5-06 | D | 2 | 是 | S5-01 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | `/knowledge` 页 + API 代理对接 knowledge |
 | S2-05 | A/E | 9 | 否 | — | `M01-infrastructure.md` | `infra/`、`scripts/dev-up*` | `done` | 总控 | 2026-08-29 11:02 | Docker 三容器 healthy；`/ready` database+redis true；test.ps1 13/13 |
 
@@ -193,7 +194,7 @@
 | S5-02 | 任务创建与列表页 | M05 | D | `completed` | S5-01 + MS3 任务 API |
 | S5-03 | Agent Trace 实时展示（SSE） | M05 | D | `completed` | S5-02 |
 | S5-04 | HITL 审核页 | M05 | D | `completed` | S5-03 |
-| S5-05 | Listing 结果导出 | M05 | D | `pending` | S5-04 |
+| S5-05 | Listing 结果导出 | M05 | D | `completed` | S5-04 |
 | S5-06 | 知识库管理页 | M05 | D | `completed` | MS2 检索 API（S2-03） |
 | S5-07 | MS5 验收 | M05 | D | `pending` | S5-01~06 |
 
@@ -268,4 +269,5 @@
 | 2026-08-30 | **用户批准 MS3**：里程碑 `completed`；M04/MS4 解除阻塞 |
 | 2026-08-30 | S5-02 completed：任务列表/创建页 + `/api/tasks` BFF；web typecheck/lint ✅ |
 | 2026-08-30 | S5-03 completed：SSE `/api/v1/tasks/{id}/events` + Trace 时间线；test.ps1 **48/48** |
-| 2026-08-30 | S5-04 completed：`/tasks/{id}/review` HITL 审核页 + `generated` 字段 + approve/reject；test.ps1 **50/50** |
+| 2026-08-30 | S5-04 merged：PR #1 HITL 审核页；`main` @ `14759df`；CI ✅ |
+| 2026-08-30 | S5-05 completed：`/tasks/{id}/result` 复制 + JSON/CSV 导出；test.ps1 **50/50** |

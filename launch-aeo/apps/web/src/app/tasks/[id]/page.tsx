@@ -158,6 +158,18 @@ export default function TaskDetailPage() {
               ) : null}
             </div>
 
+            {task.status === "completed" && task.final_output ? (
+              <div className="card space-y-3 border-emerald-200 bg-emerald-50 text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200">
+                <p>Listing 已生成，可查看最终结果并导出。</p>
+                <Link
+                  href={`/tasks/${task.id}/result`}
+                  className="btn-primary inline-flex w-full justify-center"
+                >
+                  查看结果 / 导出
+                </Link>
+              </div>
+            ) : null}
+
             {task.status === "waiting_hitl" ? (
               <div className="card space-y-3 border-amber-200 bg-amber-50 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
                 <p>任务已暂停，等待人工审核 Listing 草稿。</p>
