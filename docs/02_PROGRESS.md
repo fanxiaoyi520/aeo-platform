@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W11 — S7-03 已完成；下一 **S7-04** MS7 验收  
-**Git：** `main` @ `27d1844`  
+**Git：** `main` @ `bb20a6a`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -302,3 +302,4 @@
 | 2026-08-30 | S7-02：batch_pilot.py + pilot_metrics；test.ps1 **151/151** |
 | 2026-08-30 | S7-02 merged：PR #11 batch pilot；test.ps1 **151/151**；CI ✅ |
 | 2026-08-30 | S7-03：试点报告模板 + generate_pilot_report + 演示脚本 |
+| 2026-08-30 | S7-03 merged：PR #12 pilot report + demo script；test.ps1 **160/160**；CI ✅ |
