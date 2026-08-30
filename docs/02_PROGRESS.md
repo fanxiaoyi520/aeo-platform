@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W6 — 下一 S5-07 MS5 验收  
-**Git：** `main` @ `bc780aa`；PR #2 已合并（S5-05）  
+**当前阶段：** W7 — S5-07 完成；待批准 MS5；下一 S6-01  
+**Git：** `main` @ `52fe3ab`；S5-07 待 merge（`feat/s5-07-ms5-acceptance`）  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -30,7 +30,7 @@
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
-| 开功能分支 | `git checkout -b feat/s5-07-ms5-acceptance`（下一任务） |
+| 开功能分支 | `git checkout -b feat/s6-01-prod-compose`（下一任务，须先批准 MS5） |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
 | 云端 CI | PR / push to `main` → GitHub Actions |
@@ -44,10 +44,10 @@
 |--------|------|--------|------------|
 | MS0 计划批准 | `completed` | W0 | 2026-08-29 |
 | MS1 工程底座 | `completed` | W1–W2 | 2026-08-29 |
-| MS2 RAG 可用 | `in_progress` | W3 | — |
+| MS2 RAG 可用 | `completed` | W3 | 2026-08-30 |
 | MS3 Agent 核心 | `completed` | W4–W6 | 2026-08-30 |
 | MS4 浏览器调研 | `pending` | W7 | — |
-| MS5 运营工作台 | `in_progress` | W8–W9 | — |
+| MS5 运营工作台 | `in_progress` | W8–W9 | —（S5-07 完成，待批准 MS5） |
 | MS6 生产加固 | `blocked` | W10 | — |
 | MS7 试点验收 | `blocked` | W11–W12 | — |
 
@@ -58,9 +58,9 @@
 | 模块 | 名称 | 状态 | 完成度 | 泳道 |
 |------|------|------|--------|------|
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
-| M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
+| M02 | RAG 知识库 | `completed` | 100% | MS2 已批准（2026-08-30） |
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
-| M05 | 运营工作台 | `in_progress` | 95% | S5-01~06 ✅；下一 S5-07 验收 |
+| M05 | 运营工作台 | `in_progress` | 100% | S5-01~07 ✅；待批准 MS5 |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
 
@@ -70,9 +70,9 @@
 
 | 泳道 | 当前任务 | 包/目录所有权 | 状态 |
 |------|----------|---------------|------|
-| **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
+| **Lane A** | MS2 已批准 | `infra/`、`scripts/dev-up*` | `idle` |
 | **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
-| **Lane D** | S5-05 已合并，下一 S5-07 | `apps/web/` | `idle` |
+| **Lane D** | S5-07 MS5 验收完成，待批准 MS5 | `apps/web/`、`apps/api/`（验收测试） | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
 ### Agent 认领规则
@@ -106,6 +106,7 @@
 | S5-03 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:20 | SSE Trace 时间线 + `/tasks/{id}/events` |
 | S5-04 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:30 | `/tasks/{id}/review` HITL 审核 + approve/reject BFF |
 | S5-05 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/` | `done` | 总控 | 2026-08-30 09:42 | `/tasks/{id}/result` 复制 + JSON/CSV 导出 |
+| S5-07 | D | 2 | 否 | — | `M05-frontend-workbench.md` | `apps/web/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:52 | MS5 验收测试 + 报告 |
 | S5-06 | D | 2 | 是 | S5-01 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | `/knowledge` 页 + API 代理对接 knowledge |
 | S2-05 | A/E | 9 | 否 | — | `M01-infrastructure.md` | `infra/`、`scripts/dev-up*` | `done` | 总控 | 2026-08-29 11:02 | Docker 三容器 healthy；`/ready` database+redis true；test.ps1 13/13 |
 
@@ -196,7 +197,7 @@
 | S5-04 | HITL 审核页 | M05 | D | `completed` | S5-03 |
 | S5-05 | Listing 结果导出 | M05 | D | `completed` | S5-04 |
 | S5-06 | 知识库管理页 | M05 | D | `completed` | MS2 检索 API（S2-03） |
-| S5-07 | MS5 验收 | M05 | D | `pending` | S5-01~06 |
+| S5-07 | MS5 验收 | M05 | D | `completed` | S5-01~06 |
 
 ### Sprint 8 — 生产加固（MS6）
 
@@ -220,16 +221,16 @@
 
 ---
 
-## 管理岗愿景（独立线，未开启）
+## 管理岗 Phase 2 — 生产商业级扩展（独立线，未开启）
 
-> **非当前执行来源。** 自 `Desktop/111` 管理岗 JD 提炼；状态 `ON_HOLD`，待用户决定是否开启。
+> **非当前执行来源。** 自 `Desktop/111` 管理岗 JD 提炼；**生产商业级交付计划**（非远景/demo）；状态 `ON_HOLD`。
 
 | 文档 | 说明 |
 |------|------|
-| [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | 需求、六类 Agent、MV0–MV5 里程碑（约 11–14 个月） |
-| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | 89 项任务进度表（当前 0%） |
+| [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | Phase 2 生产目标、SLA、六类 Agent、MV0–MV5（约 11–14 个月） |
+| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | 89 项任务；终验：替代率 ≥40%、ROI ≥ 人工 p50 |
 
-**开启口令：** 「批准 MV 计划」或「开启管理岗愿景」— 推荐 Launch AEO MS7 完成后再开。
+**开启口令：** 「批准 MV 计划」或「开启 MV 生产计划」— **须 MS7 生产验收通过后**再开。
 
 ---
 
@@ -284,3 +285,6 @@
 | 2026-08-30 | S5-03 completed：SSE `/api/v1/tasks/{id}/events` + Trace 时间线；test.ps1 **48/48** |
 | 2026-08-30 | S5-04 merged：PR #1 HITL 审核页；`main` @ `14759df`；CI ✅ |
 | 2026-08-30 | S5-05 merged：PR #2 Listing 导出页；`main` @ `bc780aa`；CI ✅ |
+| 2026-08-30 | docs: sync progress @ `52fe3ab` |
+| 2026-08-30 | **用户批准 MS2**：里程碑 `completed`；M02 关闭 |
+| 2026-08-30 | S5-07 completed：MS5 验收测试 + 报告；待「批准 MS5」 |
