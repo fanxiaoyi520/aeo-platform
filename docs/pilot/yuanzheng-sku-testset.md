@@ -53,7 +53,7 @@
 
 | 任务 | 用法 |
 |------|------|
-| **S7-02** | `batch_pilot.py` 读取本 JSON，逐条创建任务并采集指标 |
+| **S7-02** | `scripts/batch_pilot.py --auto-approve` 读取本 JSON，输出 `pilot/reports/batch-*.csv` |
 | **S7-03** | 试点报告引用本清单，统计一次通过率 / 耗时 |
 | **S7-04** | MS7 验收对照总计划 §1.4 成功标准 |
 
@@ -71,12 +71,16 @@
 }
 ```
 
-### CLI 示例
+### 批跑示例（S7-02）
 
 ```powershell
-uv run aeo-orchestrate run --sku X431-PRO --platform amazon --market US \
-  --competitor B07JFSRMBH --keyword "obd2 scanner" --auto-approve
+cd launch-aeo
+.\scripts\batch_pilot.ps1 --dry-run          # 校验测试集，输出 planned CSV
+.\scripts\batch_pilot.ps1 --auto-approve   # 全量 20 SKU 批跑 + 指标 CSV
+.\scripts\batch_pilot.ps1 --auto-approve --limit 3
 ```
+
+输出：`pilot/reports/batch-<timestamp>.csv` + `.summary.json`
 
 ---
 
