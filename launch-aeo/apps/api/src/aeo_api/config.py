@@ -3,6 +3,13 @@ from functools import lru_cache
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+DEFAULT_DEV_API_KEYS: frozenset[str] = frozenset(
+    {
+        "dev-api-key",
+        "dev-api-key-change-in-production",
+    }
+)
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
@@ -23,6 +30,23 @@ class Settings(BaseSettings):
 
     agent_max_concurrent: int = Field(alias="AGENT_MAX_CONCURRENT", default=3)
     rate_limit_per_minute: int = Field(alias="RATE_LIMIT_PER_MINUTE", default=100)
+    cors_origins: str = Field(alias="CORS_ORIGINS", default="")
+
+    def get_cors_origins(self) -> list[str]:
+        if self.cors_origins.strip():
+            return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        if self.app_env == "production":
+            return []
+        return ["http://localhost:3000", "http://127.0.0.1:3000"]
+
+
+def validate_production_settings(settings: Settings) -> None:
+    if settings.app_env != "production":
+        return
+    if settings.auth_api_key in DEFAULT_DEV_API_KEYS:
+        raise RuntimeError(
+            "AUTH_API_KEY must be changed from the default dev value when APP_ENV=production"
+        )
 
 
 @lru_cache
