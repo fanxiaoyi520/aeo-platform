@@ -38,3 +38,8 @@ Thumbs.db
 
 # Backups (local only)
 backups/
+
+# Pilot batch reports (local only)
+pilot/reports/*.csv
+pilot/reports/*.json
+!pilot/reports/.gitkeep
