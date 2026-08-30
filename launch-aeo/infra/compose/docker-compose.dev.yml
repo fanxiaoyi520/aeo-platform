@@ -44,6 +44,17 @@ services:
       DB_URL: postgresql+asyncpg://aeo:aeo_dev_password@postgres:5432/aeo
       DB_URL_SYNC: postgresql+psycopg://aeo:aeo_dev_password@postgres:5432/aeo
       REDIS_URL: redis://redis:6379/0
+      CHROMA_PATH: data/chroma
+      KNOWLEDGE_PATH: knowledge
+      RAG_USE_HASH_EMBEDDINGS: "true"
+      RAG_SCORE_THRESHOLD: "0.0"
+      BROWSER_ENABLED: "true"
+      BROWSER_HEADLESS: "true"
+      BROWSER_SCREENSHOT_DIR: data/screenshots
+    volumes:
+      - ../../knowledge:/app/knowledge
+      - ../../data/chroma:/app/data/chroma
+      - ../../data/screenshots:/app/data/screenshots
     ports:
       - "8000:8000"
     depends_on:

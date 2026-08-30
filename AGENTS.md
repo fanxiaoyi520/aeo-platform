@@ -4,13 +4,15 @@
 
 ## 推荐工作流（默认，CR-20260829-002）
 
-**单总控对话 + Git 分支 + CI** — 用户 2026-08-29 批准。
+**单总控对话 + Git 分支 + PR + CI** — 用户 2026-08-29 批准；进阶档 PR 流程 2026-08-29 接入。
 
 | 层级 | 做什么 |
 |------|--------|
 | **单总控** | 用户只维护一个主对话（派活、实现、验收、集成） |
+| **任务 Spec** | 开工前贴 Spec（[`docs/06_TASK_SPEC.md`](docs/06_TASK_SPEC.md)），用户回复「开始」后再写代码 |
 | **Git 分支** | 每个任务 `feat/{任务ID}-{简述}`，合并前 `test.ps1` 全绿 |
-| **CI** | push 到 GitHub 后 Actions 自动跑与本地相同的检查 |
+| **Pull Request** | push 后开 PR → 看 diff → CI 绿 → merge `main`（不直接合 main） |
+| **CI** | push / PR 到 `main` 时 GitHub Actions 自动跑与本地相同的检查 |
 
 多 Cursor 窗口、SESSIONS 登记簿为**可选**，默认不用。
 
@@ -26,16 +28,31 @@ fix/health-ready-timeout
 
 | 口令 | 行为 |
 |------|------|
-| **推进 W3** / **做 S3-01** | 总控在对应分支开发或继续任务 |
+| **推进 W3** / **做 S3-01** | 先输出任务 Spec（`06_TASK_SPEC.md`），用户「开始」后在对应分支开发 |
+| **开始** | 按已确认 Spec 写代码 |
 | **验收 MS2** | 对照模块文档实测 + `test.ps1` |
-| **合并检查** | 跑 `test.ps1`，汇报是否可合 main |
+| **合并检查** | 跑 `test.ps1`，汇报是否可开 PR |
+| **开 PR** | push 分支并用 `gh pr create`（或网页），填 PR 模板 |
+| **合 PR** | CI 绿 + 看过 diff → merge → 更新 `02_PROGRESS.md` |
 | **批准 MSx** | 实测通过后更新里程碑 `completed` |
 
 ### 合并前检查清单
 
 1. `cd launch-aeo; .\scripts\test.ps1` 全绿  
-2. 仅改任务相关目录  
-3. 总控更新 `02_PROGRESS.md` 任务/里程碑状态  
+2. 仅改任务相关目录（对照 Spec「不做什么」）  
+3. `git diff main --stat` 无计划外文件  
+4. 开 PR，等 CI 绿，用户确认 diff 后 merge  
+5. 总控更新 `02_PROGRESS.md` 任务/里程碑状态  
+
+### Commit 格式（进阶档）
+
+```
+feat(orchestrator): S3-05 compliance_agent + retry loop
+fix(api): health ready timeout on slow redis
+docs: add task spec template
+```
+
+`类型(范围): 任务ID 简述` — 类型：`feat` `fix` `test` `docs` `chore`
 
 ---
 
@@ -56,8 +73,8 @@ fix/health-ready-timeout
 | 总计划状态 | `APPROVED` |
 | 任务来源 | `02_PROGRESS.md` 中 `in_progress` 或用户点名 |
 | 分支 | 功能开发在 `feat/*` 分支（Git 已初始化后） |
-| 验收 | 本地 `test.ps1` + 可选 GitHub Actions CI |
-| 完成后 | 总控更新 `02_PROGRESS.md` |
+| 验收 | 本地 `test.ps1` + PR 上 CI 绿 |
+| 完成后 | merge PR → 总控更新 `02_PROGRESS.md` |
 
 ## 可选：多窗口工人模式
 
@@ -69,4 +86,4 @@ fix/health-ready-timeout
 
 ## 项目负责人
 
-用户（元征科技 AI 部门技术开发，目标转岗 AI 电商 Agent 团队）
+用户（元征科技 — Launch AEO 产品负责人）

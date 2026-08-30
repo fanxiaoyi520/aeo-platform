@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** **Phase 1 收官** — MS0~MS7 全部 `completed`；Phase 2 MV1 待 SP-API（MV0-02）  
-**Git：** `main` @ `613e2ca`  
+**当前阶段：** **Phase 1 生产扩展** — MS7 ✅；**P1-01 知识库运营上传**（`feat/knowledge-upload`）待 PR；**MV1 blocked**（MV0-02 SP-API）  
+**Git：** `main`（本地未提交：MS4 + embeddings fix + live pilot 报告）  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -46,10 +46,10 @@
 | MS1 工程底座 | `completed` | W1–W2 | 2026-08-29 |
 | MS2 RAG 可用 | `completed` | W3 | 2026-08-30 |
 | MS3 Agent 核心 | `completed` | W4–W6 | 2026-08-30 |
-| MS4 浏览器调研 | `pending` | W7 | — |
+| MS4 浏览器调研 | `pending` | W7 | — | S4-01~04 技术验收通过，待用户批准 |
 | MS5 运营工作台 | `completed` | W8–W9 | 2026-08-30 |
 | MS6 生产加固 | `completed` | W10 | 2026-08-30 |
-| MS7 试点验收 | `completed` | W11–W12 | 2026-08-30 |
+| MS7 试点验收 | `completed` | W11–W12 | 2026-08-30 | live 批跑 20/20，三项指标达标 |
 
 ---
 
@@ -62,7 +62,7 @@
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
 | M05 | 运营工作台 | `completed` | 100% | MS5 已批准（2026-08-30） |
 | M06 | 部署与安全 | `completed` | 100% | MS6 已批准（2026-08-30） |
-| M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
+| M04 | 浏览器自动化 | `pending` | 100% | S4-04 技术验收通过，待批准 MS4 |
 | M07 | 可观测与商业指标 | `completed` | 100% | MS7 已批准（2026-08-30） |
 
 ---
@@ -183,10 +183,10 @@
 
 | ID | 任务 | 模块 | Lane | 状态 | 依赖 |
 |----|------|------|------|------|------|
-| S4-01 | Playwright 服务封装 | M04 | — | `pending` | MS3 |
-| S4-02 | Amazon 竞品 Listing 抓取 | M04 | — | `pending` | S4-01 |
-| S4-03 | 接入 research_agent + 降级策略 | M04 | — | `pending` | S4-02 |
-| S4-04 | MS4 验收 | M04 | — | `pending` | S4-01~03 |
+| S4-01 | Playwright 服务封装 | M04 | — | `completed` | MS3 |
+| S4-02 | Amazon 竞品 Listing 抓取 | M04 | — | `completed` | S4-01 |
+| S4-03 | 接入 research_agent + 降级策略 | M04 | — | `completed` | S4-02 |
+| S4-04 | MS4 验收 | M04 | — | `completed` | S4-01~03 |
 
 ### Sprint 6–7 — 运营工作台（MS5，Lane D）
 
@@ -219,6 +219,14 @@
 | S7-02 | 批量运行并记录指标 | M07 | `completed` | S7-01 |
 | S7-03 | 试点报告 + 10 分钟演示视频 | — | `completed` | S7-02 |
 | S7-04 | MS7 验收 | ALL | `completed` | S7-01~03 |
+
+### Sprint 11 — Phase 1 生产扩展（MS7 后）
+
+| ID | 任务 | 模块 | 状态 | 依赖 |
+|----|------|------|------|------|
+| P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `in_progress` | MS7 |
+| P1-02 | 真实 SKU 产品资料入库（≥5 SKU） | M02 | `pending` | P1-01 |
+| P1-03 | MV0-02 SP-API / 试点店可行性确认 | MV-M10 | `pending` | MS7 |
 
 ---
 

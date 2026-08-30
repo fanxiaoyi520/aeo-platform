@@ -32,3 +32,22 @@ class KnowledgeReindexResponse(BaseModel):
     documents: int
     chunks: int
     total: int
+
+
+class KnowledgeDocumentItem(BaseModel):
+    source_file: str
+    size_bytes: int
+    extension: str
+    updated_at: str
+
+
+class KnowledgeDocumentsResponse(BaseModel):
+    items: list[KnowledgeDocumentItem]
+    total: int
+
+
+class KnowledgeUploadResponse(BaseModel):
+    source_file: str
+    size_bytes: int
+    category: str
+    reindex: KnowledgeReindexResponse

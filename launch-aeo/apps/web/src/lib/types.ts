@@ -31,6 +31,44 @@ export type KnowledgeReindexResponse = {
   total: number;
 };
 
+export type KnowledgeDocumentItem = {
+  source_file: string;
+  size_bytes: number;
+  extension: string;
+  updated_at: string;
+};
+
+export type KnowledgeDocumentsResponse = {
+  items: KnowledgeDocumentItem[];
+  total: number;
+};
+
+export type KnowledgeUploadResponse = {
+  source_file: string;
+  size_bytes: number;
+  category: string;
+  reindex: KnowledgeReindexResponse;
+};
+
+export type KnowledgeDocumentItem = {
+  source_file: string;
+  size_bytes: number;
+  extension: string;
+  updated_at: string;
+};
+
+export type KnowledgeDocumentsResponse = {
+  items: KnowledgeDocumentItem[];
+  total: number;
+};
+
+export type KnowledgeUploadResponse = {
+  source_file: string;
+  size_bytes: number;
+  category: string;
+  reindex: KnowledgeReindexResponse;
+};
+
 export type TaskPlatform = "amazon" | "tiktok";
 
 export type Task = {

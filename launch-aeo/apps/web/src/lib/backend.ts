@@ -6,17 +6,7 @@ type FetchOptions = {
   body?: unknown;
 };
 
-export async function backendFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method: options.method ?? "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${AUTH_API_KEY}`,
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    cache: "no-store",
-  });
-
+async function parseApiResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const text = await response.text();
     throw new Error(`API ${response.status}: ${text}`);
@@ -28,4 +18,31 @@ export async function backendFetch<T>(path: string, options: FetchOptions = {}):
   }
 
   return payload.data;
+}
+
+export async function backendFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: options.method ?? "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${AUTH_API_KEY}`,
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+    cache: "no-store",
+  });
+
+  return parseApiResponse<T>(response);
+}
+
+export async function backendUpload<T>(path: string, formData: FormData): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${AUTH_API_KEY}`,
+    },
+    body: formData,
+    cache: "no-store",
+  });
+
+  return parseApiResponse<T>(response);
 }

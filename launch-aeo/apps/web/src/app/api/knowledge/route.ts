@@ -1,14 +1,27 @@
 import { NextResponse } from "next/server";
 
 import { backendFetch } from "@/lib/backend";
-import type { KnowledgeReindexResponse, KnowledgeSearchResponse, KnowledgeStats } from "@/lib/types";
+import type { KnowledgeDocumentsResponse, KnowledgeStats } from "@/lib/types";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    if (searchParams.get("view") === "documents") {
+      try {
+        const data = await backendFetch<KnowledgeDocumentsResponse>("/api/v1/knowledge/documents");
+        return NextResponse.json({ data });
+      } catch {
+        // Older API builds lack GET /documents — keep the page usable.
+        return NextResponse.json({ data: { items: [], total: 0 } });
+      }
+    }
+
     const data = await backendFetch<KnowledgeStats>("/api/v1/knowledge/stats");
     return NextResponse.json({ data });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to load stats";
+    const message = error instanceof Error ? error.message : "Failed to load knowledge data";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -17,14 +30,14 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as { action?: string; query?: string; platform?: string };
     if (body.action === "reindex") {
-      const data = await backendFetch<KnowledgeReindexResponse>("/api/v1/knowledge/reindex", {
+      const data = await backendFetch("/api/v1/knowledge/reindex", {
         method: "POST",
       });
       return NextResponse.json({ data });
     }
 
     if (body.action === "search") {
-      const data = await backendFetch<KnowledgeSearchResponse>("/api/v1/knowledge/search", {
+      const data = await backendFetch("/api/v1/knowledge/search", {
         method: "POST",
         body: {
           query: body.query,

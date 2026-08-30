@@ -5,9 +5,11 @@ from pathlib import Path
 
 import structlog
 
+from aeo_rag.extractors import extract_text_from_path
+
 logger = structlog.get_logger(__name__)
 
-SUPPORTED_EXTENSIONS = {".md", ".json", ".txt"}
+SUPPORTED_EXTENSIONS = {".md", ".json", ".txt", ".pdf", ".docx"}
 
 
 @dataclass
@@ -38,6 +40,8 @@ def _infer_metadata(path: Path, knowledge_root: Path) -> tuple[str, str]:
             category = "example"
         elif top == "sop":
             category = "sop"
+        elif top == "uploads":
+            category = "upload"
 
     return category, platform
 
@@ -52,10 +56,9 @@ def load_file(path: Path, knowledge_root: Path) -> KnowledgeDocument | None:
 
     if suffix == ".json":
         data = json.loads(path.read_text(encoding="utf-8"))
-        if isinstance(data, list):
-            content = json.dumps(data, ensure_ascii=False, indent=2)
-        else:
-            content = json.dumps(data, ensure_ascii=False, indent=2)
+        content = json.dumps(data, ensure_ascii=False, indent=2)
+    elif suffix in (".pdf", ".docx"):
+        content = extract_text_from_path(path)
     else:
         content = path.read_text(encoding="utf-8")
 
