@@ -4,7 +4,7 @@ from uuid import UUID
 from aeo_shared.errors import ErrorCode
 from aeo_shared.responses import error_response, success_response
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.db.models import get_db_session
@@ -14,7 +14,9 @@ from aeo_api.schemas.tasks import (
     TaskListResponse,
     TaskResponse,
 )
+from aeo_api.services.task_events import stream_task_events
 from aeo_api.services.task_service import TaskNotFoundError, TaskService, TaskStateError
+from aeo_api.sse import format_sse
 
 router = APIRouter(prefix="/api/v1/tasks", tags=["tasks"])
 _service = TaskService()
@@ -93,3 +95,27 @@ async def reject_task(
     except TaskStateError:
         return _error_response(request, ErrorCode.HITL_NOT_PENDING, 409)
     return _ok(request, TaskResponse(**data).model_dump())
+
+
+@router.get("/{task_id}/events")
+async def task_events(task_id: UUID) -> StreamingResponse:
+    from aeo_api.db.models import async_session_factory
+
+    async def event_stream() -> Any:
+        try:
+            async for event_name, payload in stream_task_events(
+                _service, async_session_factory, str(task_id)
+            ):
+                yield format_sse(event_name, payload)
+        except TaskNotFoundError:
+            yield format_sse("error", {"message": "task not found", "task_id": str(task_id)})
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

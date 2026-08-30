@@ -223,3 +223,6 @@ class TaskService:
         )
         await session.commit()
         return _serialize_task(task, final_output=final_output or None)
+
+    def is_task_waiting_hitl(self, task_id: str) -> bool:
+        return is_waiting_hitl(self._graph, task_id)

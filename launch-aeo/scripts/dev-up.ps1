@@ -4,7 +4,7 @@ $ErrorActionPreference = "Stop"
 Write-Host "==> Starting dev environment (Docker CLI)" -ForegroundColor Cyan
 
 $composeFile = "infra/compose/docker-compose.dev.yml"
-Invoke-DockerCompose -ComposeFile $composeFile -Arguments @("up", "-d")
+Invoke-DockerCompose -ComposeFile $composeFile -Arguments @("up", "-d", "--build")
 
 Write-Host "==> Waiting for services..."
 Start-Sleep -Seconds 8
@@ -24,6 +24,12 @@ if (Test-DockerCli) {
     $env:DB_URL_SYNC = "postgresql+psycopg://aeo:aeo_dev_password@localhost:5432/aeo"
     uv run alembic upgrade head
     Pop-Location
+}
+
+Write-Host "==> Ingesting knowledge base (hash embeddings)"
+& "$PSScriptRoot\ingest.ps1"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Knowledge ingest failed — run .\scripts\ingest.ps1 manually after fixing .env" -ForegroundColor Yellow
 }
 
 Write-Host "==> Dev environment ready" -ForegroundColor Green
