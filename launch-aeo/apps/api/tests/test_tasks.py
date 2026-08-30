@@ -14,6 +14,7 @@ os.environ.setdefault("LLM_API_KEY", "test-key")
 os.environ.setdefault("EMBED_BASE_URL", "https://api.openai.com/v1")
 os.environ.setdefault("EMBED_API_KEY", "test-key")
 os.environ.setdefault("AUTH_API_KEY", "dev-api-key-change-in-production")
+API_KEY = os.environ["AUTH_API_KEY"]
 
 from aeo_api.main import app  # noqa: E402
 
@@ -21,7 +22,7 @@ from aeo_api.main import app  # noqa: E402
 @pytest.fixture
 async def client() -> AsyncGenerator[AsyncClient, None]:
     transport = ASGITransport(app=app)
-    headers = {"Authorization": "Bearer dev-api-key-change-in-production"}
+    headers = {"Authorization": f"Bearer {API_KEY}"}
     async with AsyncClient(transport=transport, base_url="http://test", headers=headers) as ac:
         yield ac
 
@@ -84,6 +85,49 @@ async def test_get_task_not_found(client: AsyncClient) -> None:
         response = await client.get(f"/api/v1/tasks/{uuid4()}")
     assert response.status_code == 404
     assert response.json()["code"] == 20001
+
+
+@pytest.mark.asyncio
+async def test_get_task_includes_generated(client: AsyncClient) -> None:
+    task_id = str(uuid4())
+    payload = _task_payload(task_id)
+    payload["generated"] = {
+        "title": "Draft Title",
+        "bullets": ["Point A", "Point B"],
+        "search_terms": "keyword",
+        "description": "Draft body",
+    }
+
+    with patch("aeo_api.routers.tasks._service.get_task", new_callable=AsyncMock) as mock_get:
+        mock_get.return_value = payload
+        response = await client.get(f"/api/v1/tasks/{task_id}")
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data["generated"]["title"] == "Draft Title"
+    assert len(data["generated"]["bullets"]) == 2
+
+
+@pytest.mark.asyncio
+async def test_approve_task_with_listing(client: AsyncClient) -> None:
+    task_id = str(uuid4())
+    completed = _task_payload(task_id)
+    completed["status"] = "completed"
+    completed["final_output"] = {"title": "Edited", "metrics": {"listing_version": 1}}
+    listing = {"title": "Edited", "bullets": ["A"], "search_terms": "x", "description": "y"}
+
+    with patch(
+        "aeo_api.routers.tasks._service.approve_task", new_callable=AsyncMock
+    ) as mock_approve:
+        mock_approve.return_value = completed
+        response = await client.post(
+            f"/api/v1/tasks/{task_id}/approve",
+            json={"listing": listing},
+        )
+    assert response.status_code == 200
+    mock_approve.assert_awaited_once()
+    call = mock_approve.await_args
+    assert call is not None
+    assert call.kwargs["listing"] == listing
 
 
 @pytest.mark.asyncio

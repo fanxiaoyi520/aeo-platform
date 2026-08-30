@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.db.models import get_db_session
 from aeo_api.schemas.tasks import (
+    ApproveTaskRequest,
     CreateTaskRequest,
     RejectTaskRequest,
     TaskListResponse,
@@ -71,9 +72,11 @@ async def approve_task(
     request: Request,
     task_id: UUID,
     session: DbSession,
+    body: ApproveTaskRequest | None = None,
 ) -> dict[str, Any] | JSONResponse:
     try:
-        data = await _service.approve_task(session, str(task_id))
+        listing = body.listing if body else None
+        data = await _service.approve_task(session, str(task_id), listing=listing)
     except TaskNotFoundError:
         return _error_response(request, ErrorCode.TASK_NOT_FOUND, 404)
     except TaskStateError:

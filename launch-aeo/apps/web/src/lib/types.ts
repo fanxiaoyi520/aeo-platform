@@ -41,6 +41,7 @@ export type Task = {
   status: string;
   product_info: Record<string, unknown>;
   trace: unknown[];
+  generated?: Record<string, unknown> | null;
   final_output: Record<string, unknown> | null;
   error_message: string | null;
   created_at: string | null;

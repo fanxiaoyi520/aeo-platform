@@ -33,8 +33,13 @@ class TaskStateError(Exception):
     pass
 
 
-def _serialize_task(task: Task, *, final_output: dict[str, Any] | None = None) -> dict[str, Any]:
-    return {
+def _serialize_task(
+    task: Task,
+    *,
+    final_output: dict[str, Any] | None = None,
+    generated: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
         "id": str(task.id),
         "sku": task.sku,
         "platform": task.platform,
@@ -47,6 +52,9 @@ def _serialize_task(task: Task, *, final_output: dict[str, Any] | None = None) -
         "created_at": task.created_at.isoformat() if task.created_at else None,
         "updated_at": task.updated_at.isoformat() if task.updated_at else None,
     }
+    if generated is not None:
+        payload["generated"] = generated
+    return payload
 
 
 class TaskService:
@@ -152,9 +160,17 @@ class TaskService:
     async def get_task(self, session: AsyncSession, task_id: str) -> dict[str, Any]:
         task = await self._get_task(session, task_id)
         snapshot = self._graph.get_state(task_thread_config(task_id))
-        final_output = snapshot.values.get("final_output") if snapshot.values else None
+        values = snapshot.values if snapshot.values else {}
+        final_output = values.get("final_output")
+        generated = values.get("generated")
+        status = task.status
+        if is_waiting_hitl(self._graph, task_id):
+            status = TaskStatus.WAITING_HITL
+        task.status = status
         return _serialize_task(
-            task, final_output=final_output if isinstance(final_output, dict) else None
+            task,
+            final_output=final_output if isinstance(final_output, dict) else None,
+            generated=generated if isinstance(generated, dict) else None,
         )
 
     async def list_tasks(
@@ -177,12 +193,21 @@ class TaskService:
         items = [_serialize_task(task) for task in result.scalars().all()]
         return {"items": items, "total": total, "page": page, "page_size": page_size}
 
-    async def approve_task(self, session: AsyncSession, task_id: str) -> dict[str, Any]:
+    async def approve_task(
+        self,
+        session: AsyncSession,
+        task_id: str,
+        *,
+        listing: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         task = await self._get_task(session, task_id)
         if task.status != TaskStatus.WAITING_HITL:
             raise TaskStateError("approve")
         if not is_waiting_hitl(self._graph, task_id):
             raise TaskStateError("approve")
+
+        if listing:
+            self._graph.update_state(task_thread_config(task_id), {"generated": listing})
 
         graph_state = await approve_hitl(self._graph, task_id)
         final_output = await self._sync_task_from_graph(

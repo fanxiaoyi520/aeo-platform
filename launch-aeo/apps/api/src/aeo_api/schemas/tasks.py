@@ -14,6 +14,10 @@ class RejectTaskRequest(BaseModel):
     feedback: str = Field(min_length=1, max_length=2000)
 
 
+class ApproveTaskRequest(BaseModel):
+    listing: dict[str, Any] | None = None
+
+
 class TaskResponse(BaseModel):
     id: str
     sku: str
@@ -22,6 +26,7 @@ class TaskResponse(BaseModel):
     status: str
     product_info: dict[str, Any]
     trace: list[Any]
+    generated: dict[str, Any] | None = None
     final_output: dict[str, Any] | None = None
     error_message: str | None = None
     created_at: str | None = None
