@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W7 — S5-07 完成；待批准 MS5；下一 S6-01  
-**Git：** `main` @ `e13e339`；PR #3 已合并（S5-07 + 批准 MS2）  
+**当前阶段：** W8 — MS5 已批准；下一 S6-01 生产加固  
+**Git：** `main` @ `aa2378f`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -30,7 +30,7 @@
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
-| 开功能分支 | `git checkout -b feat/s6-01-prod-compose`（下一任务，须先批准 MS5） |
+| 开功能分支 | `git checkout -b feat/s6-01-prod-compose`（下一任务） |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
 | 云端 CI | PR / push to `main` → GitHub Actions |
@@ -47,8 +47,8 @@
 | MS2 RAG 可用 | `completed` | W3 | 2026-08-30 |
 | MS3 Agent 核心 | `completed` | W4–W6 | 2026-08-30 |
 | MS4 浏览器调研 | `pending` | W7 | — |
-| MS5 运营工作台 | `in_progress` | W8–W9 | —（S5-07 完成，待批准 MS5） |
-| MS6 生产加固 | `blocked` | W10 | — |
+| MS5 运营工作台 | `completed` | W8–W9 | 2026-08-30 |
+| MS6 生产加固 | `pending` | W10 | — |
 | MS7 试点验收 | `blocked` | W11–W12 | — |
 
 ---
@@ -60,7 +60,7 @@
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `completed` | 100% | MS2 已批准（2026-08-30） |
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
-| M05 | 运营工作台 | `in_progress` | 100% | S5-01~07 ✅；待批准 MS5 |
+| M05 | 运营工作台 | `completed` | 100% | MS5 已批准（2026-08-30） |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
 
@@ -72,7 +72,7 @@
 |------|----------|---------------|------|
 | **Lane A** | MS2 已批准 | `infra/`、`scripts/dev-up*` | `idle` |
 | **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
-| **Lane D** | S5-07 MS5 验收完成，待批准 MS5 | `apps/web/`、`apps/api/`（验收测试） | `done` |
+| **Lane D** | MS5 已批准，Lane 空闲 | `apps/web/` | `idle` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
 ### Agent 认领规则
@@ -288,3 +288,4 @@
 | 2026-08-30 | docs: sync progress @ `52fe3ab` |
 | 2026-08-30 | **用户批准 MS2**：里程碑 `completed`；M02 关闭 |
 | 2026-08-30 | S5-07 merged：PR #3 MS5 验收；`main` @ `e13e339`；test.ps1 **70/70** |
+| 2026-08-30 | **用户批准 MS5**：里程碑 `completed`；MS6 解除阻塞 |
