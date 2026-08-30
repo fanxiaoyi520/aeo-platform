@@ -19,6 +19,7 @@ version = "0.1.0"
 source = { editable = "apps/api" }
 dependencies = [
     { name = "aeo-llm" },
+    { name = "aeo-orchestrator" },
     { name = "aeo-rag" },
     { name = "aeo-shared" },
     { name = "alembic" },
@@ -37,6 +38,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "aeo-llm", editable = "packages/llm" },
+    { name = "aeo-orchestrator", editable = "apps/orchestrator" },
     { name = "aeo-rag", editable = "packages/rag" },
     { name = "aeo-shared", editable = "packages/shared" },
     { name = "alembic", specifier = ">=1.13.0" },

@@ -13,7 +13,7 @@ from aeo_api.config import get_settings
 from aeo_api.db.redis import close_redis
 from aeo_api.logging_setup import setup_logging
 from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
-from aeo_api.routers import health, knowledge, metrics, root
+from aeo_api.routers import health, knowledge, metrics, root, tasks
 
 logger = structlog.get_logger(__name__)
 settings = get_settings()
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(knowledge.router)
     app.include_router(metrics.router)
+    app.include_router(tasks.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:

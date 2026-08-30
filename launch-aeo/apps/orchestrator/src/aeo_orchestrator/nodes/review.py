@@ -1,3 +1,4 @@
+from aeo_orchestrator.persistence import save_listing_version
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, TaskStatus, make_trace_event
 
 
@@ -20,11 +21,31 @@ async def human_review_node(state: TaskState) -> dict[str, object]:
 
 
 async def review_node(state: TaskState) -> dict[str, object]:
-    """review_agent — S3-07 will persist listing version."""
+    """review_agent — persist listing version and finalize task output."""
     generated = state.get("generated") or {}
-    event = make_trace_event("review_agent", AgentTraceStatus.COMPLETED)
+    compliance = state.get("compliance") or {}
+    persisted = await save_listing_version(state["task_id"], generated)
+    metrics = {
+        "degraded_mode": bool(state.get("degraded_mode", False)),
+        "retry_count": int(state.get("retry_count", 0)),
+        "compliance_passed": compliance.get("passed") if isinstance(compliance, dict) else None,
+        "listing_version": persisted.get("version"),
+    }
+    final_output = {
+        **generated,
+        "metrics": metrics,
+        "listing_version_id": persisted.get("id"),
+    }
+    event = make_trace_event(
+        "review_agent",
+        AgentTraceStatus.COMPLETED,
+        detail={
+            "listing_version": persisted.get("version"),
+            "persisted": persisted.get("persisted", True),
+        },
+    )
     return {
-        "final_output": generated,
+        "final_output": final_output,
         "status": TaskStatus.COMPLETED,
         "trace": [event],
     }

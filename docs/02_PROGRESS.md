@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W3 — MS2 待批准；MS3 S3-07 为下一任务  
-**Git：** `main` @ `8fcd85b`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
+**当前阶段：** W3 — MS2 待批准；下一 S3-08 MS3 验收  
+**Git：** `main` @ `e2a2a71`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -30,7 +30,7 @@
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
-| 开功能分支 | `git checkout -b feat/s3-07-review-agent`（下一任务） |
+| 开功能分支 | `git checkout -b feat/s3-08-ms3-acceptance`（下一任务） |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
 | 云端 CI | PR / push to `main` → GitHub Actions |
@@ -59,7 +59,7 @@
 |------|------|------|--------|------|
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
-| M03 | Agent 编排引擎 | `in_progress` | 75% | S3-01~06 ✅；下一 S3-07 |
+| M03 | Agent 编排引擎 | `in_progress` | 85% | S3-01~07 ✅；下一 S3-08 |
 | M05 | 运营工作台 | `in_progress` | 40% | S5-01/06 ✅；待 S5-02 |
 | M04 | 浏览器自动化 | `blocked` | 0% | MS3 后 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
@@ -71,7 +71,7 @@
 | 泳道 | 当前任务 | 包/目录所有权 | 状态 |
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
-| **Lane B** | S3-06 HITL + checkpoint 已完成 | `apps/orchestrator/`、`packages/shared`（只读优先） | `done` |
+| **Lane B** | S3-07 review + 任务 API 已完成 | `apps/orchestrator/`、`apps/api/` | `done` |
 | **Lane D** | S5-01 + S5-06 已完成 | `apps/web/` | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
@@ -99,6 +99,7 @@
 | S3-04 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:38 | generate_agent：Amazon/TikTok LLM 模板 + JSON 输出 |
 | S3-05 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-29 11:46 | compliance_agent：规则校验 + 自动修复 + generate 重试回路 |
 | S3-06 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-30 08:50 | HITL approve/reject + Postgres checkpoint 工厂 |
+| S3-07 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:00 | review_agent 持久化 ListingVersion + 任务 CRUD/HITL API |
 | S5-01 | D | 2 | 是 | S5-06 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | Next.js 14 + AppShell 布局 + 导航 |
 | S5-06 | D | 2 | 是 | S5-01 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | `/knowledge` 页 + API 代理对接 knowledge |
 | S2-05 | A/E | 9 | 否 | — | `M01-infrastructure.md` | `infra/`、`scripts/dev-up*` | `done` | 总控 | 2026-08-29 11:02 | Docker 三容器 healthy；`/ready` database+redis true；test.ps1 13/13 |
@@ -168,7 +169,7 @@
 | S3-04 | generate_agent | M03 | B | `completed` | S3-03 |
 | S3-05 | compliance_agent + 重试回路 | M03 | B | `completed` | S3-04 |
 | S3-06 | HITL 中断/恢复 + PostgreSQL checkpoint | M03 | B | `completed` | S3-05 |
-| S3-07 | review_agent + 任务 API | M03 | B | `in_progress` | S3-06 |
+| S3-07 | review_agent + 任务 API | M03 | B | `completed` | S3-06 |
 | S3-08 | MS3 验收（CLI + API 演示） | M03 | B | `pending` | S3-01~07 |
 
 ### Sprint 5 — 浏览器自动化（MS4）

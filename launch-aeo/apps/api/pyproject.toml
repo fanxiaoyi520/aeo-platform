@@ -6,6 +6,7 @@ dependencies = [
     "aeo-shared",
     "aeo-llm",
     "aeo-rag",
+    "aeo-orchestrator",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.30.0",
     "sqlalchemy[asyncio]>=2.0.35",
@@ -23,6 +24,7 @@ dependencies = [
 aeo-shared = { workspace = true }
 aeo-llm = { workspace = true }
 aeo-rag = { workspace = true }
+aeo-orchestrator = { workspace = true }
 
 [build-system]
 requires = ["setuptools>=68"]
