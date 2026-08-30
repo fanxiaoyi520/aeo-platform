@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W10 — S6-02 已完成；下一 **S6-03** 日志脱敏与审计日志  
-**Git：** `main` @ `af2a176`  
+**当前阶段：** W10 — S6-03 已完成；下一 **S6-04** 核心模块测试补齐  
+**Git：** `main` @ `1e4d9f9`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -205,7 +205,7 @@
 |----|------|------|------|------|
 | S6-01 | prod Docker Compose profile | M06 | `completed` | MS5 |
 | S6-02 | 认证与 API 限流 | M06 | `completed` | S6-01 |
-| S6-03 | 日志脱敏与审计日志 | M06/M07 | `pending` | S6-01 |
+| S6-03 | 日志脱敏与审计日志 | M06/M07 | `completed` | S6-01 |
 | S6-04 | 核心模块测试补齐（≥70%） | ALL | `pending` | MS5 |
 | S6-05 | 部署文档 + 演示脚本 | M06 | `pending` | S6-01~04 |
 | S6-06 | MS6 验收 | ALL | `pending` | S6-01~05 |
@@ -221,16 +221,16 @@
 
 ---
 
-## 管理岗 Phase 2 — 生产商业级扩展（独立线，未开启）
+## 管理岗 Phase 2 — 生产商业级扩展（**已批准**，MV1 待 MS7）
 
-> **非当前执行来源。** 自 `Desktop/111` 管理岗 JD 提炼；**生产商业级交付计划**（非远景/demo）；状态 `ON_HOLD`。
+> Phase 2 计划 **已 `APPROVED`**（2026-08-30）。MV1 编码仍 blocked，须 **MS7 通过 + SP-API 确认**。
 
-| 文档 | 说明 |
+| 文档 | 状态 |
 |------|------|
-| [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | Phase 2 生产目标、SLA、六类 Agent、MV0–MV5（约 11–14 个月） |
-| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | 89 项任务；终验：替代率 ≥40%、ROI ≥ 人工 p50 |
+| [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | `APPROVED` — 生产商业级 Phase 2 |
+| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | MV0 ✅；MV1–MV5 blocked |
 
-**开启口令：** 「批准 MV 计划」或「开启 MV 生产计划」— **须 MS7 生产验收通过后**再开。
+**当前主执行：** Phase 1 `02_PROGRESS`（MS6 进行中）→ 完成后 MS7 → 再开 MV1。
 
 ---
 
@@ -291,3 +291,4 @@
 | 2026-08-30 | **用户批准 MS5**：里程碑 `completed`；MS6 解除阻塞 |
 | 2026-08-30 | S6-01 merged：PR #4 prod compose + web Dockerfile + prod-up/down；test.ps1 **75/75**；CI ✅ |
 | 2026-08-30 | S6-02 merged：PR #5 rate limit + CORS + prod key guard；test.ps1 **80/80**；CI ✅ |
+| 2026-08-30 | S6-03 merged：PR #6 log redaction + audit API；test.ps1 **88/88**；CI ✅ |
