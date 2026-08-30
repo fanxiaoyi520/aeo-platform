@@ -79,7 +79,7 @@ export default function TaskDetailPage() {
   }, [taskId]);
 
   const status = task ? formatTaskStatus(task.status) : null;
-  const previewOutput = task?.final_output ?? null;
+  const previewOutput = task?.final_output ?? task?.generated ?? null;
 
   const timelineEvents = useMemo(() => {
     const initial =
@@ -159,9 +159,14 @@ export default function TaskDetailPage() {
             </div>
 
             {task.status === "waiting_hitl" ? (
-              <div className="card border-amber-200 bg-amber-50 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
-                任务已暂停，等待人工审核。批准/驳回操作将在 S5-04 审核页提供；当前可用 Swagger
-                或 API 调用。
+              <div className="card space-y-3 border-amber-200 bg-amber-50 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+                <p>任务已暂停，等待人工审核 Listing 草稿。</p>
+                <Link
+                  href={`/tasks/${task.id}/review`}
+                  className="btn-primary inline-flex w-full justify-center"
+                >
+                  去审核
+                </Link>
               </div>
             ) : null}
 
