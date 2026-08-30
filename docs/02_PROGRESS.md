@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W6 — MS3 ✅ 已批准；MS2 待批准；下一 S5-02 任务页  
-**Git：** `main` @ `e0db969`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
+**当前阶段：** W6 — 下一 S5-03 Agent Trace  
+**Git：** `main` @ `7f9f2fb`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -30,7 +30,7 @@
 | 初始化（一次性） | `git init` ✅ 已完成 |
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
-| 开功能分支 | `git checkout -b feat/s5-02-task-pages`（下一任务） |
+| 开功能分支 | `git checkout -b feat/s5-03-task-trace`（下一任务） |
 | 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
 | 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
 | 云端 CI | PR / push to `main` → GitHub Actions |
@@ -60,7 +60,7 @@
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
-| M05 | 运营工作台 | `in_progress` | 40% | S5-01/06 ✅；下一 S5-02 |
+| M05 | 运营工作台 | `in_progress` | 55% | S5-01/02/06 ✅；下一 S5-03 |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
 
@@ -72,7 +72,7 @@
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
 | **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
-| **Lane D** | S5-01 + S5-06 已完成 | `apps/web/` | `done` |
+| **Lane D** | S5-02 任务页已完成 | `apps/web/` | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
 ### Agent 认领规则
@@ -102,6 +102,7 @@
 | S3-07 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/`、`apps/api/` | `done` | 总控 | 2026-08-30 09:00 | review_agent 持久化 ListingVersion + 任务 CRUD/HITL API |
 | S3-08 | B | 1 | 否 | — | `M03-agent-orchestration.md` | `apps/orchestrator/` | `done` | 总控 | 2026-08-30 09:05 | CLI `aeo-orchestrate run` + MS3 验收测试 6 项 |
 | S5-01 | D | 2 | 是 | S5-06 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | Next.js 14 + AppShell 布局 + 导航 |
+| S5-02 | D | 2 | 是 | — | `M05-frontend-workbench.md` | `apps/web/` | `done` | 总控 | 2026-08-30 09:10 | `/tasks` 列表 + `/tasks/new` 创建 + BFF 代理 |
 | S5-06 | D | 2 | 是 | S5-01 | `M05-frontend-workbench.md` | `apps/web/` | `done` | 工人-D | 2026-08-29 11:08 | `/knowledge` 页 + API 代理对接 knowledge |
 | S2-05 | A/E | 9 | 否 | — | `M01-infrastructure.md` | `infra/`、`scripts/dev-up*` | `done` | 总控 | 2026-08-29 11:02 | Docker 三容器 healthy；`/ready` database+redis true；test.ps1 13/13 |
 
@@ -187,7 +188,7 @@
 | ID | 任务 | 模块 | Lane | 状态 | 依赖 |
 |----|------|------|------|------|------|
 | S5-01 | Next.js 项目初始化 + 布局 | M05 | D | `completed` | MS1（并行；布局/mock，不等 MS3） |
-| S5-02 | 任务创建与列表页 | M05 | D | `pending` | S5-01 + MS3 任务 API |
+| S5-02 | 任务创建与列表页 | M05 | D | `completed` | S5-01 + MS3 任务 API |
 | S5-03 | Agent Trace 实时展示（SSE） | M05 | D | `pending` | S5-02 |
 | S5-04 | HITL 审核页 | M05 | D | `pending` | S5-03 |
 | S5-05 | Listing 结果导出 | M05 | D | `pending` | S5-04 |
@@ -263,3 +264,4 @@
 | 2026-08-30 | S3-07 completed：review_agent + 任务 API；test.ps1 **41/41** 全绿 |
 | 2026-08-30 | S3-08 completed：CLI + MS3 验收测试；test.ps1 **47/47** 全绿 |
 | 2026-08-30 | **用户批准 MS3**：里程碑 `completed`；M04/MS4 解除阻塞 |
+| 2026-08-30 | S5-02 completed：任务列表/创建页 + `/api/tasks` BFF；web typecheck/lint ✅ |
