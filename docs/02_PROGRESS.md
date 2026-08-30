@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W6 — 下一 S5-07 MS5 验收  
-**Git：** `feat/s5-05-listing-export`（待 merge PR）；`main` @ `14759df`  
+**Git：** `main` @ `bc780aa`；PR #2 已合并（S5-05）  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -72,7 +72,7 @@
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
 | **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
-| **Lane D** | S5-05 Listing 导出已完成（待 merge） | `apps/web/` | `done` |
+| **Lane D** | S5-05 已合并，下一 S5-07 | `apps/web/` | `idle` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
 ### Agent 认领规则
@@ -220,6 +220,19 @@
 
 ---
 
+## 管理岗愿景（独立线，未开启）
+
+> **非当前执行来源。** 自 `Desktop/111` 管理岗 JD 提炼；状态 `ON_HOLD`，待用户决定是否开启。
+
+| 文档 | 说明 |
+|------|------|
+| [`10_MANAGER_VISION_PLAN.md`](10_MANAGER_VISION_PLAN.md) | 需求、六类 Agent、MV0–MV5 里程碑（约 11–14 个月） |
+| [`10_MANAGER_VISION_PROGRESS.md`](10_MANAGER_VISION_PROGRESS.md) | 89 项任务进度表（当前 0%） |
+
+**开启口令：** 「批准 MV 计划」或「开启管理岗愿景」— 推荐 Launch AEO MS7 完成后再开。
+
+---
+
 ## 用户口令速查（总控对话）
 
 | 说 | 效果 |
@@ -270,4 +283,4 @@
 | 2026-08-30 | S5-02 completed：任务列表/创建页 + `/api/tasks` BFF；web typecheck/lint ✅ |
 | 2026-08-30 | S5-03 completed：SSE `/api/v1/tasks/{id}/events` + Trace 时间线；test.ps1 **48/48** |
 | 2026-08-30 | S5-04 merged：PR #1 HITL 审核页；`main` @ `14759df`；CI ✅ |
-| 2026-08-30 | S5-05 completed：`/tasks/{id}/result` 复制 + JSON/CSV 导出；test.ps1 **50/50** |
+| 2026-08-30 | S5-05 merged：PR #2 Listing 导出页；`main` @ `bc780aa`；CI ✅ |
