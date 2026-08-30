@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W7 — S5-07 完成；待批准 MS5；下一 S6-01  
-**Git：** `main` @ `52fe3ab`；S5-07 待 merge（`feat/s5-07-ms5-acceptance`）  
+**Git：** `main` @ `e13e339`；PR #3 已合并（S5-07 + 批准 MS2）  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -287,4 +287,4 @@
 | 2026-08-30 | S5-05 merged：PR #2 Listing 导出页；`main` @ `bc780aa`；CI ✅ |
 | 2026-08-30 | docs: sync progress @ `52fe3ab` |
 | 2026-08-30 | **用户批准 MS2**：里程碑 `completed`；M02 关闭 |
-| 2026-08-30 | S5-07 completed：MS5 验收测试 + 报告；待「批准 MS5」 |
+| 2026-08-30 | S5-07 merged：PR #3 MS5 验收；`main` @ `e13e339`；test.ps1 **70/70** |
