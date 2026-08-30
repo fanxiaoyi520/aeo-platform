@@ -5,9 +5,9 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-08-29  
-**当前阶段：** W3 — MS2 待批准；MS3 S3-06 为下一任务  
-**Git：** `main` @ `cec3b5d`；当前分支 `feat/s3-05-compliance-agent`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
+**最后更新：** 2026-08-30  
+**当前阶段：** W3 — MS2 待批准；MS3 S3-07 为下一任务  
+**Git：** `main` @ `8fcd85b`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
