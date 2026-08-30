@@ -1,8 +1,10 @@
-from typing import Any
+from typing import Annotated, Any
 
 from aeo_shared.responses import success_response
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from aeo_api.db.models import get_db_session
 from aeo_api.schemas.knowledge import (
     KnowledgeReindexResponse,
     KnowledgeSearchRequest,
@@ -10,10 +12,13 @@ from aeo_api.schemas.knowledge import (
     KnowledgeSearchResultItem,
     KnowledgeStatsResponse,
 )
+from aeo_api.services.audit_service import AuditService
 from aeo_api.services.knowledge_service import KnowledgeService
 
 router = APIRouter(prefix="/api/v1/knowledge", tags=["knowledge"])
 _service = KnowledgeService()
+_audit = AuditService()
+DbSession = Annotated[AsyncSession, Depends(get_db_session)]
 
 
 @router.post("/search")
@@ -56,8 +61,14 @@ async def knowledge_stats(request: Request) -> dict[str, Any]:
 
 
 @router.post("/reindex")
-async def reindex_knowledge(request: Request) -> dict[str, Any]:
+async def reindex_knowledge(request: Request, session: DbSession) -> dict[str, Any]:
     result = _service.reindex(reset=True)
+    await _audit.record(
+        session,
+        action="knowledge_reindex",
+        detail={"reset": True, **result},
+    )
+    await session.commit()
     return success_response(
         KnowledgeReindexResponse(**result).model_dump(),
         request.state.request_id,

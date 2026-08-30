@@ -1,7 +1,18 @@
 import logging
 import sys
+from collections.abc import MutableMapping
+from typing import Any, cast
 
 import structlog
+from aeo_shared.redaction import redact_value
+
+
+def _redact_sensitive_fields(
+    _logger: logging.Logger,
+    _method_name: str,
+    event_dict: MutableMapping[str, Any],
+) -> MutableMapping[str, Any]:
+    return cast(MutableMapping[str, Any], redact_value(dict(event_dict)))
 
 
 def setup_logging(debug: bool = False) -> None:
@@ -12,6 +23,7 @@ def setup_logging(debug: bool = False) -> None:
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.StackInfoRenderer(),
+        _redact_sensitive_fields,
     ]
 
     if debug:
