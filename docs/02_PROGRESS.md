@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W11 — S7-03 已完成；下一 **S7-04** MS7 验收  
-**Git：** `main` @ `bb20a6a`  
+**当前阶段：** W11–W12 — S7-04 已完成；**MS7 待用户批准**  
+**Git：** `main` @ `320f8f0`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -63,7 +63,7 @@
 | M05 | 运营工作台 | `completed` | 100% | MS5 已批准（2026-08-30） |
 | M06 | 部署与安全 | `completed` | 100% | MS6 已批准（2026-08-30） |
 | M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
-| M07 | 可观测与商业指标 | `in_progress` | 60% | S7-03 报告 + 演示脚本完成 |
+| M07 | 可观测与商业指标 | `completed` | 100% | MS7 试点指标路径完成（仪表盘 Phase 2） |
 
 ---
 
@@ -218,7 +218,7 @@
 | S7-01 | 准备 20 个元征 SKU 测试集 | — | `completed` | MS6 |
 | S7-02 | 批量运行并记录指标 | M07 | `completed` | S7-01 |
 | S7-03 | 试点报告 + 10 分钟演示视频 | — | `completed` | S7-02 |
-| S7-04 | MS7 验收 | ALL | `pending` | S7-01~03 |
+| S7-04 | MS7 验收 | ALL | `completed` | S7-01~03 |
 
 ---
 
@@ -303,3 +303,4 @@
 | 2026-08-30 | S7-02 merged：PR #11 batch pilot；test.ps1 **151/151**；CI ✅ |
 | 2026-08-30 | S7-03：试点报告模板 + generate_pilot_report + 演示脚本 |
 | 2026-08-30 | S7-03 merged：PR #12 pilot report + demo script；test.ps1 **160/160**；CI ✅ |
+| 2026-08-30 | S7-04：MS7 验收报告 + `test_ms7_acceptance.py`；MS7 待用户批准 |
