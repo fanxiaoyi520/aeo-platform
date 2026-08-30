@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W11–W12 — S7-04 已完成；**MS7 待用户批准**  
-**Git：** `main` @ `320f8f0`  
+**Git：** `main` @ `a025f61`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -304,3 +304,4 @@
 | 2026-08-30 | S7-03：试点报告模板 + generate_pilot_report + 演示脚本 |
 | 2026-08-30 | S7-03 merged：PR #12 pilot report + demo script；test.ps1 **160/160**；CI ✅ |
 | 2026-08-30 | S7-04：MS7 验收报告 + `test_ms7_acceptance.py`；MS7 待用户批准 |
+| 2026-08-30 | S7-04 merged：PR #13 MS7 acceptance；test.ps1 **169/169**；CI ✅ |
