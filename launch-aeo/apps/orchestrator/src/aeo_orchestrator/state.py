@@ -44,6 +44,7 @@ class TaskState(TypedDict, total=False):
     generated: dict[str, Any] | None
     compliance: dict[str, Any] | None
     human_feedback: str | None
+    hitl_decision: Literal["approve", "reject"] | None
     final_output: dict[str, Any] | None
     retry_count: int
     degraded_mode: bool
@@ -85,6 +86,7 @@ def initial_state(
         generated=None,
         compliance=None,
         human_feedback=None,
+        hitl_decision=None,
         final_output=None,
         retry_count=0,
         degraded_mode=False,

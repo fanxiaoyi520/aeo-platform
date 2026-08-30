@@ -1,15 +1,18 @@
-"""LangGraph state graph — S3-01 skeleton; checkpoint wiring in S3-06."""
+"""LangGraph state graph — S3-06 HITL routing + pluggable checkpointer."""
 
 from __future__ import annotations
 
-from langgraph.checkpoint.memory import MemorySaver
+from typing import Any
+
+from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
+from aeo_orchestrator.checkpoint import create_memory_checkpointer
 from aeo_orchestrator.nodes.compliance import compliance_node, route_after_compliance
 from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.research import research_node
-from aeo_orchestrator.nodes.review import human_review_node, review_node
+from aeo_orchestrator.nodes.review import human_review_node, review_node, route_after_human_review
 from aeo_orchestrator.nodes.rules import rules_node
 from aeo_orchestrator.state import TaskState
 
@@ -17,9 +20,9 @@ HUMAN_REVIEW_NODE = "human_review"
 
 
 def build_graph(
-    *, checkpointer: MemorySaver | None = None
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
 ) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
-    """Compile the listing-generation graph with optional in-memory checkpoint."""
+    """Compile the listing-generation graph with optional checkpoint backend."""
     builder = StateGraph(TaskState)
 
     builder.add_node("research", research_node)
@@ -38,10 +41,14 @@ def build_graph(
         route_after_compliance,
         {"generate": "generate", "human_review": HUMAN_REVIEW_NODE},
     )
-    builder.add_edge(HUMAN_REVIEW_NODE, "review")
+    builder.add_conditional_edges(
+        HUMAN_REVIEW_NODE,
+        route_after_human_review,
+        {"generate": "generate", "review": "review"},
+    )
     builder.add_edge("review", END)
 
-    memory = checkpointer or MemorySaver()
+    memory = checkpointer or create_memory_checkpointer()
     return builder.compile(
         checkpointer=memory,
         interrupt_before=[HUMAN_REVIEW_NODE],

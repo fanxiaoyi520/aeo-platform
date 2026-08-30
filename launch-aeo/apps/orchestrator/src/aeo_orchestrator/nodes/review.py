@@ -1,14 +1,22 @@
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, TaskStatus, make_trace_event
 
 
+def route_after_human_review(state: TaskState) -> str:
+    if state.get("hitl_decision") == "reject":
+        return "generate"
+    return "review"
+
+
 async def human_review_node(state: TaskState) -> dict[str, object]:
-    """HITL placeholder — graph interrupts before this node (S3-06)."""
+    """HITL node — graph interrupts before this node; resume via hitl.approve/reject."""
+    decision = state.get("hitl_decision") or "approve"
     event = make_trace_event(
         "human_review",
-        AgentTraceStatus.STARTED,
-        detail={"awaiting": "approve_or_reject"},
+        AgentTraceStatus.COMPLETED,
+        detail={"decision": decision},
     )
-    return {"status": TaskStatus.WAITING_HITL, "trace": [event]}
+    status = TaskStatus.RUNNING if decision == "reject" else TaskStatus.WAITING_HITL
+    return {"status": status, "trace": [event]}
 
 
 async def review_node(state: TaskState) -> dict[str, object]:

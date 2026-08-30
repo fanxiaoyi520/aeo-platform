@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from aeo_llm.provider import LLMResponse
 from aeo_orchestrator import build_graph, initial_state
+from aeo_orchestrator.hitl import approve_hitl
 from aeo_orchestrator.state import TaskStatus
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import MemorySaver
@@ -72,7 +73,7 @@ async def test_graph_resumes_after_hitl() -> None:
 
     with patch("aeo_orchestrator.nodes.generate.get_llm_provider", return_value=mock_provider):
         await graph.ainvoke(state, config=config)
-        resumed = await graph.ainvoke(None, config=config)
+        resumed = await approve_hitl(graph, "task-2")
 
     assert resumed["status"] == TaskStatus.COMPLETED
     assert resumed["final_output"] is not None
