@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W11 — S7-01 已完成；下一 **S7-02** 批量跑批  
-**Git：** `main` @ `baeeea4`  
+**Git：** `main` @ `f908f0f`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -298,3 +298,4 @@
 | 2026-08-30 | S6-06 merged：PR #9 MS6 验收报告 + acceptance tests；test.ps1 **126/126**；CI ✅ |
 | 2026-08-30 | **用户批准 MS6**：里程碑 `completed`；MS7 解除阻塞；下一 **S7-01** |
 | 2026-08-30 | S7-01：20 元征 SKU 测试集 JSON + 文档；test.ps1 **143/143** |
+| 2026-08-30 | S7-01 merged：PR #10 pilot testset；test.ps1 **143/143**；CI ✅ |
