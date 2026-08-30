@@ -120,13 +120,17 @@ function Invoke-DockerCompose {
         [Parameter(Mandatory = $true)]
         [string]$ComposeFile,
         [Parameter(Mandatory = $true)]
-        [string[]]$Arguments
+        [string[]]$Arguments,
+        [string]$EnvFile = $null
     )
     $root = Get-ProjectRoot
     if (Test-DockerCli) {
         Push-Location $root
         try {
-            docker compose -f $ComposeFile @Arguments
+            $composeArgs = @("compose")
+            if ($EnvFile) { $composeArgs += @("--env-file", $EnvFile) }
+            $composeArgs += @("-f", $ComposeFile) + $Arguments
+            docker @composeArgs
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         } finally {
             Pop-Location
@@ -135,7 +139,12 @@ function Invoke-DockerCompose {
     }
     if (Test-WslDockerCli) {
         $relFile = $ComposeFile -replace "\\", "/"
-        $allArgs = @("compose", "-f", $relFile) + $Arguments
+        $allArgs = @("compose")
+        if ($EnvFile) {
+            $relEnv = $EnvFile -replace "\\", "/"
+            $allArgs += @("--env-file", $relEnv)
+        }
+        $allArgs += @("-f", $relFile) + $Arguments
         Invoke-WslDocker -Arguments $allArgs
         return
     }

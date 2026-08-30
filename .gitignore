@@ -11,6 +11,7 @@ Thumbs.db
 launch-aeo/.env
 launch-aeo/.env.*
 !launch-aeo/.env.example
+!launch-aeo/.env.prod.example
 launch-aeo/.venv/
 launch-aeo/**/__pycache__/
 launch-aeo/**/*.py[cod]

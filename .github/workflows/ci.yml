@@ -54,3 +54,11 @@ jobs:
       - name: Docker build
         working-directory: launch-aeo
         run: docker compose -f infra/compose/docker-compose.dev.yml build api
+
+      - name: Validate prod compose
+        working-directory: launch-aeo
+        run: docker compose --env-file .env.prod.example -f infra/compose/docker-compose.prod.yml config
+
+      - name: Docker build prod images
+        working-directory: launch-aeo
+        run: docker compose --env-file .env.prod.example -f infra/compose/docker-compose.prod.yml build api web
