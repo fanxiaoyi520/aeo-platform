@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W8 — MS5 已批准；下一 S6-01 生产加固  
-**Git：** `main` @ `aa2378f`  
+**Git：** `main` @ `757f936`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
