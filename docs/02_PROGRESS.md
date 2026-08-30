@@ -7,7 +7,7 @@
 
 **最后更新：** 2026-08-30  
 **当前阶段：** W3 — MS2 待批准；下一 S3-08 MS3 验收  
-**Git：** `main` @ `e2a2a71`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
+**Git：** `main` @ `efe4258`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
