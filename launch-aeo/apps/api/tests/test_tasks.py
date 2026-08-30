@@ -14,6 +14,7 @@ os.environ.setdefault("LLM_API_KEY", "test-key")
 os.environ.setdefault("EMBED_BASE_URL", "https://api.openai.com/v1")
 os.environ.setdefault("EMBED_API_KEY", "test-key")
 os.environ.setdefault("AUTH_API_KEY", "dev-api-key-change-in-production")
+API_KEY = os.environ["AUTH_API_KEY"]
 
 from aeo_api.main import app  # noqa: E402
 
@@ -21,7 +22,7 @@ from aeo_api.main import app  # noqa: E402
 @pytest.fixture
 async def client() -> AsyncGenerator[AsyncClient, None]:
     transport = ASGITransport(app=app)
-    headers = {"Authorization": "Bearer dev-api-key-change-in-production"}
+    headers = {"Authorization": f"Bearer {API_KEY}"}
     async with AsyncClient(transport=transport, base_url="http://test", headers=headers) as ac:
         yield ac
 
