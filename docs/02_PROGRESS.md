@@ -6,7 +6,7 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W11 — **MS6 已批准**；下一 **S7-01** 元征 SKU 测试集  
+**当前阶段：** W11 — S7-01 已完成；下一 **S7-02** 批量跑批  
 **Git：** `main` @ `baeeea4`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
@@ -215,7 +215,7 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| S7-01 | 准备 20 个元征 SKU 测试集 | — | `pending` | MS6 |
+| S7-01 | 准备 20 个元征 SKU 测试集 | — | `completed` | MS6 |
 | S7-02 | 批量运行并记录指标 | M07 | `pending` | S7-01 |
 | S7-03 | 试点报告 + 10 分钟演示视频 | — | `pending` | S7-02 |
 | S7-04 | MS7 验收 | ALL | `pending` | S7-01~03 |
@@ -297,3 +297,4 @@
 | 2026-08-30 | S6-05 merged：PR #8 DEPLOYMENT.md + backup/demo scripts；test.ps1 **106/106**；CI ✅ |
 | 2026-08-30 | S6-06 merged：PR #9 MS6 验收报告 + acceptance tests；test.ps1 **126/126**；CI ✅ |
 | 2026-08-30 | **用户批准 MS6**：里程碑 `completed`；MS7 解除阻塞；下一 **S7-01** |
+| 2026-08-30 | S7-01：20 元征 SKU 测试集 JSON + 文档；test.ps1 **143/143** |
