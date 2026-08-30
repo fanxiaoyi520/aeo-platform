@@ -15,6 +15,7 @@ services:
       retries: 5
     networks:
       - aeo-internal
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -35,6 +36,7 @@ services:
       retries: 5
     networks:
       - aeo-internal
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -56,6 +58,13 @@ services:
       DB_URL: postgresql+asyncpg://aeo:${POSTGRES_PASSWORD:-aeo_prod_password}@postgres:5432/aeo
       DB_URL_SYNC: postgresql+psycopg://aeo:${POSTGRES_PASSWORD:-aeo_prod_password}@postgres:5432/aeo
       REDIS_URL: redis://redis:6379/0
+      CHROMA_PATH: data/chroma
+      KNOWLEDGE_PATH: knowledge
+      RAG_USE_HASH_EMBEDDINGS: "true"
+      RAG_SCORE_THRESHOLD: "0.0"
+    volumes:
+      - ../../knowledge:/app/knowledge:ro
+      - chroma_data:/app/data/chroma
     ports:
       - "8000:8000"
     depends_on:
@@ -71,6 +80,7 @@ services:
       start_period: 20s
     networks:
       - aeo-internal
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -79,6 +89,38 @@ services:
         reservations:
           memory: 1G
 
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.web
+    container_name: aeo-web-prod
+    env_file:
+      - ../../.env.prod
+    environment:
+      NODE_ENV: production
+      API_BASE_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - aeo-internal
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+        reservations:
+          memory: 256M
+
 networks:
   aeo-internal:
     driver: bridge
@@ -86,3 +128,4 @@ networks:
 volumes:
   pg_data:
   redis_data:
+  chroma_data:

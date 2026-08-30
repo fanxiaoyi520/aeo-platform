@@ -19,6 +19,7 @@ COPY packages/shared/src packages/shared/src
 COPY packages/llm/src packages/llm/src
 COPY packages/rag/src packages/rag/src
 COPY knowledge knowledge
+COPY scripts/ingest_knowledge.py scripts/
 
 RUN uv sync --frozen --package aeo-api --no-dev
 
