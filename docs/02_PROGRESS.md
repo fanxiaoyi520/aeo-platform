@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W10 — S6-01 已完成；下一 **S6-02** 认证与 API 限流  
-**Git：** `main` @ `087aa2d`  
+**当前阶段：** W10 — S6-02 已完成；下一 **S6-03** 日志脱敏与审计日志  
+**Git：** `main` @ `af2a176`  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -204,7 +204,7 @@
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
 | S6-01 | prod Docker Compose profile | M06 | `completed` | MS5 |
-| S6-02 | 认证与 API 限流 | M06 | `pending` | S6-01 |
+| S6-02 | 认证与 API 限流 | M06 | `completed` | S6-01 |
 | S6-03 | 日志脱敏与审计日志 | M06/M07 | `pending` | S6-01 |
 | S6-04 | 核心模块测试补齐（≥70%） | ALL | `pending` | MS5 |
 | S6-05 | 部署文档 + 演示脚本 | M06 | `pending` | S6-01~04 |
@@ -290,3 +290,4 @@
 | 2026-08-30 | S5-07 merged：PR #3 MS5 验收；`main` @ `e13e339`；test.ps1 **70/70** |
 | 2026-08-30 | **用户批准 MS5**：里程碑 `completed`；MS6 解除阻塞 |
 | 2026-08-30 | S6-01 merged：PR #4 prod compose + web Dockerfile + prod-up/down；test.ps1 **75/75**；CI ✅ |
+| 2026-08-30 | S6-02 merged：PR #5 rate limit + CORS + prod key guard；test.ps1 **80/80**；CI ✅ |
