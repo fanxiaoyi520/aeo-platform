@@ -5,7 +5,7 @@
 | **模块 ID** | M03 |
 | **优先级** | P0 |
 | **里程碑** | MS3（W4–W6） |
-| **状态** | `blocked` |
+| **状态** | `completed` |
 | **依赖** | M01, M02 |
 
 ---
@@ -90,12 +90,12 @@ class TaskState(TypedDict):
 
 ## 4. 交付物
 
-- [ ] LangGraph 状态图定义（`apps/orchestrator/graph.py`）
-- [ ] 5 个 Agent 节点实现
-- [ ] PostgreSQL Checkpointer 集成
-- [ ] 任务 API：创建、查询、SSE 事件流、HITL 操作
-- [ ] CLI：`python -m apps.orchestrator.cli run --sku X431 ...`
-- [ ] 单元测试：各 Agent mock 测试 + 图集成测试
+- [x] LangGraph 状态图定义（`apps/orchestrator/graph.py`）
+- [x] 5 个 Agent 节点实现
+- [x] PostgreSQL Checkpointer 集成
+- [x] 任务 API：创建、查询、HITL 操作（SSE 事件流属 S5-03）
+- [x] CLI：`uv run aeo-orchestrate run --sku X431 ...`
+- [x] 单元测试：各 Agent mock 测试 + 图集成测试
 
 ## 5. 可靠性规范
 

@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-08-30  
-**当前阶段：** W3 — MS2/MS3 待批准；下一 S5-02 任务页  
-**Git：** `main` @ `22c653a`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
+**当前阶段：** W6 — MS3 ✅ 已批准；MS2 待批准；下一 S5-02 任务页  
+**Git：** `main` @ `e0db969`；远程 [fanxiaoyi520/launch-aeo](https://github.com/fanxiaoyi520/launch-aeo)  
 **CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
 
 ---
@@ -45,8 +45,8 @@
 | MS0 计划批准 | `completed` | W0 | 2026-08-29 |
 | MS1 工程底座 | `completed` | W1–W2 | 2026-08-29 |
 | MS2 RAG 可用 | `in_progress` | W3 | — |
-| MS3 Agent 核心 | `in_progress` | W4–W6 | — |
-| MS4 浏览器调研 | `blocked` | W7 | — |
+| MS3 Agent 核心 | `completed` | W4–W6 | 2026-08-30 |
+| MS4 浏览器调研 | `pending` | W7 | — |
 | MS5 运营工作台 | `in_progress` | W8–W9 | — |
 | MS6 生产加固 | `blocked` | W10 | — |
 | MS7 试点验收 | `blocked` | W11–W12 | — |
@@ -59,9 +59,9 @@
 |------|------|------|--------|------|
 | M01 | 基础设施与工程化 | `completed` | 100% | — |
 | M02 | RAG 知识库 | `in_progress` | 100% | S2-05 完成，待批准 MS2 |
-| M03 | Agent 编排引擎 | `in_progress` | 100% | S3-01~08 ✅；待批准 MS3 |
-| M05 | 运营工作台 | `in_progress` | 40% | S5-01/06 ✅；待 S5-02 |
-| M04 | 浏览器自动化 | `blocked` | 0% | MS3 后 |
+| M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
+| M05 | 运营工作台 | `in_progress` | 40% | S5-01/06 ✅；下一 S5-02 |
+| M04 | 浏览器自动化 | `pending` | 0% | MS3 已解除阻塞，待 S4-01 |
 | M07 | 可观测与商业指标 | `blocked` | 0% | — |
 
 ---
@@ -71,7 +71,7 @@
 | 泳道 | 当前任务 | 包/目录所有权 | 状态 |
 |------|----------|---------------|------|
 | **Lane A** | S2-05 已完成，待批准 MS2 | `infra/`、`scripts/dev-up*` | `done` |
-| **Lane B** | S3-08 MS3 验收已完成 | `apps/orchestrator/`、`apps/api/` | `done` |
+| **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
 | **Lane D** | S5-01 + S5-06 已完成 | `apps/web/` | `done` |
 | **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
 
@@ -260,3 +260,6 @@
 | 2026-08-29 | **进阶档**：PR 模板、Issue 模板、commit 规范；工作流改为 Spec → PR → merge |
 | 2026-08-29 | S3-05 completed：compliance_agent 校验/自动修复/重试回路；test.ps1 **29/29** 全绿 |
 | 2026-08-30 | S3-06 completed：HITL approve/reject + Postgres checkpoint；test.ps1 **35/35** 全绿 |
+| 2026-08-30 | S3-07 completed：review_agent + 任务 API；test.ps1 **41/41** 全绿 |
+| 2026-08-30 | S3-08 completed：CLI + MS3 验收测试；test.ps1 **47/47** 全绿 |
+| 2026-08-30 | **用户批准 MS3**：里程碑 `completed`；M04/MS4 解除阻塞 |
