@@ -1,6 +1,6 @@
 # 管理岗 — 生产商业级扩展进度表（Phase 2 Progress）
 
-> **Phase 2 执行来源（已批准）。** MV1 业务编码仍 **blocked**，须 **MV0-02（SP-API）** 确认；Launch AEO **MS7 已于 2026-08-30 批准**。  
+> **Phase 2 执行来源（已批准）。** MV1 业务编码仍 **blocked**，须 **MV0-02（SP-API）** 确认；AEO Platform **MS7 已于 2026-08-30 批准**。  
 > **Phase 1：** [`02_PROGRESS.md`](02_PROGRESS.md) — **MS0~MS7 全部 completed**  
 > **计划性质：** 生产商业级交付；每里程碑须过生产门禁（见计划 §7.3）。
 
@@ -10,7 +10,7 @@
 | **需求来源** | `Desktop/111/` 管理岗 JD |
 | **最后更新** | 2026-08-30 |
 | **当前阶段** | MV0 ✅ · MS7 ✅ → **MV1 blocked**（等 SP-API / MV0-02） |
-| **前置条件** | Launch AEO **MS7** ✅（2026-08-30）；**MV0-02 SP-API** 待确认 |
+| **前置条件** | AEO Platform **MS7** ✅（2026-08-30）；**MV0-02 SP-API** 待确认 |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **3%**（MV0 3/3；MV1–MV5 未启动） |
 
@@ -46,11 +46,11 @@
 
 ---
 
-## Launch AEO 复用映射（已完成 / 进行中）
+## AEO Platform 复用映射（已完成 / 进行中）
 
 > MV 开启后可复用，**不计入 MV 完成度**。
 
-| Launch AEO | 状态 | 复用到 MV |
+| AEO Platform | 状态 | 复用到 MV |
 |------------|------|-----------|
 | MS1 工程底座 | `completed` | 全部模块 |
 | MS2 RAG | `in_progress` | A03/A05 知识库 |
@@ -60,7 +60,7 @@
 | MS6 生产加固 | `blocked` | MV 生产基线 |
 | MS7 试点 | `completed` | MV 试点方法论 |
 
-**Launch AEO 对 MV 的贡献度（粗估）：** ~15%（技术地基，非业务全链路）
+**AEO Platform 对 MV 的贡献度（粗估）：** ~15%（技术地基，非业务全链路）
 
 ---
 
@@ -109,7 +109,7 @@
 | MV3-02 | A02 投放 Agent：结构建议 + 出价模拟 | MV-M05 | `blocked` | MV3-01 |
 | MV3-03 | 预算分配与 ROI 预估引擎 | MV-M05 | `blocked` | MV3-02 |
 | MV3-04 | A04 运维 Agent：调价/库存建议（L1 人审） | MV-M06 | `blocked` | MV3-01 |
-| MV3-05 | 浏览器辅助：Seller Central 只读巡检 | MV-M06 | `blocked` | Launch MS4 |
+| MV3-05 | 浏览器辅助：Seller Central 只读巡检 | MV-M06 | `blocked` | MS4 |
 | MV3-06 | Shopify Store API 只读（独立站） | MV-M08 | `blocked` | MV1 |
 | MV3-07 | 投放 ↔ 库存联动策略（文档 + 原型） | MV-M05 | `blocked` | MV3-02, MV3-04 |
 | MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `blocked` | MV3-02 |
@@ -146,7 +146,7 @@
 | ID | 描述 | 状态 |
 |----|------|------|
 | MV-B001 | 用户未批准 MV 计划 | `closed` | 2026-08-30 批准 |
-| MV-B002 | Launch AEO MS7 未完成 | `closed` | 2026-08-30 用户批准 MS7 |
+| MV-B002 | AEO Platform MS7 未完成 | `closed` | 2026-08-30 用户批准 MS7 |
 | MV-B003 | SP-API / 店铺数据接入方案未确认 | `open` |
 
 ---

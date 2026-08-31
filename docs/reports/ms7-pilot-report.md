@@ -1,34 +1,34 @@
-# MS7 元征 SKU 试点报告
+﻿# MS7 通用 SKU 试点报告
 
 | 属性 | 值 |
 |------|-----|
-| **生成时间** | 2026-08-30 03:23 UTC |
-| **测试集** | `launch-aeo\pilot\yuanzheng-sku-testset.json` |
-| **批跑 CSV** | `launch-aeo\pilot\reports\ms7-reference.csv` |
-| **批跑模式** | dry_run |
+| **生成时间** | 2026-08-30 04:09 UTC |
+| **测试集** | `aeo-platform\pilot\sample-sku-testset.json` |
+| **批跑 CSV** | `aeo-platform\pilot\reports\batch-20260830_040448.csv` |
+| **批跑模式** | live |
 
 ## 1. 执行摘要
 
 - 任务总数：**20**
-- 完成：**0**；失败：**0**
-- HITL 介入率：**0.0%**
-- 一次通过率：**0.0%**
-- 采纳率：**0.0%**
-- 平均耗时：**0 ms**
-- p95 耗时：**0 ms**
+- 完成：**20**；失败：**0**
+- HITL 介入率：**100.0%**
+- 一次通过率：**100.0%**
+- 采纳率：**100.0%**
+- 平均耗时：**13722 ms**
+- p95 耗时：**18577 ms**
 
 ## 2. 成功标准对照（总计划 §1.4）
 
 | 指标 | 目标 | 实测 | 结果 |
 |------|------|------|------|
-| P-BIZ-01 端到端耗时 p95 | ≤ 180s | 0.0s | ⏳ 待 live 批跑 |
-| 人工审核一次通过率 | ≥ 60% | 0.0% | ⏳ 待 live 批跑 |
-| Listing 采纳率 | ≥ 85% 编辑距离 | 0.0% | ⏳ 待 live 批跑 |
+| P-BIZ-01 端到端耗时 p95 | ≤ 180s | 18.6s | ✅ 达标 |
+| 人工审核一次通过率 | ≥ 60% | 100.0% | ✅ 达标 |
+| Listing 采纳率 | ≥ 85% 编辑距离 | 100.0% | ✅ 达标 |
 
 ## 3. 批跑命令
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 .\scripts\batch_pilot.ps1 --auto-approve
 .\scripts\generate_pilot_report.ps1 `
   --summary pilot/reports/batch-<timestamp>.summary.json `

@@ -1,4 +1,4 @@
-# MS7 试点验收报告
+﻿# MS7 试点验收报告
 
 | 属性 | 值 |
 |------|-----|
@@ -14,7 +14,7 @@
 
 | # | 标准 | 结果 | 证据 |
 |---|------|------|------|
-| 1 | 20 SKU 测试集就绪 | ✅ | `pilot/yuanzheng-sku-testset.json`；`test_s7_01_testset.py` |
+| 1 | 20 SKU 测试集就绪 | ✅ | `pilot/sample-sku-testset.json`；`test_s7_01_testset.py` |
 | 2 | `batch_pilot` 可输出 20 SKU CSV 报告 | ✅ | `batch_pilot.py --dry-run`；`test_s7_02_batch_pilot.py` |
 | 3 | 试点报告含一次通过率 / 耗时 / 采纳率 | ✅ | `ms7-pilot-report.md`；`generate_pilot_report.py` |
 | 4 | 10 分钟演示可录制 | ✅ | `docs/pilot/demo-video-script.md`（视频文件待本地录制） |
@@ -27,7 +27,7 @@
 
 | 任务 | 交付物 | 状态 |
 |------|--------|------|
-| S7-01 | 20 元征 SKU 测试集 JSON + 文档 | ✅ PR #10 |
+| S7-01 | 20 通用 SKU 测试集 JSON + 文档 | ✅ PR #10 |
 | S7-02 | `batch_pilot.py` + `pilot_metrics` CSV/汇总 | ✅ PR #11 |
 | S7-03 | `PILOT_REPORT` 模板、试点报告、演示脚本 | ✅ PR #12 |
 | S7-04 | 本验收报告 + `test_ms7_acceptance.py` | ✅ 本 PR |
@@ -51,7 +51,7 @@
 ## 4. 手动抽测步骤（推荐）
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 .\scripts\batch_pilot.ps1 --dry-run
 .\scripts\batch_pilot.ps1 --auto-approve --limit 3   # 需有效 LLM_KEY
 .\scripts\generate_pilot_report.ps1 `

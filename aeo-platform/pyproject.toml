@@ -1,0 +1,63 @@
+[project]
+name = "aeo-platform"
+version = "0.1.0"
+description = "AEO Platform — Autonomous Ecommerce Operator"
+requires-python = ">=3.11,<3.12"
+readme = "README.md"
+
+[tool.uv.workspace]
+members = [
+    "apps/api",
+    "apps/orchestrator",
+    "apps/browser",
+    "packages/shared",
+    "packages/llm",
+    "packages/rag",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
+    "httpx>=0.27.0",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["apps", "packages"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["aeo_api", "aeo_orchestrator", "aeo_browser", "aeo_shared", "aeo_llm", "aeo_rag"]
+
+[[tool.mypy.overrides]]
+module = ["alembic.*", "prometheus_client.*", "chromadb.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = [
+    "apps/api/tests",
+    "apps/browser/tests",
+    "apps/orchestrator/tests",
+    "packages/shared/tests",
+    "packages/llm/tests",
+    "packages/rag/tests",
+]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["apps", "packages"]
+omit = ["*/tests/*", "*/alembic/*"]
+
+[tool.coverage.report]
+fail_under = 70
+show_missing = true

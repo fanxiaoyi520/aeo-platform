@@ -1,4 +1,4 @@
-# M03 — Agent 编排引擎
+﻿# M03 — Agent 编排引擎
 
 | 属性 | 值 |
 |------|-----|
@@ -94,7 +94,7 @@ class TaskState(TypedDict):
 - [x] 5 个 Agent 节点实现
 - [x] PostgreSQL Checkpointer 集成
 - [x] 任务 API：创建、查询、HITL 操作（SSE 事件流属 S5-03）
-- [x] CLI：`uv run aeo-orchestrate run --sku X431 ...`
+- [x] CLI：`uv run aeo-orchestrate run --sku DEMO-001 ...`
 - [x] 单元测试：各 Agent mock 测试 + 图集成测试
 
 ## 5. 可靠性规范

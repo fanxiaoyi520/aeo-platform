@@ -9,7 +9,7 @@
 
 | 项 | 命令 / 检查 |
 |----|-------------|
-| 启动 | `cd launch-aeo; .\scripts\prod-up.ps1` 或 `dev-up.ps1` + `pnpm dev` |
+| 启动 | `cd aeo-platform; .\scripts\prod-up.ps1` 或 `dev-up.ps1` + `pnpm dev` |
 | 冒烟 | `.\scripts\demo.ps1` |
 | 浏览器 | `http://127.0.0.1:3000` |
 | API Key | `.env.prod` 中 `AUTH_API_KEY` 已配置 |
@@ -22,7 +22,7 @@
 
 **旁白要点：**
 
-- Launch AEO：元征汽摩配跨境 Listing 自主运营 Agent
+- AEO Platform：通用跨境 Listing 自主运营 Agent
 - 本期范围：调研 → 规则 → 生成 → 合规 → 人工审核 → 导出
 - 本次演示：单 SKU 端到端 + 批跑指标入口
 
@@ -45,10 +45,10 @@
 
 **操作：**
 
-1. SKU：`X431-PRO`  
+1. SKU：`ACME-EARBUDS-PRO`  
 2. 平台：Amazon US  
 3. 竞品 ASIN：`B07JFSRMBH`（可填一个）  
-4. 关键词：`obd2 scanner`, `launch x431`  
+4. 关键词：`wireless earbuds`, `noise cancelling`  
 5. 提交 → 跳转任务详情  
 
 **画面：** `/tasks/{id}` Trace 时间线（SSE 实时事件）
@@ -89,7 +89,7 @@
 **操作：**
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 .\scripts\batch_pilot.ps1 --auto-approve --limit 3
 type pilot\reports\batch-*.summary.json
 .\scripts\generate_pilot_report.ps1 --summary pilot\reports\batch-xxx.summary.json --csv pilot\reports\batch-xxx.csv
@@ -109,7 +109,7 @@ type pilot\reports\batch-*.summary.json
 - `backup.sh` 数据可恢复  
 - 下一步：MS7 试点报告与里程碑验收  
 
-**结束语：** Launch AEO 已具备生产级 Listing 优化闭环，感谢观看。
+**结束语：** AEO Platform 已具备生产级 Listing 优化闭环，感谢观看。
 
 ---
 

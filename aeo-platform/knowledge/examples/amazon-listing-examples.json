@@ -1,0 +1,15 @@
+[
+  {
+    "platform": "amazon",
+    "category": "wireless_earbuds",
+    "title": "Acme Wireless Earbuds Pro Bluetooth 5.3 Noise Cancelling TWS Earphones",
+    "bullets": [
+      "ACTIVE NOISE CANCELLING: Hybrid ANC reduces ambient noise for commute, office, and travel",
+      "BLUETOOTH 5.3: Stable connection with low latency game mode for video and gaming",
+      "32H TOTAL PLAYTIME: 8 hours per charge plus 24 hours from the compact charging case",
+      "IPX5 WATER RESISTANT: Sweat and splash resistant for workouts and daily use",
+      "COMFORT FIT: Ergonomic ear tips in three sizes for secure all-day wear"
+    ],
+    "notes": "Good example: brand first, features, battery, durability, comfort"
+  }
+]

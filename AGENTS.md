@@ -29,6 +29,7 @@ fix/health-ready-timeout
 | 口令 | 行为 |
 |------|------|
 | **推进 W3** / **做 S3-01** | 先输出任务 Spec（`06_TASK_SPEC.md`），用户「开始」后在对应分支开发 |
+| **探索 S3-05** | 大任务（估时 > 2h）：先方案对比，用户确认后再出 Spec（见 `06_TASK_SPEC.md` §设计探索） |
 | **开始** | 按已确认 Spec 写代码 |
 | **验收 MS2** | 对照模块文档实测 + `test.ps1` |
 | **合并检查** | 跑 `test.ps1`，汇报是否可开 PR |
@@ -38,11 +39,22 @@ fix/health-ready-timeout
 
 ### 合并前检查清单
 
-1. `cd launch-aeo; .\scripts\test.ps1` 全绿  
+1. `cd aeo-platform; .\scripts\test.ps1` 全绿  
 2. 仅改任务相关目录（对照 Spec「不做什么」）  
 3. `git diff main --stat` 无计划外文件  
 4. 开 PR，等 CI 绿，用户确认 diff 后 merge  
 5. 总控更新 `02_PROGRESS.md` 任务/里程碑状态  
+6. **证据优先**（禁止只说「应该好了」）：完成声明须附带 `test.ps1` 完整输出（`x/x passed`），或关键 curl 响应 / 日志片段 / 截图  
+
+### 工程纪律（吸纳 Superpowers 精华，不装插件）
+
+| 原则 | 落地位置 |
+|------|----------|
+| **证据优先于声明** | 上表第 6 条；合并检查、验收报告必须贴真实输出 |
+| **TDD 优先** | `06_TASK_SPEC.md` §TDD 纪律 — 功能开发先 RED 再 GREEN |
+| **系统化调试** | `06_TASK_SPEC.md` §修 Bug 版 — 四阶段根因分析 |
+| **两阶段审查** | `SESSIONS.md` §工人 PR 前审查 — 规格符合性 → 代码质量 |
+| **并行隔离** | `SESSIONS.md` §git worktree — 多工人同时开发 |
 
 ### Commit 格式（进阶档）
 
@@ -78,12 +90,12 @@ docs: add task spec template
 
 ## 可选：多窗口工人模式
 
-仅赶工期时使用。见 `02_PROGRESS.md` §任务认领登记簿 与 [`docs/SESSIONS.md`](docs/SESSIONS.md)。
+仅赶工期时使用。见 `02_PROGRESS.md` §任务认领登记簿 与 [`docs/SESSIONS.md`](docs/SESSIONS.md)（含 **两阶段审查** 与 **git worktree** 并行规范）。
 
 ## 项目代号
 
-**Launch AEO**（Autonomous Ecommerce Operator）
+**AEO Platform**（Autonomous Ecommerce Operator）
 
 ## 项目负责人
 
-用户（元征科技 — Launch AEO 产品负责人）
+用户（项目维护者）

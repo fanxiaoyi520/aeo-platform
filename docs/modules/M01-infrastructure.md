@@ -17,7 +17,7 @@
 
 ## 2. 交付物
 
-- [ ] `launch-aeo/` Monorepo 目录结构（符合 `04` §4 包职责）
+- [ ] `aeo-platform/` Monorepo 目录结构（符合 `04` §4 包职责）
 - [ ] `docker-compose.dev.yml` 一键启动，端口符合 `03` §7
 - [ ] FastAPI 应用：`/health`、`/ready` 端点（P-API-04：p95 ≤ 50ms）
 - [ ] Alembic 数据库迁移框架 + `04` §6.2 索引

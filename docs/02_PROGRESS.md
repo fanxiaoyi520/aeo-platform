@@ -1,4 +1,4 @@
-# 进度表（Progress Tracker）
+﻿# 进度表（Progress Tracker）
 
 > **唯一任务执行来源。** AI Agent 仅可执行本表中 `in_progress` 或用户明确指名的任务。  
 > **总计划状态：** `APPROVED` — 2026-08-29 批准开工  
@@ -31,7 +31,7 @@
 | 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
 | 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
 | 开功能分支 | `git checkout -b feat/s6-01-prod-compose`（下一任务） |
-| 本地验收 | `cd launch-aeo; .\scripts\test.ps1` |
+| 本地验收 | `cd aeo-platform; .\scripts\test.ps1` |
 | 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
 | 云端 CI | PR / push to `main` → GitHub Actions |
 | 合并 | CI 绿 + 看 diff → merge PR → 更新进度表 |
@@ -215,7 +215,7 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| S7-01 | 准备 20 个元征 SKU 测试集 | — | `completed` | MS6 |
+| S7-01 | 准备 20 个通用 SKU 测试集 | — | `completed` | MS6 |
 | S7-02 | 批量运行并记录指标 | M07 | `completed` | S7-01 |
 | S7-03 | 试点报告 + 10 分钟演示视频 | — | `completed` | S7-02 |
 | S7-04 | MS7 验收 | ALL | `completed` | S7-01~03 |
@@ -280,7 +280,7 @@
 | 2026-08-29 | **CR-20260829-002**：默认 **单总控 + Git 分支 + CI**；test/CI 纳入 orchestrator（17 项） |
 | 2026-08-29 | S3-01 completed；S3-02 in_progress；Git 仓库 init |
 | 2026-08-29 | S3-02 completed：research_agent 无浏览器版；test.ps1 **19/19** 全绿 |
-| 2026-08-29 | 远程仓库上线：`fanxiaoyi520/launch-aeo`；`main` push 完成 |
+| 2026-08-29 | 远程仓库上线：`fanxiaoyi520/aeo-platform`；`main` push 完成 |
 | 2026-08-29 | S3-03 completed：rules_agent RAG 集成；test.ps1 **21/21** 全绿 |
 | 2026-08-29 | S3-03 合并 push `main`；S3-04 completed：generate_agent；test.ps1 **23/23** 全绿 |
 | 2026-08-29 | 新增 `06_TASK_SPEC.md`：任务 Spec 模板 + S3-05 示例；接入 AGENTS 工作流 |
@@ -305,7 +305,7 @@
 | 2026-08-30 | S6-05 merged：PR #8 DEPLOYMENT.md + backup/demo scripts；test.ps1 **106/106**；CI ✅ |
 | 2026-08-30 | S6-06 merged：PR #9 MS6 验收报告 + acceptance tests；test.ps1 **126/126**；CI ✅ |
 | 2026-08-30 | **用户批准 MS6**：里程碑 `completed`；MS7 解除阻塞；下一 **S7-01** |
-| 2026-08-30 | S7-01：20 元征 SKU 测试集 JSON + 文档；test.ps1 **143/143** |
+| 2026-08-30 | S7-01：20 通用 SKU 测试集 JSON + 文档；test.ps1 **143/143** |
 | 2026-08-30 | S7-01 merged：PR #10 pilot testset；test.ps1 **143/143**；CI ✅ |
 | 2026-08-30 | S7-02：batch_pilot.py + pilot_metrics；test.ps1 **151/151** |
 | 2026-08-30 | S7-02 merged：PR #11 batch pilot；test.ps1 **151/151**；CI ✅ |

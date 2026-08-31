@@ -1,4 +1,4 @@
-# Launch AEO — 生产部署指南
+﻿# AEO Platform — 生产部署指南
 
 > **模块：** M06 部署与安全 · **任务：** S6-05  
 > **适用环境：** 单机 Docker Compose（本地 / 内网服务器），数据不出域。
@@ -26,7 +26,7 @@
 | **postgres** | 无（仅 internal） | 任务、审计、HITL 状态 |
 | **redis** | 无（仅 internal） | 限流、缓存 |
 
-Compose 文件：`launch-aeo/infra/compose/docker-compose.prod.yml`
+Compose 文件：`aeo-platform/infra/compose/docker-compose.prod.yml`
 
 ---
 
@@ -46,7 +46,7 @@ Compose 文件：`launch-aeo/infra/compose/docker-compose.prod.yml`
 ### 3.1 配置密钥
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 copy .env.prod.example .env.prod
 # 编辑 .env.prod — 至少修改以下项：
 #   POSTGRES_PASSWORD
@@ -60,7 +60,7 @@ copy .env.prod.example .env.prod
 ### 3.2 启动
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 .\scripts\prod-up.ps1
 ```
 
@@ -115,7 +115,7 @@ curl -H "Authorization: Bearer $key" http://127.0.0.1:8000/api/v1/knowledge/stat
 ./scripts/backup.sh
 ```
 
-输出目录：`launch-aeo/backups/YYYYMMDD_HHMMSS/`
+输出目录：`aeo-platform/backups/YYYYMMDD_HHMMSS/`
 
 | 文件 | 内容 |
 |------|------|
@@ -173,11 +173,11 @@ docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml res
 1. **启动** — `.\scripts\prod-up.ps1`，等待 healthy  
 2. **自动化冒烟** — `.\scripts\demo.ps1`（健康检查 + 认证 + 知识库 + 审计）  
 3. **Web 端到端** — 浏览器打开 `http://127.0.0.1:3000`  
-   - `/tasks/new` 创建 SKU 任务（如 `X431`）  
+   - `/tasks/new` 创建 SKU 任务（如 `DEMO-001`）  
    - 详情页观察 SSE Trace  
    - `/tasks/{id}/review` HITL 审核批准  
    - `/tasks/{id}/result` 复制 Listing / 导出 JSON  
-4. **CLI（可选）** — `uv run aeo-orchestrate run --sku X431 --auto-approve`  
+4. **CLI（可选）** — `uv run aeo-orchestrate run --sku DEMO-001 --auto-approve`  
 5. **审计** — Swagger 或 curl 查询 `/api/v1/audit-logs`  
 
 ---
@@ -185,7 +185,7 @@ docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml res
 ## 7. 运维命令速查
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 
 # 查看容器状态
 docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml ps

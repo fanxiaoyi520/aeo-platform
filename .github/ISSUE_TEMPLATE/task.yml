@@ -1,0 +1,49 @@
+name: 开发任务
+description: 对应 02_PROGRESS 中的 Sprint 任务（进阶档：Issue 跟踪）
+title: "[S3-05] "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        任务 ID 须与 [`docs/02_PROGRESS.md`](../blob/main/docs/02_PROGRESS.md) 一致。
+        开工前 Spec 见 [`docs/06_TASK_SPEC.md`](../blob/main/docs/06_TASK_SPEC.md)。
+
+  - type: input
+    id: task_id
+    attributes:
+      label: 任务 ID
+      placeholder: S3-05
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目标（一句话）
+      placeholder: 实现 compliance_agent + 重试回路
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      placeholder: |
+        1. 单测覆盖禁用词、条数不足等
+        2. test.ps1 全绿
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: 功能分支
+      placeholder: feat/s3-05-compliance-agent
+
+  - type: textarea
+    id: module_doc
+    attributes:
+      label: 模块文档
+      placeholder: docs/modules/M03-agent-orchestration.md
+      value: docs/modules/M03-agent-orchestration.md

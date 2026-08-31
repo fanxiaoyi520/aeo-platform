@@ -39,11 +39,11 @@
 ## 3. 手动抽测步骤（推荐）
 
 ```powershell
-cd launch-aeo; .\scripts\dev-up.ps1
+cd aeo-platform; .\scripts\dev-up.ps1
 cd apps/web; pnpm dev
 ```
 
-1. 打开 `http://localhost:3000/tasks/new`，创建 SKU `X431` 任务  
+1. 打开 `http://localhost:3000/tasks/new`，创建 SKU `DEMO-001` 任务  
 2. 进入详情，确认 Trace 时间线有 SSE 事件  
 3. 待审核时点击「去审核」，编辑后批准  
 4. 完成后点击「查看结果 / 导出」，验证复制与 JSON/CSV 下载  
