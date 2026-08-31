@@ -14,8 +14,14 @@
 | 文档 | 状态 |
 |------|------|
 | 总计划 v1.1.0 | **APPROVED** |
-| 开发 | **进行中 — Sprint 1 / MS1** |
+| Phase 1（MS0–MS7） | **已完成** |
+| Phase 1 扩展 P1-01 | **已完成**（知识库上传，PR #14） |
+| Phase 2（MV1–MV5） | **blocked**（待 MV0-02 SP-API） |
 | 代码目录 | `aeo-platform/` |
+
+## 参与贡献
+
+见 [CONTRIBUTING.md](CONTRIBUTING.md) — 分支命名、Lane 目录锁定、PR 与验收要求。
 
 ## AI Agent 必读
 
@@ -37,6 +43,7 @@
 | [性能规范](docs/05_PERFORMANCE_STANDARDS.md) | SLA、超时、并发、压测（锁定） |
 | [进度表](docs/02_PROGRESS.md) | Sprint 任务与状态 |
 | [任务 Spec 模板](docs/06_TASK_SPEC.md) | 开工前 Spec + PR 流程 + 口令 |
+| [贡献指南](CONTRIBUTING.md) | 多人协作、Lane 认领、PR 检查清单 |
 | [M01 基础设施](docs/modules/M01-infrastructure.md) | |
 | [M02 RAG 知识库](docs/modules/M02-rag-knowledge.md) | |
 | [M03 Agent 编排](docs/modules/M03-agent-orchestration.md) | |

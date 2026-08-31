@@ -1,6 +1,9 @@
 # Check WSL + Docker CLI install status
 
 $ErrorActionPreference = "SilentlyContinue"
+. (Join-Path $PSScriptRoot "docker-config.ps1")
+
+$dockerRoot = Get-AeoDockerRoot
 
 Write-Host "==> Docker CLI status" -ForegroundColor Cyan
 Write-Host ""
@@ -15,11 +18,11 @@ if ($isAdmin) {
 }
 
 Write-Host ""
-Write-Host "D:\Software\Docker:" -ForegroundColor Cyan
+Write-Host "Docker root ($dockerRoot):" -ForegroundColor Cyan
 $paths = @(
-    "D:\Software\Docker",
-    "D:\Software\Docker\wsl\data",
-    "D:\Software\Docker\install.log"
+    $dockerRoot,
+    (Get-AeoDockerDataRoot),
+    (Get-AeoDockerLogFile)
 )
 foreach ($p in $paths) {
     if (Test-Path $p) {

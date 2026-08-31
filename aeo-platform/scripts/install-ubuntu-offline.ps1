@@ -2,10 +2,11 @@
 # Requires: Administrator PowerShell
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "docker-config.ps1")
 
-$LogFile = "D:\Software\Docker\install.log"
-$UbuntuDir = "D:\Software\Docker\wsl\ubuntu"
-$TarFile = "D:\Software\Docker\ubuntu-rootfs.tar.gz"
+$LogFile = Get-AeoDockerLogFile
+$UbuntuDir = Join-Path (Get-AeoDockerRoot) "wsl\ubuntu"
+$TarFile = Join-Path (Get-AeoDockerRoot) "ubuntu-rootfs.tar.gz"
 $DistroName = "Ubuntu"
 $MinSizeBytes = 100MB
 
@@ -27,7 +28,7 @@ function Test-ValidRootfs {
     return (Get-Item $Path).Length -ge $MinSizeBytes
 }
 
-New-Item -ItemType Directory -Force -Path "D:\Software\Docker" | Out-Null
+Ensure-AeoDockerRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $UbuntuDir | Out-Null
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(

@@ -7,8 +7,8 @@
 | 属性 | 值 |
 |------|-----|
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
-| **需求来源** | `Desktop/111/` 管理岗 JD |
-| **最后更新** | 2026-08-30 |
+| **需求来源** | `docs/internal/` 管理岗 JD |
+| **最后更新** | 2026-08-31 |
 | **当前阶段** | MV0 ✅ · MS7 ✅ → **MV1 blocked**（等 SP-API / MV0-02） |
 | **前置条件** | AEO Platform **MS7** ✅（2026-08-30）；**MV0-02 SP-API** 待确认 |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
@@ -53,12 +53,13 @@
 | AEO Platform | 状态 | 复用到 MV |
 |------------|------|-----------|
 | MS1 工程底座 | `completed` | 全部模块 |
-| MS2 RAG | `in_progress` | A03/A05 知识库 |
+| MS2 RAG | `completed` | A03/A05 知识库 |
 | MS3 Agent 核心 | `completed` | A03 Listing 子链、编排模式 |
 | MS4 浏览器 | `pending` | A01 竞品、A04 运维 |
-| MS5 工作台 | `in_progress` | 指挥台扩展 |
-| MS6 生产加固 | `blocked` | MV 生产基线 |
+| MS5 工作台 | `completed` | 指挥台扩展 |
+| MS6 生产加固 | `completed` | MV 生产基线 |
 | MS7 试点 | `completed` | MV 试点方法论 |
+| P1-01 知识库上传 | `completed` | 运营文档入库 |
 
 **AEO Platform 对 MV 的贡献度（粗估）：** ~15%（技术地基，非业务全链路）
 
