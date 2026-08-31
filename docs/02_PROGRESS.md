@@ -225,7 +225,7 @@
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
 | P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `in_progress` | MS7 |
-| P1-02 | 真实 SKU 产品资料入库（≥5 SKU） | M02 | `pending` | P1-01 |
+| P1-02 | 真实 SKU 产品资料入库（≥5 SKU）+ CSV 导入脚本 | M02 | `in_progress` | P1-01 |
 | P1-03 | MV0-02 SP-API / 试点店可行性确认 | MV-M10 | `pending` | MS7 |
 
 ---
