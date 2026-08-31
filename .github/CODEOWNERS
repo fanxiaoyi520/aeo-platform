@@ -1,0 +1,32 @@
+# CODEOWNERS — Lane-based review routing
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default maintainer
+* @fanxiaoyi520
+
+# Lane B — API + Orchestrator
+/aeo-platform/apps/api/ @fanxiaoyi520
+/aeo-platform/apps/orchestrator/ @fanxiaoyi520
+
+# Lane C — Browser automation
+/aeo-platform/apps/browser/ @fanxiaoyi520
+
+# Lane D — Frontend workbench
+/aeo-platform/apps/web/ @fanxiaoyi520
+
+# Lane A — Infrastructure
+/aeo-platform/infra/ @fanxiaoyi520
+
+# Lane E — RAG + LLM packages
+/aeo-platform/packages/rag/ @fanxiaoyi520
+/aeo-platform/packages/llm/ @fanxiaoyi520
+
+# Shared contracts — extra scrutiny (merge bottleneck by design)
+/aeo-platform/packages/shared/ @fanxiaoyi520
+/aeo-platform/apps/api/alembic/ @fanxiaoyi520
+
+# Governance docs
+/AGENTS.md @fanxiaoyi520
+/CONTRIBUTING.md @fanxiaoyi520
+/docs/ @fanxiaoyi520
+/.github/ @fanxiaoyi520

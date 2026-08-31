@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-08-30  
-**当前阶段：** **Phase 1 生产扩展** — MS7 ✅；**P1-01 知识库运营上传**（`feat/knowledge-upload`）待 PR；**MV1 blocked**（MV0-02 SP-API）  
-**Git：** `main`（本地未提交：MS4 + embeddings fix + live pilot 报告）  
-**CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
+**最后更新：** 2026-08-31  
+**当前阶段：** **Phase 1 生产扩展** — MS7 ✅、P1-01 ✅（PR #14 merged）；下一任务 **P1-02** 或 **MV0-02 SP-API**  
+**Git：** `main` @ `0c0f818`（含 AEO Platform 重命名 + 知识库上传）  
+**CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
 
@@ -224,7 +224,7 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `in_progress` | MS7 |
+| P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `completed` | MS7 |
 | P1-02 | 真实 SKU 产品资料入库（≥5 SKU） | M02 | `pending` | P1-01 |
 | P1-03 | MV0-02 SP-API / 试点店可行性确认 | MV-M10 | `pending` | MS7 |
 
@@ -314,3 +314,4 @@
 | 2026-08-30 | S7-04：MS7 验收报告 + `test_ms7_acceptance.py`；MS7 待用户批准 |
 | 2026-08-30 | S7-04 merged：PR #13 MS7 acceptance；test.ps1 **169/169**；CI ✅ |
 | 2026-08-30 | **用户批准 MS7**：里程碑 `completed`；**Phase 1 收官**；MV1 待 SP-API |
+| 2026-08-31 | P1-01 merged：PR #14 知识库上传 + AEO Platform 重命名；`main` @ `0c0f818`；CI ✅ |

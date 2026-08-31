@@ -14,7 +14,7 @@
 | **Pull Request** | push 后开 PR → 看 diff → CI 绿 → merge `main`（不直接合 main） |
 | **CI** | push / PR 到 `main` 时 GitHub Actions 自动跑与本地相同的检查 |
 
-多 Cursor 窗口、SESSIONS 登记簿为**可选**，默认不用。
+多 Cursor 窗口、SESSIONS 登记簿为**可选**，默认不用。多人协作详见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
 
 ### Git 分支命名
 
