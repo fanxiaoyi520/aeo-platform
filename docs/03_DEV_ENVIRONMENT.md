@@ -156,17 +156,14 @@ packages/llm/pyproject.toml
 # Windows — 首次
 .\scripts\setup.ps1
 
-# 启动全部服务（dev）
-docker compose -f infra/compose/docker-compose.dev.yml up -d
+# 日常一键启动（推荐：Docker 只跑 DB，API/Web 本机后台）
+.\scripts\dev-start.ps1
 
-# 数据库迁移
-uv run alembic -c apps/api/alembic.ini upgrade head
+# 停止
+.\scripts\dev-stop.ps1
 
-# 知识库初始化（MS2 后）
-uv run python -m scripts.ingest_knowledge
-
-# 前端 dev（或 Docker 内）
-cd apps/web && pnpm dev
+# 全容器启动（含 API 镜像构建，较慢）
+.\scripts\dev-up.ps1
 ```
 
 ```bash
@@ -179,8 +176,10 @@ make setup && make dev-up
 | 脚本 | 作用 |
 |------|------|
 | `scripts/setup.ps1` / `scripts/setup.sh` | 安装 uv、pnpm、拉依赖、建 venv |
-| `scripts/dev-up.ps1` | 启动 dev compose |
-| `scripts/dev-down.ps1` | 停止 dev compose |
+| `scripts/dev-start.ps1` | **日常一键启动**（Postgres/Redis + 本机 API/Web） |
+| `scripts/dev-stop.ps1` | 停止 dev-start 拉起的全部服务 |
+| `scripts/dev-up.ps1` | 全容器 dev compose（含 API 构建，较慢） |
+| `scripts/dev-down.ps1` | 停止 dev compose 容器 |
 | `scripts/migrate.ps1` | 执行 Alembic |
 | `scripts/test.ps1` | 全量 lint + test |
 | `Makefile` | Linux/macOS 快捷命令（与 ps1 功能对齐） |

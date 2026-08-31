@@ -1,0 +1,12 @@
+{
+  "total": 20,
+  "completed": 20,
+  "failed": 0,
+  "hitl_rate": 1.0,
+  "first_pass_rate": 1.0,
+  "degraded_rate": 0.3,
+  "adoption_rate": 1.0,
+  "avg_duration_ms": 13722,
+  "p95_duration_ms": 18577,
+  "mode": "live"
+}

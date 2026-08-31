@@ -1,0 +1,25 @@
+[project]
+name = "aeo-rag"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "aeo-llm",
+    "aeo-shared",
+    "chromadb>=0.5.0",
+    "pypdf>=5.0.0",
+    "python-docx>=1.1.0",
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.4.0",
+    "structlog>=24.4.0",
+]
+
+[tool.uv.sources]
+aeo-llm = { workspace = true }
+aeo-shared = { workspace = true }
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

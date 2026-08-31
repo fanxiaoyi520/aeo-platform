@@ -4,7 +4,7 @@
 > 每个会话听到口令后**必须先更新本表**，再干活。  
 > 建议：在 Cursor 里把对话**重命名**为「登记人标签」列（如 `总控`、`工人-B`、`验收`）。
 
-**最后更新：** 2026-08-29
+**最后更新：** 2026-08-31
 
 ---
 
@@ -89,3 +89,60 @@ Agent 会汇总：
 4. 会话结束或用户说 **「释放会话」** → 改 `idle`
 
 **禁止：** 工人/验收登记为 `总控`；验收登记开发任务到任务认领登记簿。
+
+---
+
+## 工人 PR 前审查（两阶段）
+
+> 对应 Superpowers `subagent-driven-development` 两阶段 review。工人说「合并检查」或开 PR **之前**必须自检；总控可抽查。
+
+### 阶段 A — 规格符合性（对照 Task Spec）
+
+- [ ] 「做什么」每项已实现
+- [ ] 「不做什么」未越界（对照 `06_TASK_SPEC.md` Lane 表）
+- [ ] 验收标准每条有证据（测试输出 / curl / 日志）
+- [ ] TDD：功能任务有 RED → GREEN 记录（见 `06_TASK_SPEC.md` §TDD 纪律）
+
+### 阶段 B — 代码质量
+
+- [ ] 符合 `04_ARCHITECTURE_STANDARDS.md`（分层、错误码、API 契约）
+- [ ] 无硬编码密钥、无计划外依赖
+- [ ] 新增逻辑有测试（不只 happy path）
+- [ ] `test.ps1` 全绿 + 已贴完整输出
+
+**两阶段都过** → 才允许 push / 开 PR。任一失败 → 在本窗口继续修，不交给总控合并。
+
+---
+
+## 并行工人：git worktree（推荐）
+
+> 对应 Superpowers `using-git-worktrees`。多工人**同时**开发不同 Lane 时，禁止在同一工作目录 `git checkout` 切分支。
+
+### 何时用
+
+- 工人-B（orchestrator）与工人-D（web）**并行**开发
+- 总控集成分支时，工人仍在各自任务上开发
+
+### 命令（PowerShell，仓库根目录 `创新/` 或 `aeo-platform/` 的 git 根）
+
+```powershell
+# 在 main 仓库旁创建隔离 worktree（路径按本机调整）
+git worktree add ..\aeo-platform-worker-b feat/s3-05-compliance-agent
+git worktree add ..\aeo-platform-worker-d feat/s5-02-task-list
+
+# 工人-B 只在 ..\aeo-platform-worker-b 里开发
+# 工人-D 只在 ..\aeo-platform-worker-d 里开发
+
+# 任务完成、PR 合并后清理
+git worktree remove ..\aeo-platform-worker-b
+git worktree remove ..\aeo-platform-worker-d
+```
+
+### 规则
+
+1. 每个工人 **一个 worktree + 一个分支**，不共享工作目录  
+2. worktree 路径写入 `SESSIONS.md`「正在做什么」列，便于总控对照  
+3. 禁止在 worktree 里改其他 Lane 目录（仍遵守 Lane 锁定表）  
+4. PR merge 后删除对应 worktree，避免目录堆积  
+
+单工人、单任务时继续用普通 `git checkout -b feat/...` 即可，**不必**强制 worktree。

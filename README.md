@@ -1,6 +1,13 @@
-# Launch AEO
+# AEO Platform
 
-生产级 AI 电商自主运营系统 — 元征跨境 Listing 优化场景。
+**AEO** = **A**utonomous **E**commerce **O**perator（自主电商运营系统）
+
+> 不是 SEO 圈的 Answer Engine Optimization（答引擎优化）。
+
+开源、可自部署的多 Agent 电商运营平台 — 首期聚焦 Listing 生成、合规校验与人工审核（Amazon / TikTok）。
+
+**GitHub:** [github.com/fanxiaoyi520/aeo-platform](https://github.com/fanxiaoyi520/aeo-platform)  
+**License:** [MIT](LICENSE)
 
 ## 状态
 
@@ -8,7 +15,7 @@
 |------|------|
 | 总计划 v1.1.0 | **APPROVED** |
 | 开发 | **进行中 — Sprint 1 / MS1** |
-| 代码目录 | `launch-aeo/` |
+| 代码目录 | `aeo-platform/` |
 
 ## AI Agent 必读
 
@@ -29,6 +36,7 @@
 | [架构规范](docs/04_ARCHITECTURE_STANDARDS.md) | 分层、API 契约、数据模型、Agent 规范（锁定） |
 | [性能规范](docs/05_PERFORMANCE_STANDARDS.md) | SLA、超时、并发、压测（锁定） |
 | [进度表](docs/02_PROGRESS.md) | Sprint 任务与状态 |
+| [任务 Spec 模板](docs/06_TASK_SPEC.md) | 开工前 Spec + PR 流程 + 口令 |
 | [M01 基础设施](docs/modules/M01-infrastructure.md) | |
 | [M02 RAG 知识库](docs/modules/M02-rag-knowledge.md) | |
 | [M03 Agent 编排](docs/modules/M03-agent-orchestration.md) | |

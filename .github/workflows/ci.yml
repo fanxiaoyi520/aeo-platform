@@ -21,23 +21,23 @@ jobs:
         run: uv python install 3.11.9
 
       - name: Install dependencies
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: uv sync --all-packages --group dev
 
       - name: Ruff check
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: uv run ruff check apps packages
 
       - name: Ruff format
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: uv run ruff format --check apps packages
 
       - name: Mypy
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: uv run python -m mypy apps packages
 
       - name: Pytest
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         env:
           DB_URL: postgresql+asyncpg://aeo:aeo@localhost:5432/aeo
           DB_URL_SYNC: postgresql+psycopg://aeo:aeo@localhost:5432/aeo
@@ -52,17 +52,17 @@ jobs:
         run: uv run pytest apps/api/tests apps/orchestrator/tests packages/shared/tests packages/llm/tests packages/rag/tests --cov=apps --cov=packages --cov-report=term-missing:skip-covered --cov-fail-under=70
 
       - name: Docker build
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: docker compose -f infra/compose/docker-compose.dev.yml build api
 
       - name: Validate prod compose
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: |
           cp .env.prod.example .env.prod
           docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml config
 
       - name: Docker build prod images
-        working-directory: launch-aeo
+        working-directory: aeo-platform
         run: |
           cp .env.prod.example .env.prod
           docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml build api web

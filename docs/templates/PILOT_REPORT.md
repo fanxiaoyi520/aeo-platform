@@ -65,7 +65,7 @@
 ## 自动生成
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 .\scripts\batch_pilot.ps1 --auto-approve
 .\scripts\generate_pilot_report.ps1 `
   --summary pilot/reports/batch-<timestamp>.summary.json `

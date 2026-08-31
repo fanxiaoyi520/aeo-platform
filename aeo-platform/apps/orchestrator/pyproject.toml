@@ -1,0 +1,30 @@
+[project]
+name = "aeo-orchestrator"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "aeo-browser",
+    "aeo-shared",
+    "aeo-llm",
+    "aeo-rag",
+    "click>=8.1.0",
+    "langgraph>=0.2.0",
+    "langgraph-checkpoint-postgres>=3.1.2",
+    "psycopg[binary]>=3.3.4",
+]
+
+[project.scripts]
+aeo-orchestrate = "aeo_orchestrator.cli:main"
+
+[tool.uv.sources]
+aeo-browser = { workspace = true }
+aeo-shared = { workspace = true }
+aeo-llm = { workspace = true }
+aeo-rag = { workspace = true }
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

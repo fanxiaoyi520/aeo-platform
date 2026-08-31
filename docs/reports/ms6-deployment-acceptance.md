@@ -50,7 +50,7 @@
 ## 4. 手动抽测步骤（推荐）
 
 ```powershell
-cd launch-aeo
+cd aeo-platform
 copy .env.prod.example .env.prod   # 修改 AUTH_API_KEY、POSTGRES_PASSWORD
 .\scripts\prod-up.ps1
 .\scripts\demo.ps1

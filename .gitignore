@@ -7,23 +7,23 @@ Thumbs.db
 .vscode/
 *.swp
 
-# Launch AEO (see launch-aeo/.gitignore)
-launch-aeo/.env
-launch-aeo/.env.*
-!launch-aeo/.env.example
-!launch-aeo/.env.prod.example
-launch-aeo/.venv/
-launch-aeo/**/__pycache__/
-launch-aeo/**/*.py[cod]
-launch-aeo/**/*.egg-info/
-launch-aeo/.pytest_cache/
-launch-aeo/.mypy_cache/
-launch-aeo/.ruff_cache/
-launch-aeo/htmlcov/
-launch-aeo/.coverage
-launch-aeo/node_modules/
-launch-aeo/**/.next/
-launch-aeo/**/out/
-launch-aeo/.pnpm-store/
-launch-aeo/data/
-!launch-aeo/data/.gitkeep
+# AEO Platform (see aeo-platform/.gitignore)
+aeo-platform/.env
+aeo-platform/.env.*
+!aeo-platform/.env.example
+!aeo-platform/.env.prod.example
+aeo-platform/.venv/
+aeo-platform/**/__pycache__/
+aeo-platform/**/*.py[cod]
+aeo-platform/**/*.egg-info/
+aeo-platform/.pytest_cache/
+aeo-platform/.mypy_cache/
+aeo-platform/.ruff_cache/
+aeo-platform/htmlcov/
+aeo-platform/.coverage
+aeo-platform/node_modules/
+aeo-platform/**/.next/
+aeo-platform/**/out/
+aeo-platform/.pnpm-store/
+aeo-platform/data/
+!aeo-platform/data/.gitkeep
