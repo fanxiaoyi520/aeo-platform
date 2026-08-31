@@ -8,10 +8,16 @@
 
 ## 快速开始
 
+> 以下命令均在 **`aeo-platform/`** 目录下执行。克隆仓库后：
+>
+> ```powershell
+> git clone https://github.com/fanxiaoyi520/aeo-platform.git
+> cd aeo-platform
+> ```
+
 ### 日常开发（推荐，一键启动）
 
 ```powershell
-cd "d:\Users\fanxiaoyi\Desktop\创新\aeo-platform"
 .\scripts\setup.ps1          # 仅首次
 .\scripts\dev-start.ps1      # Postgres/Redis + API + Web，后台运行
 ```
@@ -27,7 +33,6 @@ cd "d:\Users\fanxiaoyi\Desktop\创新\aeo-platform"
 ### 方式 A：无 Docker（仅 API 文档）
 
 ```powershell
-cd "d:\Users\fanxiaoyi\Desktop\创新\aeo-platform"
 .\scripts\setup.ps1
 .\scripts\dev-local.ps1
 ```
@@ -36,11 +41,10 @@ cd "d:\Users\fanxiaoyi\Desktop\创新\aeo-platform"
 
 ### 方式 B：Docker CLI（全容器，含 API 镜像构建，较慢）
 
-数据目录：`D:\Software\Docker\wsl\data`
+数据目录默认在 `scripts/install-docker-cli.ps1` 的 `$DataRoot`（可按本机修改）。
 
 ```powershell
-# 1. 管理员 PowerShell
-cd "d:\Users\fanxiaoyi\Desktop\创新\aeo-platform"
+# 1. 管理员 PowerShell（在 aeo-platform/ 目录下）
 .\scripts\install-docker-cli.ps1
 
 # 首次 WSL 需：重启 → 打开 Ubuntu 设密码 → 再运行一次 install 脚本
