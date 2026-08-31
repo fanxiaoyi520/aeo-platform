@@ -37,14 +37,7 @@ async def test_rules_node_aggregates_rag_hits() -> None:
     mock_store = MagicMock()
     mock_store.search.side_effect = [
         [_hit(doc_id="r1", content="Title max 200 chars", category="amazon_rules")],
-        [
-            _hit(
-                doc_id="p1",
-                content="Acme Wireless Earbuds features",
-                category="product",
-                platform="general",
-            )
-        ],
+        [_hit(doc_id="p1", content="Acme Wireless Earbuds features", category="product", platform="general")],
         [_hit(doc_id="e1", content="Example listing", category="example")],
     ]
 

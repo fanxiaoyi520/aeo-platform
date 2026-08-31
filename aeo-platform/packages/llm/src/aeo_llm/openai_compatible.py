@@ -5,6 +5,10 @@ from aeo_llm.config import get_llm_settings
 from aeo_llm.provider import LLMProvider, LLMResponse, Message
 
 
+def _deepseek_v4_model(model: str) -> bool:
+    return model.lower().startswith("deepseek-v4")
+
+
 class OpenAICompatibleProvider:
     """OpenAI-compatible LLM gateway (supports company internal gateway)."""
 
@@ -20,11 +24,14 @@ class OpenAICompatibleProvider:
             timeout = float(self._settings.llm_timeout_seconds)
         model = str(kwargs.get("model", self._settings.llm_model))
 
-        payload = {
+        payload: dict[str, object] = {
             "model": model,
             "messages": [m.model_dump() for m in messages],
             "temperature": kwargs.get("temperature", 0.3),
         }
+        if _deepseek_v4_model(model):
+            # DeepSeek V4 defaults to thinking mode; plain JSON chat needs it off.
+            payload["thinking"] = {"type": "disabled"}
 
         async with httpx.AsyncClient(
             base_url=self._settings.llm_base_url,

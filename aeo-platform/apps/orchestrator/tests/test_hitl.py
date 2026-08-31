@@ -1,30 +1,9 @@
-from unittest.mock import AsyncMock, patch
-
 import pytest
-from aeo_llm.provider import LLMResponse
 from aeo_orchestrator import build_graph, initial_state
 from aeo_orchestrator.hitl import approve_hitl, is_waiting_hitl, reject_hitl, run_until_hitl
 from aeo_orchestrator.state import TaskStatus
 from langgraph.checkpoint.memory import MemorySaver
-
-_SAMPLE_JSON = """{
-  "title": "Acme Wireless Earbuds Pro Bluetooth 5.3 Noise Cancelling TWS",
-  "bullets": [
-    "ACTIVE NOISE CANCELLING for commute and office use",
-    "BLUETOOTH 5.3 with low latency game mode",
-    "32H TOTAL PLAYTIME with compact charging case",
-    "IPX5 WATER RESISTANT for workouts and daily use",
-    "COMFORT FIT with three ear tip sizes included"
-  ],
-  "search_terms": "wireless earbuds bluetooth noise cancelling",
-  "description": "Premium wireless earbuds with hybrid ANC."
-}"""
-
-
-def _mock_llm() -> AsyncMock:
-    provider = AsyncMock()
-    provider.chat.return_value = LLMResponse(content=_SAMPLE_JSON, model="test")
-    return provider
+from llm_fixtures import patch_generate_instructor
 
 
 @pytest.mark.asyncio
@@ -36,7 +15,7 @@ async def test_run_until_hitl_pauses_before_human_review() -> None:
         sku="DEMO-001",
         product_info={"competitor_asins": ["B001"], "keywords": ["wireless earbuds"]},
     )
-    with patch("aeo_orchestrator.nodes.generate.get_llm_provider", return_value=_mock_llm()):
+    with patch_generate_instructor():
         await run_until_hitl(graph, state)
     assert is_waiting_hitl(graph, "hitl-1") is True
 
@@ -50,7 +29,7 @@ async def test_approve_hitl_completes_task() -> None:
         sku="DEMO-001",
         product_info={"competitor_asins": ["B001"], "keywords": ["wireless earbuds"]},
     )
-    with patch("aeo_orchestrator.nodes.generate.get_llm_provider", return_value=_mock_llm()):
+    with patch_generate_instructor():
         await run_until_hitl(graph, state)
         result = await approve_hitl(graph, "hitl-2")
     assert result["status"] == TaskStatus.COMPLETED
@@ -66,9 +45,8 @@ async def test_reject_hitl_routes_back_to_generate() -> None:
         sku="DEMO-001",
         product_info={"competitor_asins": ["B001"], "keywords": ["wireless earbuds"]},
     )
-    provider = _mock_llm()
-    with patch("aeo_orchestrator.nodes.generate.get_llm_provider", return_value=provider):
+    with patch_generate_instructor() as client:
         await run_until_hitl(graph, state)
         result = await reject_hitl(graph, "hitl-3", "Shorten the title")
     assert result["human_feedback"] == "Shorten the title"
-    assert provider.chat.call_count >= 2
+    assert client.chat.completions.create.await_count >= 2

@@ -155,7 +155,12 @@ class TaskService:
             await session.commit()
             await session.refresh(task)
             raise
-        return _serialize_task(task, final_output=final_output or None)
+        generated = graph_state.get("generated")
+        return _serialize_task(
+            task,
+            final_output=final_output or None,
+            generated=generated if isinstance(generated, dict) else None,
+        )
 
     async def get_task(self, session: AsyncSession, task_id: str) -> dict[str, Any]:
         task = await self._get_task(session, task_id)

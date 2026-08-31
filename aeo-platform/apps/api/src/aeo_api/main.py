@@ -25,7 +25,10 @@ settings = get_settings()
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     validate_production_settings(settings)
     setup_logging(debug=settings.app_debug)
-    logger.info("starting", app=settings.app_name, env=settings.app_env)
+    from aeo_llm.config import get_llm_settings
+
+    llm = get_llm_settings()
+    logger.info("starting", app=settings.app_name, env=settings.app_env, llm_model=llm.llm_model)
     yield
     await close_redis()
     logger.info("shutdown complete")
