@@ -7,31 +7,55 @@ from typing import cast
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from aeo_llm.provider import LLMResponse
 from aeo_orchestrator import build_graph, initial_state
 from aeo_orchestrator.cli import main
 from aeo_orchestrator.hitl import approve_hitl, is_waiting_hitl
-from aeo_orchestrator.listing_schema import ListingGeneration
 from aeo_orchestrator.nodes.compliance import MAX_COMPLIANCE_RETRIES
 from aeo_orchestrator.runner import build_runner_graph, run_listing_task, serialize_run_result
 from aeo_orchestrator.state import TaskStatus
 from click.testing import CliRunner
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import MemorySaver
-from llm_fixtures import (
-    INVALID_LISTING,
-    SAMPLE_LISTING,
-    patch_generate_instructor,
-)
+
+_LLM_PATCH = "aeo_orchestrator.nodes.generate.get_llm_provider"
+
+_VALID_JSON = """{
+  "title": "Acme Wireless Earbuds Pro Bluetooth 5.3 Noise Cancelling TWS",
+  "bullets": [
+    "ACTIVE NOISE CANCELLING for commute and office use",
+    "BLUETOOTH 5.3 with low latency game mode",
+    "32H TOTAL PLAYTIME with compact charging case",
+    "IPX5 WATER RESISTANT for workouts and daily use",
+    "COMFORT FIT with three ear tip sizes included"
+  ],
+  "search_terms": "wireless earbuds bluetooth noise cancelling",
+  "description": "Premium wireless earbuds with hybrid ANC."
+}"""
+
+_INVALID_JSON = """{
+  "title": "BEST free shipping wireless earbuds",
+  "bullets": ["Only one bullet"],
+  "search_terms": "",
+  "description": ""
+}"""
 
 
 def _thread_config(thread_id: str) -> RunnableConfig:
     return cast(RunnableConfig, {"configurable": {"thread_id": thread_id}})
 
 
+def _mock_llm(content: str) -> AsyncMock:
+    provider = AsyncMock()
+    provider.chat.return_value = LLMResponse(content=content, model="test")
+    return provider
+
+
 @pytest.mark.asyncio
 async def test_ms3_cli_e2e_auto_approve() -> None:
     graph = build_runner_graph()
-    with patch_generate_instructor():
+    mock = _mock_llm(_VALID_JSON)
+    with patch(_LLM_PATCH, return_value=mock):
         state = await run_listing_task(
             sku="DEMO-001",
             platform="amazon",
@@ -50,7 +74,8 @@ async def test_ms3_cli_e2e_auto_approve() -> None:
 @pytest.mark.asyncio
 async def test_ms3_cli_pauses_at_hitl() -> None:
     graph = build_runner_graph()
-    with patch_generate_instructor():
+    mock = _mock_llm(_VALID_JSON)
+    with patch(_LLM_PATCH, return_value=mock):
         state = await run_listing_task(
             sku="DEMO-001",
             platform="amazon",
@@ -68,7 +93,8 @@ async def test_ms3_cli_pauses_at_hitl() -> None:
 @pytest.mark.asyncio
 async def test_ms3_hitl_approve_completes() -> None:
     graph = build_graph(checkpointer=MemorySaver())
-    with patch_generate_instructor():
+    mock = _mock_llm(_VALID_JSON)
+    with patch(_LLM_PATCH, return_value=mock):
         await run_listing_task(
             sku="DEMO-001",
             platform="amazon",
@@ -85,13 +111,14 @@ async def test_ms3_hitl_approve_completes() -> None:
 @pytest.mark.asyncio
 async def test_ms3_degraded_research_still_completes() -> None:
     graph = build_runner_graph()
+    mock = _mock_llm(_VALID_JSON)
     with (
         patch(
             "aeo_orchestrator.nodes.research._expand_keywords_with_llm",
             new_callable=AsyncMock,
             return_value=["wireless earbuds", "bluetooth"],
         ),
-        patch_generate_instructor(),
+        patch(_LLM_PATCH, return_value=mock),
     ):
         state = await run_listing_task(
             sku="DEMO-001",
@@ -110,17 +137,20 @@ async def test_ms3_compliance_retries_then_hitl() -> None:
     graph = build_graph(checkpointer=MemorySaver())
     state = initial_state(task_id="ms3-retry", platform="amazon", sku="DEMO-001")
     config = _thread_config("ms3-retry")
+    provider = _mock_llm(_INVALID_JSON)
 
     call_count = 0
 
-    async def alternating_llm(*_args: object, **_kwargs: object) -> ListingGeneration:
+    async def alternating_llm(*_args: object, **_kwargs: object) -> LLMResponse:
         nonlocal call_count
         call_count += 1
         if call_count <= MAX_COMPLIANCE_RETRIES:
-            return INVALID_LISTING
-        return SAMPLE_LISTING
+            return LLMResponse(content=_INVALID_JSON, model="test")
+        return LLMResponse(content=_VALID_JSON, model="test")
 
-    with patch_generate_instructor(side_effect=alternating_llm):
+    provider.chat.side_effect = alternating_llm
+
+    with patch(_LLM_PATCH, return_value=provider):
         result = await graph.ainvoke(state, config=config)
 
     assert int(result.get("retry_count", 0)) >= MAX_COMPLIANCE_RETRIES
@@ -132,7 +162,8 @@ async def test_ms3_compliance_retries_then_hitl() -> None:
 
 def test_ms3_trace_queryable() -> None:
     runner = CliRunner()
-    with patch_generate_instructor():
+    mock = _mock_llm(_VALID_JSON)
+    with patch(_LLM_PATCH, return_value=mock):
         result = runner.invoke(
             main,
             [

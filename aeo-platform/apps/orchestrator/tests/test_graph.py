@@ -1,12 +1,26 @@
 from typing import cast
+from unittest.mock import AsyncMock, patch
 
 import pytest
+from aeo_llm.provider import LLMResponse
 from aeo_orchestrator import build_graph, initial_state
 from aeo_orchestrator.hitl import approve_hitl
 from aeo_orchestrator.state import TaskStatus
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import MemorySaver
-from llm_fixtures import patch_generate_instructor
+
+_SAMPLE_JSON = """{
+  "title": "Acme Wireless Earbuds Pro Bluetooth 5.3 Noise Cancelling TWS",
+  "bullets": [
+    "ACTIVE NOISE CANCELLING for commute and office use",
+    "BLUETOOTH 5.3 with low latency game mode",
+    "32H TOTAL PLAYTIME with compact charging case",
+    "IPX5 WATER RESISTANT for workouts and daily use",
+    "COMFORT FIT with three ear tip sizes included"
+  ],
+  "search_terms": "wireless earbuds bluetooth noise cancelling",
+  "description": "Premium wireless earbuds with hybrid ANC."
+}"""
 
 
 def _thread_config(thread_id: str) -> RunnableConfig:
@@ -24,7 +38,10 @@ async def test_graph_runs_until_hitl_interrupt() -> None:
     )
     config = _thread_config("task-1")
 
-    with patch_generate_instructor():
+    mock_provider = AsyncMock()
+    mock_provider.chat.return_value = LLMResponse(content=_SAMPLE_JSON, model="test")
+
+    with patch("aeo_orchestrator.nodes.generate.get_llm_provider", return_value=mock_provider):
         result = await graph.ainvoke(state, config=config)
 
     assert result["research"] is not None
@@ -51,7 +68,10 @@ async def test_graph_resumes_after_hitl() -> None:
     )
     config = _thread_config("task-2")
 
-    with patch_generate_instructor():
+    mock_provider = AsyncMock()
+    mock_provider.chat.return_value = LLMResponse(content=_SAMPLE_JSON, model="test")
+
+    with patch("aeo_orchestrator.nodes.generate.get_llm_provider", return_value=mock_provider):
         await graph.ainvoke(state, config=config)
         resumed = await approve_hitl(graph, "task-2")
 

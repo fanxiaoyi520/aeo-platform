@@ -5,22 +5,30 @@ from __future__ import annotations
 import csv
 import importlib.util
 import json
-import sys
 import types
 from pathlib import Path
+from unittest.mock import AsyncMock, patch
 
-_ORCH_TESTS = Path(__file__).resolve().parents[3] / "apps" / "orchestrator" / "tests"
-if str(_ORCH_TESTS) not in sys.path:
-    sys.path.insert(0, str(_ORCH_TESTS))
-
-from llm_fixtures import patch_generate_instructor  # noqa: E402
+from aeo_llm.provider import LLMResponse
 
 _ROOT = Path(__file__).resolve().parents[3]
 _TESTSET = _ROOT / "pilot" / "sample-sku-testset.json"
 _BATCH_SCRIPT = _ROOT / "scripts" / "batch_pilot.py"
 _BATCH_PS1 = _ROOT / "scripts" / "batch_pilot.ps1"
 
-_LLM_PATCH = "aeo_orchestrator.nodes.generate.get_instructor_client"
+_LLM_PATCH = "aeo_orchestrator.nodes.generate.get_llm_provider"
+_VALID_JSON = """{
+  "title": "Acme Wireless Earbuds Pro Bluetooth 5.3 Noise Cancelling TWS",
+  "bullets": [
+    "ACTIVE NOISE CANCELLING for commute and office use",
+    "BLUETOOTH 5.3 with low latency game mode",
+    "32H TOTAL PLAYTIME with compact charging case",
+    "IPX5 WATER RESISTANT for workouts and daily use",
+    "COMFORT FIT with three ear tip sizes included"
+  ],
+  "search_terms": "wireless earbuds bluetooth noise cancelling",
+  "description": "Premium wireless earbuds with hybrid ANC."
+}"""
 
 
 def _load_batch_pilot_module() -> types.ModuleType:
@@ -70,9 +78,11 @@ def test_s7_02_batch_pilot_dry_run_writes_csv(tmp_path: Path) -> None:
 def test_s7_02_batch_pilot_live_limit_one(tmp_path: Path) -> None:
     batch_pilot = _load_batch_pilot_module()
 
+    mock = AsyncMock()
+    mock.chat.return_value = LLMResponse(content=_VALID_JSON, model="test")
     output = tmp_path / "live.csv"
 
-    with patch_generate_instructor():
+    with patch(_LLM_PATCH, return_value=mock):
         exit_code = batch_pilot.main(
             [
                 "--testset",
