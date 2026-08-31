@@ -1,10 +1,11 @@
 # Install Docker Engine (CLI only) in WSL Ubuntu — NO Docker Desktop
-# Data root: D:\Software\Docker\wsl\data
+# Data root: %LOCALAPPDATA%\aeo-platform\docker (override: AEO_DOCKER_ROOT)
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "docker-config.ps1")
 
-$DataRoot = "D:\Software\Docker\wsl\data"
-$LogFile = "D:\Software\Docker\install.log"
+$DataRoot = Get-AeoDockerDataRoot
+$LogFile = Get-AeoDockerLogFile
 
 function Write-Log {
     param([string]$Message, [string]$Color = "White")
@@ -13,8 +14,7 @@ function Write-Log {
     Write-Host $Message -ForegroundColor $Color
 }
 
-New-Item -ItemType Directory -Force -Path "D:\Software\Docker" | Out-Null
-New-Item -ItemType Directory -Force -Path $DataRoot | Out-Null
+Ensure-AeoDockerRoot | Out-Null
 Set-Content -Path $LogFile -Value "=== Install started $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ===" -Encoding UTF8
 
 Write-Log "==> AEO Platform - Docker CLI (WSL, no Desktop)" "Cyan"
@@ -214,7 +214,7 @@ docker compose version 2>/dev/null || docker compose --version 2>/dev/null || tr
 
 $bashScript = $bashScript.Replace("__DATA_ROOT__", $wslDataPath)
 $bashScript = ($bashScript -replace "`r`n", "`n") -replace "`r", "`n"
-$installSh = "D:\Software\Docker\docker-install.sh"
+$installSh = Join-Path (Get-AeoDockerRoot) "docker-install.sh"
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllBytes($installSh, $utf8NoBom.GetBytes($bashScript))
 $wslScript = Convert-ToWslPath -Distro $activeDistro -WindowsPath $installSh

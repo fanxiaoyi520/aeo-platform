@@ -41,7 +41,7 @@
 
 ### 方式 B：Docker CLI（全容器，含 API 镜像构建，较慢）
 
-数据目录默认在 `scripts/install-docker-cli.ps1` 的 `$DataRoot`（可按本机修改）。
+数据目录默认在 `%LOCALAPPDATA%\aeo-platform\docker`（可通过环境变量 `AEO_DOCKER_ROOT` 覆盖，见 `scripts/docker-config.ps1`）。
 
 ```powershell
 # 1. 管理员 PowerShell（在 aeo-platform/ 目录下）

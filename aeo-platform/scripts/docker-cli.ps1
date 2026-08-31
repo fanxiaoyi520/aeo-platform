@@ -1,6 +1,7 @@
 # Docker CLI helper — use native docker or WSL Ubuntu docker (no Docker Desktop)
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "docker-config.ps1")
 
 function Get-ProjectRoot {
     return (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
@@ -35,25 +36,27 @@ function Get-WslProjectPath {
     $distro = Get-WslDistro
     if (-not $distro) { return $null }
 
-    $dockerDir = "D:\Software\Docker"
+    $dockerDir = Get-AeoDockerRoot
     if (-not (Test-Path $dockerDir)) {
         New-Item -ItemType Directory -Path $dockerDir -Force | Out-Null
     }
+
+    $wslMount = Get-AeoDockerWslMountPath
 
     # UTF-16LE preserves Chinese path names; passing via CLI corrupts encoding.
     $winPathFile = Join-Path $dockerDir "windows-project-path.txt"
     [System.IO.File]::WriteAllText($winPathFile, $WindowsPath.TrimEnd('\'), [System.Text.Encoding]::Unicode)
 
-    $convertScript = @'
+    $convertScript = @"
 #!/bin/bash
-P=$(iconv -f UTF-16LE -t UTF-8 /mnt/d/Software/Docker/windows-project-path.txt | tr -d '\r\n\357\273\277')
-wslpath -a "$P" | tr -d '\r' > /mnt/d/Software/Docker/wsl-project-path.txt
-'@
+P=`$(iconv -f UTF-16LE -t UTF-8 $wslMount/windows-project-path.txt | tr -d '\r\n\357\273\277')
+wslpath -a "`$P" | tr -d '\r' > $wslMount/wsl-project-path.txt
+"@
     $scriptPath = Join-Path $dockerDir "convert-path.sh"
     $utf8 = New-Object System.Text.UTF8Encoding $false
     [System.IO.File]::WriteAllBytes($scriptPath, $utf8.GetBytes($convertScript))
 
-    wsl -d $distro -e bash /mnt/d/Software/Docker/convert-path.sh 2>$null | Out-Null
+    wsl -d $distro -e bash "$wslMount/convert-path.sh" 2>$null | Out-Null
     if ($LASTEXITCODE -ne 0) { return $null }
 
     $wslPathFile = Join-Path $dockerDir "wsl-project-path.txt"
@@ -80,7 +83,7 @@ function Get-WslProjectPathFile {
     param([string]$WindowsPath)
     $wslPath = Get-WslProjectPath $WindowsPath
     if (-not $wslPath) { return $null }
-    return "/mnt/d/Software/Docker/wsl-project-path.txt"
+    return "$(Get-AeoDockerWslMountPath)/wsl-project-path.txt"
 }
 
 function Invoke-WslBash {

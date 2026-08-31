@@ -54,6 +54,8 @@ cd aeo-platform
 
 版本锁定见 [docs/03_DEV_ENVIRONMENT.md](docs/03_DEV_ENVIRONMENT.md)。
 
+**Docker 数据目录（Windows）：** 默认 `%LOCALAPPDATA%\aeo-platform\docker`，可通过 `AEO_DOCKER_ROOT` 覆盖。
+
 ## PR 检查清单
 
 合并前确认：
