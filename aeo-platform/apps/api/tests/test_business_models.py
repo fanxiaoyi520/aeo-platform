@@ -30,9 +30,8 @@ def test_ad_spend_snapshot_table_metadata() -> None:
 
 
 def test_business_models_have_mock_data_source_default() -> None:
-    order_mapper = inspect(OrderRecord)
-    campaign_mapper = inspect(AdCampaign)
-    order_default = order_mapper.columns["data_source"].default
-    campaign_default = campaign_mapper.columns["data_source"].default
-    assert order_default is not None and order_default.arg == "mock"
-    assert campaign_default is not None and campaign_default.arg == "mock"
+    for model in (OrderRecord, AdCampaign, AdSpendSnapshot):
+        mapper = inspect(model)
+        default = mapper.columns["data_source"].default
+        assert default is not None
+        assert getattr(default, "arg", None) == "mock"
