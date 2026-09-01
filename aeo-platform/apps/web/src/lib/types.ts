@@ -83,3 +83,54 @@ export type CreateTaskPayload = {
     keywords?: string[];
   };
 };
+
+export type RiskLevel = "L0" | "L1" | "L2";
+export type RiskEffect = "allow" | "require_hitl" | "deny";
+
+export type RiskRule = {
+  rule_id: string;
+  action: string;
+  risk_level: RiskLevel;
+  effect: RiskEffect;
+  description: string;
+  priority: number;
+};
+
+export type RiskRuleSet = {
+  version: string;
+  rules: RiskRule[];
+};
+
+export type RiskDecision = {
+  allowed: boolean;
+  effect: RiskEffect;
+  risk_level: RiskLevel;
+  rule_id: string;
+  message: string;
+};
+
+export type RiskAuditItem = {
+  id: string;
+  action: string;
+  actor: string;
+  detail: {
+    action: string;
+    context: Record<string, unknown>;
+    effect: RiskEffect;
+    risk_level: RiskLevel;
+    rule_id: string;
+    message: string;
+    allowed: boolean;
+  } | null;
+  created_at: string;
+};
+
+export type RiskAuditListResponse = {
+  items: RiskAuditItem[];
+  total: number;
+};
+
+export type RiskEvaluateRequest = {
+  action: string;
+  context?: Record<string, unknown>;
+};
