@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-08-30  
-**当前阶段：** **Phase 1 生产扩展** — MS7 ✅；**P1-01 知识库运营上传**（`feat/knowledge-upload`）待 PR；**MV1 blocked**（MV0-02 SP-API）  
-**Git：** `main`（本地未提交：MS4 + embeddings fix + live pilot 报告）  
-**CI：** `.github/workflows/ci.yml`（push 后 GitHub Actions 自动跑）
+**最后更新：** 2026-09-01  
+**当前阶段：** **Phase 1 生产扩展** — MS7 ✅、P1-01 ✅、P1-02 ✅（E2E 已验）；下一任务 **P1-03** 或 **MV0-02 SP-API**  
+**Git：** `main` @ PR #16–#21 merged（含 DeepSeek 修复、SKU 产品文档、CSV 导入、Docker 脚本）  
+**CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
 
@@ -224,8 +224,8 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `in_progress` | MS7 |
-| P1-02 | 真实 SKU 产品资料入库（≥5 SKU）+ CSV 导入脚本 | M02 | `in_progress` | P1-01 |
+| P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `completed` | MS7 |
+| P1-02 | 真实 SKU 产品资料入库（≥5 SKU）+ CSV 导入脚本 | M02 | `completed` | P1-01 |
 | P1-03 | MV0-02 SP-API / 试点店可行性确认 | MV-M10 | `pending` | MS7 |
 
 ---
@@ -314,3 +314,6 @@
 | 2026-08-30 | S7-04：MS7 验收报告 + `test_ms7_acceptance.py`；MS7 待用户批准 |
 | 2026-08-30 | S7-04 merged：PR #13 MS7 acceptance；test.ps1 **169/169**；CI ✅ |
 | 2026-08-30 | **用户批准 MS7**：里程碑 `completed`；**Phase 1 收官**；MV1 待 SP-API |
+| 2026-08-31 | P1-02 merged：PR #16 产品文档 + PR #21 CSV 导入；`import_products.ps1`；test.ps1 **196/196** |
+| 2026-08-31 | DeepSeek V4 + dev 脚本修复 merged：PR #18；research flaky 修复：PR #20；Docker 脚本：PR #17 |
+| 2026-09-01 | **P1-02 E2E 验收**：`import_products.ps1 -SyncTestset` + ingest **28 chunks**；testset **9** 条 `knowledge_doc`；SKU 检索 **5/5** |
