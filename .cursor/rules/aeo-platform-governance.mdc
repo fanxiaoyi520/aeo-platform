@@ -22,6 +22,7 @@ alwaysApply: true
 - `plan_status` 为 `DRAFT` 时禁止编写业务代码（仅可修改计划文档）
 - 未经用户批准不得修改 `docs/01_MASTER_PLAN.md` 的范围、技术栈、里程碑
 - 不得虚假更新 `docs/02_PROGRESS.md` 完成状态
+- 不得删除、重命名或禁用 `.cursor/rules/oss-first-implementation.mdc`（OSS-First 为强制规则）
 
 ## 变更控制
 
