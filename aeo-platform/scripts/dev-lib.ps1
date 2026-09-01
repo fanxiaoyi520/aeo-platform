@@ -63,11 +63,15 @@ function Get-ServiceLogFile {
 
 function Stop-PortListeners {
     param([int]$Port)
-    $connections = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
-    foreach ($conn in $connections) {
-        $procId = $conn.OwningProcess
-        Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue
-        Write-Host "  stopped PID $procId on port $Port" -ForegroundColor Gray
+    for ($attempt = 1; $attempt -le 5; $attempt++) {
+        $connections = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
+        if (-not $connections) { return }
+        foreach ($conn in $connections) {
+            $procId = $conn.OwningProcess
+            cmd /c "taskkill /PID $procId /T /F >nul 2>&1"
+            Write-Host "  stopped PID $procId on port $Port" -ForegroundColor Gray
+        }
+        Start-Sleep -Seconds 2
     }
 }
 
@@ -91,8 +95,8 @@ function Start-DevService {
     )
 
     if (Test-PortListening $Port) {
-        Write-Host "  $Name already listening on :$Port" -ForegroundColor Gray
-        return $true
+        Write-Host "  $Name already on :$Port — restarting" -ForegroundColor Yellow
+        Stop-DevService -Name $Name -Port $Port
     }
 
     $logFile = Get-ServiceLogFile $Name

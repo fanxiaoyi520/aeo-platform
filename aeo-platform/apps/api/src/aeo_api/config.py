@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -11,8 +12,16 @@ DEFAULT_DEV_API_KEYS: frozenset[str] = frozenset(
 )
 
 
+def _find_env_file() -> str | None:
+    for directory in (Path.cwd(), *Path.cwd().parents):
+        candidate = directory / ".env"
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(extra="ignore")
 
     app_env: str = Field(alias="APP_ENV", default="development")
     app_name: str = Field(alias="APP_NAME", default="aeo-platform")
@@ -51,4 +60,7 @@ def validate_production_settings(settings: Settings) -> None:
 
 @lru_cache
 def get_settings() -> Settings:
+    env_file = _find_env_file()
+    if env_file:
+        return Settings(_env_file=env_file)  # type: ignore[call-arg]
     return Settings()  # type: ignore[call-arg]

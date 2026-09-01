@@ -67,7 +67,11 @@ $apiCmd = @(
     "`$env:DB_URL='postgresql+asyncpg://aeo:aeo_dev_password@localhost:5432/aeo'"
     "`$env:DB_URL_SYNC='postgresql+psycopg://aeo:aeo_dev_password@localhost:5432/aeo'"
     "`$env:RAG_USE_HASH_EMBEDDINGS='true'"
-    "uv run uvicorn aeo_api.main:app --host 127.0.0.1 --port 8000 --reload"
+    "`$env:LLM_BASE_URL='$($env:LLM_BASE_URL)'"
+    "`$env:LLM_API_KEY='$($env:LLM_API_KEY)'"
+    "`$env:LLM_MODEL='$($env:LLM_MODEL)'"
+    "`$env:LLM_TIMEOUT_SECONDS='$($env:LLM_TIMEOUT_SECONDS)'"
+    "uv run uvicorn aeo_api.main:app --host 127.0.0.1 --port 8000 --reload --reload-dir src --reload-dir ..\orchestrator\src --reload-dir ..\..\packages\llm\src"
 )
 Start-DevService -Name "api" -WorkingDirectory $apiRoot -Command $apiCmd -Port 8000 | Out-Null
 
