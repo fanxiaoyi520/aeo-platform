@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { href: "/", label: "仪表盘" },
   { href: "/tasks", label: "任务" },
   { href: "/knowledge", label: "知识库" },
+  { href: "/risk", label: "风控" },
   { href: "/settings", label: "设置" },
 ];
 
