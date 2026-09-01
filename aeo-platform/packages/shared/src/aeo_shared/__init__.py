@@ -18,12 +18,20 @@ from aeo_shared.risk_dsl import (
     default_production_rule_set,
     evaluate_action,
 )
+from aeo_shared.task_scheduler import (
+    AgentTaskScheduler,
+    ScheduledAgentTask,
+    ScheduledTaskStatus,
+    SchedulerConfig,
+    TaskPriority,
+)
 
 __all__ = [
     "AgentCapability",
     "AgentCategory",
     "AgentDeclaration",
     "AgentRegistry",
+    "AgentTaskScheduler",
     "RiskLevel",
     "RiskAction",
     "RiskCondition",
@@ -31,6 +39,10 @@ __all__ = [
     "RiskEffect",
     "RiskRule",
     "RiskRuleSet",
+    "ScheduledAgentTask",
+    "ScheduledTaskStatus",
+    "SchedulerConfig",
+    "TaskPriority",
     "build_default_registry",
     "default_production_rule_set",
     "evaluate_action",

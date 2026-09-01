@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-01  
-**当前阶段：** **MV1 in_progress（mock）** — MV1-01 ✅、MV1-04/06 待 merge（PR）  
-**下一任务：** **MV1-02** 跨 Agent 任务调度器  
-**Git：** `main` @ PR #26 merged（MV1-01）；`feat/mv1-04-06-risk-and-data` 开发中  
+**当前阶段：** **MV1 in_progress（mock）** — MV1-01/04/06 ✅；**MV1-02 待 merge**  
+**下一任务：** **MV1-03** 多图编排（父任务 → 子 Agent 图）  
+**Git：** `main` @ PR #27 merged；`feat/mv1-02-task-scheduler` 待 merge  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -325,4 +325,5 @@
 | 2026-09-01 | P1-03 Spec + `demo_spapi_mock.ps1`：mock 三步演示通过（listing → research → tests） |
 | 2026-09-01 | **P1-03 NO-GO**：用户确认暂无卖家号；MV1 改走 mock 路径；P1-03 / MV0-02 关闭 |
 | 2026-09-01 | MV1-01 merged：PR #26 Agent 注册表 + 能力 Schema；test **220/220** |
-| 2026-09-01 | MV1-04 + MV1-06：风控 DSL + 经营数据表骨架（`feat/mv1-04-06-risk-and-data`） |
+| 2026-09-01 | MV1-04 + MV1-06 merged：PR #27 风控 DSL + 经营数据表骨架；test **229/229** |
+| 2026-09-01 | MV1-02 merged：PR #28 跨 Agent 优先级调度器；test **243/243** |
