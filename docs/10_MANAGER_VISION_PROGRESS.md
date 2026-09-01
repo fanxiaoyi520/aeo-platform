@@ -12,7 +12,7 @@
 | **当前阶段** | MV0 ✅ · MS7 ✅ · P1-03 NO-GO → **MV1 in_progress（mock）** |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **25%**（MV1-01/02/03/04/05/06 完成） |
+| **整体完成度** | **28%**（MV1-01~07 完成；MV1-08/09 待做） |
 
 ---
 
@@ -87,7 +87,7 @@
 | MV1-04 | L0/L1/L2 风控规则 DSL 设计 | MV-M02 | `completed` | MV0 |
 | MV1-05 | 风控引擎 + 审计日志扩展 | MV-M02 | `completed` | MV1-04 |
 | MV1-06 | 经营数据表骨架（订单/广告占位） | MV-M10 | `completed` | MV0 |
-| MV1-07 | GMV/ROI 指标采集 SDK 初版 | MV-M09 | `blocked` | MV1-06 |
+| MV1-07 | GMV/ROI 指标采集 SDK 初版 | MV-M09 | `completed` | MV1-06 |
 | MV1-08 | 前端：风控规则配置页（简版） | MV-M02 | `blocked` | MV1-05 |
 | MV1-09 | MV1 **生产验收**：3 Agent 联调 + 沙箱店审计全记录 | ALL | `blocked` | MV1-01~08 |
 

@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-01  
-**当前阶段：** **MV1 in_progress（mock）** — MV1-01/02/04/06 ✅；**MV1-03 待 merge**  
-**下一任务：** **MV1-05** 风控引擎（依赖 MV1-04）或 **MV1-07** 指标 SDK  
-**Git：** `main` @ PR #28 merged；`feat/mv1-03-multi-graph` 待 merge  
+**当前阶段：** **MV1 in_progress（mock）** — MV1-01~04/06 ✅、MV1-05 并行完成；**MV1-07 待 merge**  
+**下一任务：** **MV1-08** 风控规则配置页（依赖 MV1-05）或 **MV1-09** 生产验收  
+**Git：** `main` @ PR #29 merged；`feat/mv1-07-metrics-sdk` 待 merge  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -326,4 +326,4 @@
 | 2026-09-01 | **P1-03 NO-GO**：用户确认暂无卖家号；MV1 改走 mock 路径；P1-03 / MV0-02 关闭 |
 | 2026-09-01 | MV1-01 merged：PR #26 Agent 注册表 + 能力 Schema；test **220/220** |
 | 2026-09-01 | MV1-04 + MV1-06 merged：PR #27 风控 DSL + 经营数据表骨架；test **229/229** |
-| 2026-09-01 | MV1-03 merged：PR #29 多图编排父任务 → 子 Agent 图；test **255/255** |
+| 2026-09-01 | MV1-07 merged：PR #30 GMV/ROI metrics SDK + OSS L2 spec；test **272/272** |
