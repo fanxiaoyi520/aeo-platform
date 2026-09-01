@@ -12,7 +12,7 @@
 | **当前阶段** | MV0 ✅ · MS7 ✅ · P1-03 NO-GO → **MV1 in_progress（mock）** |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **22%**（MV1-01/02/03/04/06 完成） |
+| **整体完成度** | **25%**（MV1-01/02/03/04/05/06 完成） |
 
 ---
 
@@ -85,7 +85,7 @@
 | MV1-02 | 跨 Agent 任务调度器（优先级队列） | MV-M01 | `completed` | MV1-01 |
 | MV1-03 | 多图编排：父任务 → 子 Agent 图 | MV-M01 | `completed` | MV1-02 |
 | MV1-04 | L0/L1/L2 风控规则 DSL 设计 | MV-M02 | `completed` | MV0 |
-| MV1-05 | 风控引擎 + 审计日志扩展 | MV-M02 | `blocked` | MV1-04 |
+| MV1-05 | 风控引擎 + 审计日志扩展 | MV-M02 | `completed` | MV1-04 |
 | MV1-06 | 经营数据表骨架（订单/广告占位） | MV-M10 | `completed` | MV0 |
 | MV1-07 | GMV/ROI 指标采集 SDK 初版 | MV-M09 | `blocked` | MV1-06 |
 | MV1-08 | 前端：风控规则配置页（简版） | MV-M02 | `blocked` | MV1-05 |
@@ -176,3 +176,4 @@
 | 2026-09-01 | **P1-03 NO-GO**：暂无卖家号；MV0-02 关闭；MV1 mock 路径开工 |
 | 2026-09-01 | **MV1-01** merged PR #26；**MV1-04** 风控 DSL + **MV1-06** 数据表骨架 merged PR #27 |
 | 2026-09-01 | **MV1-03** 多图编排 merged PR #29（父任务 → 子 Agent 顺序调度） |
+| 2026-09-01 | **MV1-05** 风控引擎 + 审计扩展 PR #30；RiskEngine 服务 + /risk/evaluate + /risk/audit API；test **263/263** |
