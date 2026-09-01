@@ -13,6 +13,7 @@ members = [
     "packages/shared",
     "packages/llm",
     "packages/rag",
+    "packages/integrations",
 ]
 
 [dependency-groups]
@@ -36,7 +37,15 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.11"
 strict = true
-packages = ["aeo_api", "aeo_orchestrator", "aeo_browser", "aeo_shared", "aeo_llm", "aeo_rag"]
+packages = [
+    "aeo_api",
+    "aeo_orchestrator",
+    "aeo_browser",
+    "aeo_shared",
+    "aeo_llm",
+    "aeo_rag",
+    "aeo_integrations",
+]
 
 [[tool.mypy.overrides]]
 module = ["alembic.*", "prometheus_client.*", "chromadb.*"]
@@ -51,6 +60,7 @@ testpaths = [
     "packages/shared/tests",
     "packages/llm/tests",
     "packages/rag/tests",
+    "packages/integrations/tests",
 ]
 addopts = "-v --tb=short"
 
