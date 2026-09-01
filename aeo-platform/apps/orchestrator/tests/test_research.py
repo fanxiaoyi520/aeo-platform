@@ -92,3 +92,29 @@ async def test_research_degraded_without_competitors() -> None:
     assert research["degraded"] is True
     assert result["degraded_mode"] is True
     assert research["keywords"] == ["obd2", "diagnostic"]
+
+
+@pytest.mark.asyncio
+async def test_research_enriches_product_info_from_mock_listing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("BROWSER_ENABLED", "false")
+    monkeypatch.setenv("AMAZON_DATA_SOURCE", "mock")
+    from aeo_integrations.amazon import config as config_module
+
+    config_module.get_amazon_settings.cache_clear()
+    state = initial_state(
+        task_id="t5",
+        platform="amazon",
+        sku="HOMEBREW-KETTLE-1L",
+        product_info={"competitor_asins": ["B001"]},
+    )
+    result = await research_node(state)
+    product_info = result["product_info"]
+    assert isinstance(product_info, dict)
+    research = result["research"]
+    assert isinstance(research, dict)
+    assert product_info["title"] == "HomeBrew Electric Kettle 1L"
+    assert product_info["brand"] == "HomeBrew"
+    assert research["amazon_listing_loaded"] is True
+    assert research["degraded"] is False

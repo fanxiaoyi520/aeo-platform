@@ -14,12 +14,14 @@ COPY apps/browser/pyproject.toml apps/browser/
 COPY packages/shared/pyproject.toml packages/shared/
 COPY packages/llm/pyproject.toml packages/llm/
 COPY packages/rag/pyproject.toml packages/rag/
+COPY packages/integrations/pyproject.toml packages/integrations/
 COPY apps/api/src apps/api/src
 COPY apps/orchestrator/src apps/orchestrator/src
 COPY apps/browser/src apps/browser/src
 COPY packages/shared/src packages/shared/src
 COPY packages/llm/src packages/llm/src
 COPY packages/rag/src packages/rag/src
+COPY packages/integrations/src packages/integrations/src
 COPY knowledge knowledge
 COPY scripts/ingest_knowledge.py scripts/
 
@@ -30,7 +32,7 @@ RUN uv sync --frozen --package aeo-api --no-dev \
 COPY apps/api/alembic apps/api/alembic
 COPY apps/api/alembic.ini apps/api/
 
-ENV PYTHONPATH=/app/apps/api/src:/app/apps/orchestrator/src:/app/apps/browser/src:/app/packages/shared/src:/app/packages/llm/src:/app/packages/rag/src
+ENV PYTHONPATH=/app/apps/api/src:/app/apps/orchestrator/src:/app/apps/browser/src:/app/packages/shared/src:/app/packages/llm/src:/app/packages/rag/src:/app/packages/integrations/src
 
 WORKDIR /app/apps/api
 

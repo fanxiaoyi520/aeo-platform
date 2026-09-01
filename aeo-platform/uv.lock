@@ -114,6 +114,7 @@ version = "0.1.0"
 source = { editable = "apps/orchestrator" }
 dependencies = [
     { name = "aeo-browser" },
+    { name = "aeo-integrations" },
     { name = "aeo-llm" },
     { name = "aeo-rag" },
     { name = "aeo-shared" },
@@ -126,6 +127,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "aeo-browser", editable = "apps/browser" },
+    { name = "aeo-integrations", editable = "packages/integrations" },
     { name = "aeo-llm", editable = "packages/llm" },
     { name = "aeo-rag", editable = "packages/rag" },
     { name = "aeo-shared", editable = "packages/shared" },
