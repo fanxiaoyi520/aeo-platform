@@ -9,6 +9,7 @@ from aeo_llm.provider import Message
 
 from aeo_orchestrator.nodes._helpers import with_started_trace
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, make_trace_event
+from aeo_orchestrator.tools.amazon_listing import enrich_product_info_from_amazon
 
 MAX_BROWSER_FETCHES = 5
 
@@ -116,8 +117,14 @@ async def _expand_keywords_with_llm(state: TaskState, keywords: list[str]) -> li
 async def research_node(state: TaskState) -> dict[str, object]:
     """research_agent — user input + optional browser fetch + LLM keyword expansion."""
     trace = [with_started_trace(state, "research_agent")]
-    competitors = _parse_competitors(state.get("product_info") or {})
-    keywords = _baseline_keywords(state)
+    product_info, amazon_listing = enrich_product_info_from_amazon(
+        sku=state["sku"],
+        market=str(state.get("market", "US")),
+        platform=str(state.get("platform", "amazon")),
+        product_info=dict(state.get("product_info") or {}),
+    )
+    competitors = _parse_competitors(product_info)
+    keywords = _baseline_keywords({**state, "product_info": product_info})
     degraded = False
     market = str(state.get("market", "US"))
 
@@ -161,10 +168,12 @@ async def research_node(state: TaskState) -> dict[str, object]:
             )
 
     return {
+        "product_info": product_info,
         "research": {
             "competitors": competitors,
             "keywords": keywords,
             "degraded": degraded,
+            "amazon_listing_loaded": amazon_listing is not None,
         },
         "degraded_mode": degraded or state.get("degraded_mode", False),
         "trace": trace,

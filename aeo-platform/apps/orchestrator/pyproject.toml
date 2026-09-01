@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "aeo-browser",
+    "aeo-integrations",
     "aeo-shared",
     "aeo-llm",
     "aeo-rag",
@@ -18,6 +19,7 @@ aeo-orchestrate = "aeo_orchestrator.cli:main"
 
 [tool.uv.sources]
 aeo-browser = { workspace = true }
+aeo-integrations = { workspace = true }
 aeo-shared = { workspace = true }
 aeo-llm = { workspace = true }
 aeo-rag = { workspace = true }
