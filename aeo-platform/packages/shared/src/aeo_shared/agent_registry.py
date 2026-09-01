@@ -55,7 +55,7 @@ class AgentDeclaration(BaseModel):
 
 
 class AgentRegistry:
-    """In-memory agent registry (DB persistence deferred to MV1-02+)."""
+    """In-memory agent registry (DB persistence deferred to MV1-02+ scheduler work)."""
 
     def __init__(self) -> None:
         self._agents: dict[str, AgentDeclaration] = {}
