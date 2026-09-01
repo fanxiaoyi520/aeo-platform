@@ -178,3 +178,4 @@
 | 2026-09-01 | **MV1-03** 多图编排 merged PR #29（父任务 → 子 Agent 顺序调度） |
 | 2026-09-01 | **MV1-05** 风控引擎 + 审计扩展 PR #30；RiskEngine 服务 + /risk/evaluate + /risk/audit API；test **263/263** |
 | 2026-09-01 | **MV4-07** 六 Agent 指挥台：`GET /api/v1/agents` + `/agents` 页面 + BFF；test **280/280** |
+| 2026-09-01 | **MV1-09** 3 Agent 联调验收 merged PR #34；generate→compliance→review 7/7；test **280/280**，coverage **85.77%** |
