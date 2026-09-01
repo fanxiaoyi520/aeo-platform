@@ -12,7 +12,7 @@
 | **当前阶段** | MV0 ✅ · MS7 ✅ · P1-03 NO-GO → **MV1 in_progress（mock）** |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **5%**（MV0 完成；MV1 mock 路径开工） |
+| **整体完成度** | **12%**（MV1-01/04/06 完成；MV1-02 待开工） |
 
 ---
 
@@ -34,7 +34,7 @@
 | 模块 | 名称 | 状态 | 完成度 | 阶段 |
 |------|------|------|--------|------|
 | MV-M01 | 多 Agent 平台与调度 | `in_progress` | 0% | MV1 |
-| MV-M02 | 风控与决策分级 | `in_progress` | 0% | MV1 |
+| MV-M02 | 风控与决策分级 | `in_progress` | 20% | MV1 |
 | MV-M03 | 选品与市场情报 | `blocked` | 0% | MV2 |
 | MV-M04 | 内容 AIGC（全媒介） | `blocked` | 0% | MV2 |
 | MV-M05 | 广告投放与 ROI | `blocked` | 0% | MV3 |
@@ -42,7 +42,7 @@
 | MV-M07 | 客服与履约 | `blocked` | 0% | MV4 |
 | MV-M08 | 独立站 / DTC | `blocked` | 0% | MV3–MV4 |
 | MV-M09 | 商业指标与复盘闭环 | `blocked` | 0% | MV1 基础 / MV4 完整 |
-| MV-M10 | 数据集成层 | `in_progress` | 15% | MV1 起并行（mock 已就绪） |
+| MV-M10 | 数据集成层 | `in_progress` | 25% | MV1 起并行（mock 已就绪） |
 
 ---
 
@@ -81,12 +81,12 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV1-01 | 多 Agent 注册表与能力声明 Schema | MV-M01 | `pending` | MV0 |
-| MV1-02 | 跨 Agent 任务调度器（优先级队列） | MV-M01 | `blocked` | MV1-01 |
+| MV1-01 | 多 Agent 注册表与能力声明 Schema | MV-M01 | `completed` | MV0 |
+| MV1-02 | 跨 Agent 任务调度器（优先级队列） | MV-M01 | `pending` | MV1-01 |
 | MV1-03 | 多图编排：父任务 → 子 Agent 图 | MV-M01 | `blocked` | MV1-02 |
-| MV1-04 | L0/L1/L2 风控规则 DSL 设计 | MV-M02 | `pending` | MV0 |
+| MV1-04 | L0/L1/L2 风控规则 DSL 设计 | MV-M02 | `completed` | MV0 |
 | MV1-05 | 风控引擎 + 审计日志扩展 | MV-M02 | `blocked` | MV1-04 |
-| MV1-06 | 经营数据表骨架（订单/广告占位） | MV-M10 | `pending` | MV0 |
+| MV1-06 | 经营数据表骨架（订单/广告占位） | MV-M10 | `completed` | MV0 |
 | MV1-07 | GMV/ROI 指标采集 SDK 初版 | MV-M09 | `blocked` | MV1-06 |
 | MV1-08 | 前端：风控规则配置页（简版） | MV-M02 | `blocked` | MV1-05 |
 | MV1-09 | MV1 **生产验收**：3 Agent 联调 + 沙箱店审计全记录 | ALL | `blocked` | MV1-01~08 |
@@ -173,4 +173,5 @@
 | 2026-08-30 | 初版：自管理岗 JD 拆解 5 里程碑、89 项任务，状态 ON_HOLD |
 | 2026-08-30 | v1.1：重定义为生产商业级；验收项改为真实店铺/SKU/ROI 硬指标 |
 | 2026-08-30 | **用户批准 MV 计划**（「开启 MV 生产计划」）；MV0 completed |
-| 2026-09-01 | **P1-03 NO-GO**：暂无卖家号；MV0-02 关闭；MV1 mock 路径开工；MV1-01 / MV1-04 / MV1-06 待执行 |
+| 2026-09-01 | **P1-03 NO-GO**：暂无卖家号；MV0-02 关闭；MV1 mock 路径开工 |
+| 2026-09-01 | **MV1-01** merged PR #26；**MV1-04** 风控 DSL + **MV1-06** 数据表骨架 |
