@@ -20,7 +20,7 @@
 |------|------|------|
 | Amazon Listing 规范 | 官方卖家中心文档（公开摘录） | Markdown |
 | TikTok Shop 商品规范 | 官方文档摘录 | Markdown |
-| 示例产品资料 | 公开参数、说明书摘要 | PDF/MD |
+| 元征产品资料 | 官网公开参数、说明书 | PDF/MD |
 | 优秀 Listing 范例 | 人工标注 10–20 条 | JSON |
 | 运营 SOP | 自建：上架检查清单 | Markdown |
 
