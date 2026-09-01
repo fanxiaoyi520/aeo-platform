@@ -54,3 +54,27 @@ class AuditService:
                 detail=detail,
             )
         )
+
+    async def list_risk_logs(
+        self,
+        session: AsyncSession,
+        *,
+        evaluated_action: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        """List risk evaluation audit logs, optionally filtered by evaluated action."""
+        query = (
+            select(AuditLog)
+            .where(AuditLog.action == "risk.evaluate")
+            .order_by(AuditLog.created_at.desc())
+            .limit(min(limit, 100))
+        )
+        result = await session.execute(query)
+        entries = result.scalars().all()
+
+        if evaluated_action:
+            entries = [
+                e for e in entries if e.detail and e.detail.get("action") == evaluated_action
+            ]
+
+        return [_serialize_audit_log(entry) for entry in entries]
