@@ -76,6 +76,8 @@
 
 **已有选型无需重复调研：** LangGraph、Chroma、Playwright、FastAPI、Next.js。
 
+**L2 Spec 落盘目录：** [`docs/specs/`](specs/README.md)（含范例 MV1-07）。
+
 ---
 
 ## TDD 纪律（功能开发强制）

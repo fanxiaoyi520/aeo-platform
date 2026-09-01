@@ -31,3 +31,18 @@ alwaysApply: true
 ## 已有选型（无需重复调研）
 
 LangGraph、Chroma、Playwright、FastAPI、Next.js — 沿用即可，除非替换架构。
+
+## 新任务开工流程（L1/L2 强制）
+
+1. **定级**：根据上表判定 L0 / L1 / L2（不确定时按 L2 处理）。
+2. **写 Spec**：在对话或 `docs/specs/{任务ID}-*.md` 中附上开源段落（L1 简表 / L2 Top 3 + 采纳决策）。
+3. **等「开始」**：用户确认 Spec 后再写代码（与 `06_TASK_SPEC.md` 一致）。
+4. **PR**：填写 `.github/pull_request_template.md` §开源调研。
+
+**L2 范例：** [`docs/specs/MV1-07-metrics-sdk.md`](../../docs/specs/MV1-07-metrics-sdk.md)
+
+## 违规与修复
+
+- ❌ L2 新包/新 SDK 无 Top 3 对比即开工
+- ❌ 删除、重命名或关闭 `alwaysApply` 的本规则文件
+- ✅ 发现规则文件缺失时： `git checkout origin/main -- .cursor/rules/oss-first-implementation.mdc`
