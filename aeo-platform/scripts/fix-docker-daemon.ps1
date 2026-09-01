@@ -1,6 +1,5 @@
 # Fix Docker daemon: move data-root off Windows mount (9p breaks overlayfs in WSL)
 $ErrorActionPreference = "Stop"
-. (Join-Path $PSScriptRoot "docker-config.ps1")
 
 Write-Host "==> Fixing Docker daemon for WSL" -ForegroundColor Cyan
 
@@ -42,13 +41,11 @@ fi
 '@
 
 $fixScript = ($fixScript -replace "`r`n", "`n") -replace "`r", "`n"
-$dockerRoot = Ensure-AeoDockerRoot
-$path = Join-Path $dockerRoot "fix-docker-daemon.sh"
-$wslMount = Get-AeoDockerWslMountPath
+$path = "D:\Software\Docker\fix-docker-daemon.sh"
 $utf8 = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllBytes($path, $utf8.GetBytes($fixScript))
 
-wsl -d Ubuntu -e bash "$wslMount/fix-docker-daemon.sh"
+wsl -d Ubuntu -e bash "/mnt/d/Software/Docker/fix-docker-daemon.sh"
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host "==> Docker daemon fixed" -ForegroundColor Green
