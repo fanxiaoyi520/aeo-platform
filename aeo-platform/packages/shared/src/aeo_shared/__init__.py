@@ -8,6 +8,13 @@ from aeo_shared.agent_registry import (
     AgentRegistry,
     RiskLevel,
 )
+from aeo_shared.graph_catalog import (
+    SubGraphDefinition,
+    build_graph_catalog,
+    get_graph_catalog,
+    get_subgraph,
+)
+from aeo_shared.multi_graph import MultiGraphOrchestrator, ParentTask, ParentTaskStatus
 from aeo_shared.risk_dsl import (
     RiskAction,
     RiskCondition,
@@ -32,6 +39,9 @@ __all__ = [
     "AgentDeclaration",
     "AgentRegistry",
     "AgentTaskScheduler",
+    "MultiGraphOrchestrator",
+    "ParentTask",
+    "ParentTaskStatus",
     "RiskLevel",
     "RiskAction",
     "RiskCondition",
@@ -42,9 +52,13 @@ __all__ = [
     "ScheduledAgentTask",
     "ScheduledTaskStatus",
     "SchedulerConfig",
+    "SubGraphDefinition",
     "TaskPriority",
     "build_default_registry",
+    "build_graph_catalog",
     "default_production_rule_set",
     "evaluate_action",
     "get_default_registry",
+    "get_graph_catalog",
+    "get_subgraph",
 ]

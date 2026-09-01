@@ -119,12 +119,15 @@ class AgentTaskScheduler:
         *,
         status: ScheduledTaskStatus | None = None,
         agent_id: str | None = None,
+        parent_task_id: str | None = None,
     ) -> list[ScheduledAgentTask]:
         items = list(self._tasks.values())
         if status is not None:
             items = [item for item in items if item.status == status]
         if agent_id is not None:
             items = [item for item in items if item.agent_id == agent_id]
+        if parent_task_id is not None:
+            items = [item for item in items if item.parent_task_id == parent_task_id]
         return sorted(items, key=lambda item: (item.priority, item.sequence))
 
     def claim_next(self) -> ScheduledAgentTask | None:
