@@ -2,7 +2,7 @@
 
 > **任务 ID：** P1-03 / MV0-02  
 > **类型：** 管理门禁 + 技术可行性确认（**非编码任务**，除非 GO 后接真 SP-API）  
-> **状态：** `pending` — 待用户填写确认书  
+> **状态：** `completed` — **NO-GO**（2026-09-01，用户确认暂无卖家号；MV1 走 mock 路径）  
 > **依赖：** MS7 ✅、P1-SPAPI-MOCK ✅、P1-SPAPI-ORCH ✅  
 > **关联：** [`10_MANAGER_VISION_PROGRESS.md`](../10_MANAGER_VISION_PROGRESS.md) MV0-02
 
@@ -142,8 +142,19 @@ GO 后 **P1-SPAPI-REAL** 按 RED → GREEN，mock 测试保持绿。
 
 ---
 
+## 决策记录
+
+| 日期 | 决策 | 说明 |
+|------|------|------|
+| 2026-09-01 | **NO-GO** | 用户确认暂无 Amazon 卖家号；维持 `AMAZON_DATA_SOURCE=mock`；MV1 其他模块可开工 |
+
+**后续触发：** 获得卖家号 + SP-API 授权后，新开 **P1-SPAPI-REAL** 任务（不重新开 P1-03）。
+
+---
+
 ## 变更记录
 
 | 日期 | 说明 |
 |------|------|
 | 2026-09-01 | 初版 Spec；mock 骨架 + orchestrator 已就绪 |
+| 2026-09-01 | 用户决策 **NO-GO**；P1-03 关闭 |
