@@ -97,6 +97,65 @@ class KnowledgeDocument(Base):
     )
 
 
+class OrderRecord(Base):
+    """MV1-06 — order line placeholder (mock / future SP-API)."""
+
+    __tablename__ = "order_records"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    external_order_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    sku: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    platform: Mapped[str] = mapped_column(String(32), nullable=False, default="amazon")
+    marketplace: Mapped[str] = mapped_column(String(16), nullable=False, default="US")
+    quantity: Mapped[int] = mapped_column(nullable=False, default=1)
+    item_price: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    currency: Mapped[str] = mapped_column(String(8), nullable=False, default="USD")
+    order_status: Mapped[str] = mapped_column(String(32), nullable=False, default="Unshipped")
+    purchase_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    data_source: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (Index("idx_order_records_platform_sku", "platform", "sku"),)
+
+
+class AdCampaign(Base):
+    """MV1-06 — ad campaign placeholder."""
+
+    __tablename__ = "ad_campaigns"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    external_campaign_id: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    platform: Mapped[str] = mapped_column(String(32), nullable=False, default="amazon")
+    name: Mapped[str] = mapped_column(String(256), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="enabled")
+    daily_budget: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    currency: Mapped[str] = mapped_column(String(8), nullable=False, default="USD")
+    data_source: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
+class AdSpendSnapshot(Base):
+    """MV1-06 — daily ad spend / performance snapshot."""
+
+    __tablename__ = "ad_spend_snapshots"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    campaign_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    snapshot_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    spend: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    impressions: Mapped[int | None] = mapped_column(nullable=True)
+    clicks: Mapped[int | None] = mapped_column(nullable=True)
+    attributed_gmv: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    currency: Mapped[str] = mapped_column(String(8), nullable=False, default="USD")
+    data_source: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (Index("idx_ad_spend_campaign_date", "campaign_id", "snapshot_date"),)
+
+
 settings = get_settings()
 engine = create_async_engine(settings.db_url, echo=settings.app_debug, pool_size=10, max_overflow=5)
 async_session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
