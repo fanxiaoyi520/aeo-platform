@@ -327,3 +327,4 @@
 | 2026-09-01 | MV1-01 merged：PR #26 Agent 注册表 + 能力 Schema；test **220/220** |
 | 2026-09-01 | MV1-04 + MV1-06 merged：PR #27 风控 DSL + 经营数据表骨架；test **229/229** |
 | 2026-09-01 | MV1-07 merged：PR #30 GMV/ROI metrics SDK + OSS L2 spec；test **272/272** |
+| 2026-09-01 | MV4-07：六 Agent 指挥台（`/agents` + `GET /api/v1/agents`）；test **280/280** |

@@ -7,5 +7,6 @@
 |---------|-----------|------|
 | P1-03 | [`P1-03-spapi-feasibility.md`](P1-03-spapi-feasibility.md) | NO-GO |
 | MV1-07 | [`MV1-07-metrics-sdk.md`](MV1-07-metrics-sdk.md) | merged PR #31 |
+| MV4-07 | [`MV4-07-command-console.md`](MV4-07-command-console.md) | PR pending |
 
 新建 L2 Spec 命名：`{任务ID}-{简述}.md`（例：`MV4-07-command-console.md`）。

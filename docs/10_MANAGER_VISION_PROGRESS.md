@@ -128,7 +128,7 @@
 | MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `blocked` | MV1-07 |
 | MV4-05 | 策略建议 → 下轮任务自动创建 | MV-M09 | `blocked` | MV4-04, MV1-02 |
 | MV4-06 | GMV/ROI/人工替代率看板 | MV-M09 | `blocked` | MV1-07 |
-| MV4-07 | 六 Agent 指挥台（前端） | MV-M01 | `blocked` | MV1-03 |
+| MV4-07 | 六 Agent 指挥台（前端） | MV-M01 | `completed` | MV1-03 |
 | MV4-08 | MV4 **生产验收**：7 天连续自动日报 + 客服 50 条抽检 ≥85% | ALL | `blocked` | MV4-01~07 |
 
 ### MV5 — 全链路试点（+8 周）
@@ -177,4 +177,4 @@
 | 2026-09-01 | **MV1-01** merged PR #26；**MV1-04** 风控 DSL + **MV1-06** 数据表骨架 merged PR #27 |
 | 2026-09-01 | **MV1-03** 多图编排 merged PR #29（父任务 → 子 Agent 顺序调度） |
 | 2026-09-01 | **MV1-05** 风控引擎 + 审计扩展 PR #30；RiskEngine 服务 + /risk/evaluate + /risk/audit API；test **263/263** |
-| 2026-09-01 | **MV1-09** 3 Agent 联调验收 PR #34；generate→compliance→review 7/7 测试通过；test **280/280**，coverage **85.77%** |
+| 2026-09-01 | **MV4-07** 六 Agent 指挥台：`GET /api/v1/agents` + `/agents` 页面 + BFF；test **280/280** |
