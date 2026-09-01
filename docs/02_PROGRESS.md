@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-01  
-**当前阶段：** **Phase 1 生产扩展** — MS7 ✅、P1-01 ✅、P1-02 ✅、**P1-SPAPI-MOCK ✅**；下一任务 **P1-03** 或 **MV0-02 SP-API**  
-**Git：** `main` @ PR #24 merged（SP-API mock 骨架）；此前 PR #16–#23  
+**当前阶段：** **Phase 1 生产扩展** — MS7 ✅、P1-01 ✅、P1-02 ✅、**P1-SPAPI-MOCK ✅**、**P1-SPAPI-ORCH ✅**；下一任务 **P1-03** 或 **MV0-02 SP-API**  
+**Git：** `main` @ PR #25 merged（research_agent 接 mock listing）；此前 PR #24  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -227,6 +227,7 @@
 | P1-01 | 知识库运营上传（md/json/txt/pdf/docx）+ 自动索引 | M02/M05 | `completed` | MS7 |
 | P1-02 | 真实 SKU 产品资料入库（≥5 SKU）+ CSV 导入脚本 | M02 | `completed` | P1-01 |
 | P1-SPAPI-MOCK | Amazon SP-API mock 骨架（`aeo-integrations` listings/orders） | MV-M10 | `completed` | P1-02 |
+| P1-SPAPI-ORCH | research_agent 接入 mock listing 丰富 product_info | M03/MV-M10 | `completed` | P1-SPAPI-MOCK |
 | P1-03 | MV0-02 SP-API / 试点店可行性确认 | MV-M10 | `pending` | MS7 |
 
 ---
@@ -319,3 +320,4 @@
 | 2026-08-31 | DeepSeek V4 + dev 脚本修复 merged：PR #18；research flaky 修复：PR #20；Docker 脚本：PR #17 |
 | 2026-09-01 | **P1-02 E2E 验收**：`import_products.ps1 -SyncTestset` + ingest **28 chunks**；testset **9** 条 `knowledge_doc`；SKU 检索 **5/5** |
 | 2026-09-01 | P1-SPAPI-MOCK merged：PR #24 `aeo-integrations` mock 骨架；`AMAZON_DATA_SOURCE=mock`；test.ps1 **206/206**；CI ✅ |
+| 2026-09-01 | P1-SPAPI-ORCH merged：PR #25 research_agent 接 mock listing + Dockerfile 补 integrations；orchestrator **37/37**；CI ✅ |
