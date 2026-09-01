@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "source": "mock pilot orders",
+  "orders": [
+    {
+      "order_id": "111-0000000-0000001",
+      "sku": "HOMEBREW-KETTLE-1L",
+      "quantity": 1,
+      "item_price": "29.99",
+      "currency": "USD",
+      "order_status": "Unshipped",
+      "purchase_date": "2026-08-28T14:22:00Z"
+    },
+    {
+      "order_id": "111-0000000-0000002",
+      "sku": "KITCHEN-AIRFRYER-4QT",
+      "quantity": 2,
+      "item_price": "89.99",
+      "currency": "USD",
+      "order_status": "Shipped",
+      "purchase_date": "2026-08-27T09:10:00Z"
+    }
+  ]
+}

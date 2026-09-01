@@ -1,0 +1,101 @@
+{
+  "version": "1.0",
+  "source": "P1-02 pilot SKU batch",
+  "listings": [
+    {
+      "sku": "HOMEBREW-KETTLE-1L",
+      "seller_sku": "HOMEBREW-KETTLE-1L",
+      "asin": "B0MOCKKETTLE1",
+      "marketplace_id": "ATVPDKIKX0DER",
+      "status": "ACTIVE",
+      "title": "HomeBrew Electric Kettle 1L",
+      "brand": "HomeBrew",
+      "bullets": [
+        "Fast boil in under 5 minutes",
+        "360° swivel base with cord storage",
+        "Clear water level window"
+      ],
+      "keywords": ["electric kettle", "stainless steel kettle", "boil dry protection"],
+      "price": "29.99",
+      "currency": "USD",
+      "fulfillment_channel": "MFN",
+      "quantity": 120
+    },
+    {
+      "sku": "HOMEBREW-VACUUM-S",
+      "seller_sku": "HOMEBREW-VACUUM-S",
+      "asin": "B0MOCKVACUUM1",
+      "marketplace_id": "ATVPDKIKX0DER",
+      "status": "ACTIVE",
+      "title": "HomeBrew Cordless Vacuum S",
+      "brand": "HomeBrew",
+      "bullets": [
+        "Strong suction for pet hair",
+        "USB-C charging dock included",
+        "Washable HEPA filter"
+      ],
+      "keywords": ["cordless vacuum", "handheld vacuum", "car vacuum"],
+      "price": "79.99",
+      "currency": "USD",
+      "fulfillment_channel": "MFN",
+      "quantity": 45
+    },
+    {
+      "sku": "KITCHEN-AIRFRYER-4QT",
+      "seller_sku": "KITCHEN-AIRFRYER-4QT",
+      "asin": "B0MOCKAIRFRY1",
+      "marketplace_id": "ATVPDKIKX0DER",
+      "status": "ACTIVE",
+      "title": "KitchenPro Air Fryer 4QT",
+      "brand": "KitchenPro",
+      "bullets": [
+        "8 one-touch presets",
+        "Non-stick dishwasher-safe basket",
+        "Digital LED touch panel"
+      ],
+      "keywords": ["air fryer", "4 quart air fryer", "oil free cooking"],
+      "price": "89.99",
+      "currency": "USD",
+      "fulfillment_channel": "MFN",
+      "quantity": 60
+    },
+    {
+      "sku": "KITCHEN-BLENDER-PRO",
+      "seller_sku": "KITCHEN-BLENDER-PRO",
+      "asin": "B0MOCKBLEND1",
+      "marketplace_id": "ATVPDKIKX0DER",
+      "status": "ACTIVE",
+      "title": "KitchenPro Blender Pro",
+      "brand": "KitchenPro",
+      "bullets": [
+        "Crushes ice in seconds",
+        "Self-clean program",
+        "Overheat protection"
+      ],
+      "keywords": ["blender", "smoothie maker", "ice crush"],
+      "price": "59.99",
+      "currency": "USD",
+      "fulfillment_channel": "MFN",
+      "quantity": 80
+    },
+    {
+      "sku": "GLOW-HAIRDRYER-ION",
+      "seller_sku": "GLOW-HAIRDRYER-ION",
+      "asin": "B0MOCKDRYER1",
+      "marketplace_id": "ATVPDKIKX0DER",
+      "status": "ACTIVE",
+      "title": "GlowCare Ionic Hair Dryer",
+      "brand": "GlowCare",
+      "bullets": [
+        "Reduces frizz with ionic technology",
+        "3 heat / 2 speed settings",
+        "Cool shot button"
+      ],
+      "keywords": ["ionic hair dryer", "fast drying hair dryer", "lightweight hair dryer"],
+      "price": "39.99",
+      "currency": "USD",
+      "fulfillment_channel": "MFN",
+      "quantity": 95
+    }
+  ]
+}
