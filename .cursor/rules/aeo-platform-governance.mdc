@@ -15,6 +15,7 @@ alwaysApply: true
 4. 阅读 `docs/02_PROGRESS.md`，仅执行 `in_progress` 或用户点名任务
 5. 功能开发使用 `feat/{任务ID}-*` 分支；合并前 `aeo-platform\scripts\test.ps1` 全绿
 6. 工程纪律：TDD（`06_TASK_SPEC.md` §TDD）、Bug 四阶段调试、完成须附证据；工人模式见 `SESSIONS.md` §两阶段审查与 worktree
+7. 开源优先：`.cursor/rules/oss-first-implementation.mdc` — L1/L2 分级调研（`06_TASK_SPEC.md` §开源优先）
 
 ## 禁止事项
 

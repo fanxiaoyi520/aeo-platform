@@ -11,7 +11,7 @@
 ## 工作流（默认）
 
 ```
-认领任务 → 输出 Spec → 用户「开始」→ feat 分支开发 → test.ps1 全绿 → PR → CI 绿 → merge
+认领任务 → 输出 Spec（含 L1/L2 开源说明）→ 用户「开始」→ feat 分支开发 → test.ps1 全绿 → PR → CI 绿 → merge
 ```
 
 | 步骤 | 要求 |
@@ -64,6 +64,7 @@ cd aeo-platform
 - [ ] `cd aeo-platform; .\scripts\test.ps1` 全绿
 - [ ] 无计划外文件（`git diff main --stat`）
 - [ ] 功能开发遵循 TDD：先 RED 再 GREEN（见 `06_TASK_SPEC.md`）
+- [ ] L2 PR：填写开源调研表（见 `06_TASK_SPEC.md` §开源优先）
 - [ ] 完成声明附证据（pytest 输出、curl 结果或截图），禁止只说「应该好了」
 
 ## 并行隔离（可选）

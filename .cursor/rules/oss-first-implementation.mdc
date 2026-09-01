@@ -1,0 +1,33 @@
+---
+description: 功能模块实现前按 L1/L2 分级做开源调研；优先依赖或薄封装成熟方案
+alwaysApply: true
+---
+
+# 开源优先实现（OSS-First，分级）
+
+新能力或非 trivial 重构在写代码前，按任务规模做**分级**开源调研。细则见 `docs/06_TASK_SPEC.md` §开源优先。
+
+## 分级
+
+| 级别 | 触发 | 要求 |
+|------|------|------|
+| **L0** | bugfix、纯文档/配置、<30min 小改 | 跳过 |
+| **L1** | 新脚本、单文件工具、adapter 薄封装 | Spec 中 2～3 行：参考项目 + 采纳方式 |
+| **L2** | 新包、新 Agent 能力、外部系统集成（SP-API、队列、风控引擎等） | Top 3 对比表 + 采纳决策 |
+
+## 采纳顺序（L1/L2）
+
+1. **依赖** — `pyproject.toml` / `package.json` 引入维护中的库
+2. **薄封装** — OSS 核心 + AEO Adapter（配置、路径、分层边界）
+3. **复制代码** — 仅 MIT/Apache-2.0/BSD/ISC；文件头注明来源 URL
+4. **自研** — Top 3 均不可用或许可证不兼容；Spec/PR 须写证据
+
+## 禁止
+
+- GPL/AGPL/SSPL 整段复制
+- 无 Spec 的大模块从零实现（L2）
+- 密钥、未授权店铺数据入库
+
+## 已有选型（无需重复调研）
+
+LangGraph、Chroma、Playwright、FastAPI、Next.js — 沿用即可，除非替换架构。

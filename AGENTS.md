@@ -55,6 +55,7 @@ fix/health-ready-timeout
 | **系统化调试** | `06_TASK_SPEC.md` §修 Bug 版 — 四阶段根因分析 |
 | **两阶段审查** | `SESSIONS.md` §工人 PR 前审查 — 规格符合性 → 代码质量 |
 | **并行隔离** | `SESSIONS.md` §git worktree — 多工人同时开发 |
+| **开源优先（分级）** | `.cursor/rules/oss-first-implementation.mdc` + `06_TASK_SPEC.md` §开源优先 — L1/L2 按任务规模调研 |
 
 ### Commit 格式（进阶档）
 
