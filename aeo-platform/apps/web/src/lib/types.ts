@@ -83,3 +83,42 @@ export type CreateTaskPayload = {
     keywords?: string[];
   };
 };
+
+export type AgentCapability = {
+  name: string;
+  description: string;
+  tools: string[];
+};
+
+export type AgentCatalogItem = {
+  agent_id: string;
+  display_name: string;
+  category: string;
+  description: string;
+  version: string;
+  capabilities: AgentCapability[];
+  risk_level: string;
+  platforms: string[];
+  status: string;
+  graph_node: string | null;
+  timeout_seconds: number;
+};
+
+export type SubGraphSummary = {
+  graph_id: string;
+  display_name: string;
+  description: string;
+  category: string;
+  agent_ids: string[];
+  step_count: number;
+};
+
+export type AgentCommandConsole = {
+  agents: AgentCatalogItem[];
+  graphs: SubGraphSummary[];
+  summary: {
+    total: number;
+    active: number;
+    planned: number;
+  };
+};

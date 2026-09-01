@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/", label: "仪表盘" },
+  { href: "/agents", label: "指挥台" },
   { href: "/tasks", label: "任务" },
   { href: "/knowledge", label: "知识库" },
   { href: "/settings", label: "设置" },
