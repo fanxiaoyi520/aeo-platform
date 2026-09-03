@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-01  
-**当前阶段：** **MV1 in_progress（mock）** — MV1-01~04/06 ✅、MV1-05 并行完成；**MV1-07 待 merge**  
-**下一任务：** **MV1-08** 风控规则配置页（依赖 MV1-05）或 **MV1-09** 生产验收  
-**Git：** `main` @ PR #29 merged；`feat/mv1-07-metrics-sdk` 待 merge  
+**最后更新：** 2026-09-03  
+**当前阶段：** **MV2 in_progress** — MV2-01 ✅；MV1 全部完成  
+**下一任务：** **MV2-02** A01 选品 Agent（依赖 MV2-01）  
+**Git：** `main` @ MV4-07 merged；`feat/mv2-01-selection-scoring` 待 merge  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -328,3 +328,6 @@
 | 2026-09-01 | MV1-04 + MV1-06 merged：PR #27 风控 DSL + 经营数据表骨架；test **229/229** |
 | 2026-09-01 | MV1-07 merged：PR #30 GMV/ROI metrics SDK + OSS L2 spec；test **272/272** |
 | 2026-09-01 | MV4-07 merged：PR #35 六 Agent 指挥台；test **280/280** |
+| 2026-09-03 | **MV4-06** 商业指标看板；`GET /api/v1/business-metrics/dashboard` + `/metrics` 页面；test **290/290** |
+| 2026-09-03 | **MV1-08** 风控规则配置页；`GET /api/v1/risk/rules` + `/risk` 页面（规则表+评估+审计）；test **299/299** |
+| 2026-09-03 | **MV2-01** 选品评分模型与竞品池；`competitor_listings` + `selection_scores` 表 + 四维评分 API；test **308/308** |

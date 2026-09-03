@@ -8,11 +8,11 @@
 |------|-----|
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
-| **最后更新** | 2026-09-01 |
-| **当前阶段** | MV0 ✅ · MS7 ✅ · P1-03 NO-GO → **MV1 in_progress（mock）** |
+| **最后更新** | 2026-09-03 |
+| **当前阶段** | MV1 ✅ · **MV2 in_progress** — MV2-01 完成 |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **30%**（MV1-01~09 完成；MV1 底座完成） |
+| **整体完成度** | **34%**（MV1 全部完成；MV2-01 完成） |
 
 ---
 
@@ -21,7 +21,7 @@
 | 里程碑 | 状态 | 计划周 | 实际完成日 | 依赖 |
 |--------|------|--------|------------|------|
 | MV0 计划批准 | `completed` | — | 2026-08-30 |
-| MV1 平台与风控底座 | `in_progress` | W1–W8 | — | mock 路径 |
+| MV1 平台与风控底座 | `completed` | W1–W8 | 2026-09-03 | mock 路径 |
 | MV2 选品 + 内容扩展 | `blocked` | W9–W18 | — | MV1 |
 | MV3 投放与运维 | `blocked` | W19–W30 | — | MV2 |
 | MV4 客服 + 复盘 | `blocked` | W31–W40 | — | MV3 |
@@ -88,14 +88,14 @@
 | MV1-05 | 风控引擎 + 审计日志扩展 | MV-M02 | `completed` | MV1-04 |
 | MV1-06 | 经营数据表骨架（订单/广告占位） | MV-M10 | `completed` | MV0 |
 | MV1-07 | GMV/ROI 指标采集 SDK 初版 | MV-M09 | `completed` | MV1-06 |
-| MV1-08 | 前端：风控规则配置页（简版） | MV-M02 | `blocked` | MV1-05 |
+| MV1-08 | 前端：风控规则配置页（简版） | MV-M02 | `completed` | MV1-05 |
 | MV1-09 | MV1 **生产验收**：3 Agent 联调 + 沙箱店审计全记录 | ALL | `completed` | MV1-01~08 |
 
 ### MV2 — 选品 + 内容扩展（+10 周）
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV2-01 | 选品评分模型与竞品池持久化 | MV-M03 | `blocked` | MV1 |
+| MV2-01 | 选品评分模型与竞品池持久化 | MV-M03 | `completed` | MV1 |
 | MV2-02 | A01 选品 Agent：趋势 + 竞品 + 评分报告 | MV-M03 | `blocked` | MV2-01 |
 | MV2-03 | 市场情报定时任务（cron） | MV-M03 | `blocked` | MV2-01 |
 | MV2-04 | A03 扩展：主图/场景图文案 | MV-M04 | `blocked` | MV1 |
@@ -127,7 +127,7 @@
 | MV4-03 | 售后话术库与升级人工规则 | MV-M07 | `blocked` | MV4-02 |
 | MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `blocked` | MV1-07 |
 | MV4-05 | 策略建议 → 下轮任务自动创建 | MV-M09 | `blocked` | MV4-04, MV1-02 |
-| MV4-06 | GMV/ROI/人工替代率看板 | MV-M09 | `blocked` | MV1-07 |
+| MV4-06 | GMV/ROI/人工替代率看板 | MV-M09 | `completed` | MV1-07 |
 | MV4-07 | 六 Agent 指挥台（前端） | MV-M01 | `completed` | MV1-03 |
 | MV4-08 | MV4 **生产验收**：7 天连续自动日报 + 客服 50 条抽检 ≥85% | ALL | `blocked` | MV4-01~07 |
 
@@ -179,3 +179,4 @@
 | 2026-09-01 | **MV1-05** 风控引擎 + 审计扩展 PR #30；RiskEngine 服务 + /risk/evaluate + /risk/audit API；test **263/263** |
 | 2026-09-01 | **MV4-07** 六 Agent 指挥台 merged PR #35；`GET /api/v1/agents` + `/agents` 页面；test **280/280** |
 | 2026-09-01 | **MV1-09** 3 Agent 联调验收 merged PR #34；generate→compliance→review 7/7；test **280/280**，coverage **85.77%** |
+| 2026-09-03 | **MV2-01** 选品评分模型与竞品池持久化；`competitor_listings` + `selection_scores` 表 + 四维评分 API；test **308/308** |
