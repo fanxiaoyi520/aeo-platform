@@ -9,10 +9,10 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-03 |
-| **当前阶段** | MV1 ✅ · **MV2 in_progress** — MV2-01 完成 |
+| **当前阶段** | MV1 ✅ · **MV2 in_progress** — MV2-01~02 完成 |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **34%**（MV1 全部完成；MV2-01 完成） |
+| **整体完成度** | **36%**（MV1 全部完成；MV2-01~02 完成） |
 
 ---
 
@@ -96,7 +96,7 @@
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
 | MV2-01 | 选品评分模型与竞品池持久化 | MV-M03 | `completed` | MV1 |
-| MV2-02 | A01 选品 Agent：趋势 + 竞品 + 评分报告 | MV-M03 | `blocked` | MV2-01 |
+| MV2-02 | A01 选品 Agent：趋势 + 竞品 + 评分报告 | MV-M03 | `completed` | MV2-01 |
 | MV2-03 | 市场情报定时任务（cron） | MV-M03 | `blocked` | MV2-01 |
 | MV2-04 | A03 扩展：主图/场景图文案 | MV-M04 | `blocked` | MV1 |
 | MV2-05 | A03 扩展：TikTok 短视频脚本 + 分镜 | MV-M04 | `blocked` | MV2-04 |
@@ -180,3 +180,4 @@
 | 2026-09-01 | **MV4-07** 六 Agent 指挥台 merged PR #35；`GET /api/v1/agents` + `/agents` 页面；test **280/280** |
 | 2026-09-01 | **MV1-09** 3 Agent 联调验收 merged PR #34；generate→compliance→review 7/7；test **280/280**，coverage **85.77%** |
 | 2026-09-03 | **MV2-01** 选品评分模型与竞品池持久化；`competitor_listings` + `selection_scores` 表 + 四维评分 API；test **308/308** |
+| 2026-09-03 | **MV2-02** A01 选品 Agent；`selection_node` + `build_selection_graph` + `run_selection_task`；selection_agent planned→active |
