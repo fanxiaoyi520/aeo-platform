@@ -5,6 +5,7 @@ from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.research import research_node
 from aeo_orchestrator.nodes.review import review_node
 from aeo_orchestrator.nodes.rules import rules_node
+from aeo_orchestrator.nodes.selection import selection_node
 
 __all__ = [
     "compliance_node",
@@ -12,4 +13,5 @@ __all__ = [
     "research_node",
     "review_node",
     "rules_node",
+    "selection_node",
 ]

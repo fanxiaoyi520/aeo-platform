@@ -117,8 +117,8 @@ def test_create_parent_rejects_inactive_agent_in_graph() -> None:
     bad_graph = SubGraphDefinition(
         graph_id="bad",
         display_name="Bad",
-        category=AgentCategory.SELECTION,
-        agent_ids=["selection_agent"],
+        category=AgentCategory.ADS,
+        agent_ids=["ads_agent"],
     )
     orchestrator = MultiGraphOrchestrator(scheduler, registry, graphs={"bad": bad_graph})
     with pytest.raises(ValueError, match="not active"):

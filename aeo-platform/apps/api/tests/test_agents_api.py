@@ -33,8 +33,8 @@ async def test_list_agents_returns_catalog() -> None:
     assert body["code"] == 0
     data = body["data"]
     assert data["summary"]["total"] >= 10
-    assert data["summary"]["active"] >= 6
-    assert data["summary"]["planned"] >= 5
+    assert data["summary"]["active"] >= 7
+    assert data["summary"]["planned"] >= 4
     agent_ids = {item["agent_id"] for item in data["agents"]}
     assert "research_agent" in agent_ids
     assert "selection_agent" in agent_ids

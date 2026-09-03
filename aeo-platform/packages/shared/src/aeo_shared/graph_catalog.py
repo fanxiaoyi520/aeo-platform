@@ -34,8 +34,17 @@ _LISTING_GRAPH = SubGraphDefinition(
     ],
 )
 
+_SELECTION_GRAPH = SubGraphDefinition(
+    graph_id="selection",
+    display_name="Selection Analysis",
+    description="Competitor research → scoring → recommendation report.",
+    category=AgentCategory.SELECTION,
+    agent_ids=["selection_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
+    _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
 }
 
 

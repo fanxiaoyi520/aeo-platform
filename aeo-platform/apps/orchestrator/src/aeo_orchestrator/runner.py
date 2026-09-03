@@ -8,7 +8,7 @@ from typing import Any, Literal
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
-from aeo_orchestrator.graph import build_graph
+from aeo_orchestrator.graph import build_graph, build_selection_graph
 from aeo_orchestrator.hitl import approve_hitl, is_waiting_hitl, run_until_hitl
 from aeo_orchestrator.state import TaskState, TaskStatus, initial_state
 
@@ -45,6 +45,29 @@ async def run_listing_task(
     return result
 
 
+async def run_selection_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "amazon",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+    graph: CompiledStateGraph[TaskState, None, TaskState, TaskState] | None = None,
+) -> TaskState:
+    """Run the selection analysis graph (single selection_agent node)."""
+    resolved_id = task_id or str(uuid.uuid4())
+    compiled = graph or build_selection_graph(checkpointer=MemorySaver())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
+
+
 def serialize_run_result(state: TaskState, *, waiting_hitl: bool) -> dict[str, Any]:
     status = state.get("status", TaskStatus.RUNNING)
     status_value = status.value if isinstance(status, TaskStatus) else str(status)
@@ -63,5 +86,17 @@ def serialize_run_result(state: TaskState, *, waiting_hitl: bool) -> dict[str, A
         "final_output": state.get("final_output"),
         "generated": state.get("generated"),
         "compliance": state.get("compliance"),
+        "trace": state.get("trace", []),
+    }
+
+
+def serialize_selection_result(state: TaskState) -> dict[str, Any]:
+    selection = state.get("selection") or {}
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "selection": selection,
         "trace": state.get("trace", []),
     }

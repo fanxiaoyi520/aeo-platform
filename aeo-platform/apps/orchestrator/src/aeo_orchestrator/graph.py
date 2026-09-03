@@ -14,6 +14,7 @@ from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.research import research_node
 from aeo_orchestrator.nodes.review import human_review_node, review_node, route_after_human_review
 from aeo_orchestrator.nodes.rules import rules_node
+from aeo_orchestrator.nodes.selection import selection_node
 from aeo_orchestrator.state import TaskState
 
 HUMAN_REVIEW_NODE = "human_review"
@@ -53,3 +54,16 @@ def build_graph(
         checkpointer=memory,
         interrupt_before=[HUMAN_REVIEW_NODE],
     )
+
+
+def build_selection_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the selection analysis graph (single selection_agent node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("selection", selection_node)
+    builder.set_entry_point("selection")
+    builder.add_edge("selection", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
