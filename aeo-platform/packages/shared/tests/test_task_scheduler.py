@@ -40,7 +40,7 @@ def test_enqueue_active_listing_agent() -> None:
 def test_enqueue_rejects_planned_agent() -> None:
     scheduler = _scheduler()
     with pytest.raises(ValueError, match="not active"):
-        scheduler.enqueue("selection_agent")
+        scheduler.enqueue("ads_agent")
 
 
 def test_enqueue_rejects_unknown_capability() -> None:

@@ -40,6 +40,7 @@ class TaskState(TypedDict, total=False):
     market: str
     product_info: dict[str, Any]
     research: dict[str, Any] | None
+    selection: dict[str, Any] | None
     rules: dict[str, Any] | None
     generated: dict[str, Any] | None
     compliance: dict[str, Any] | None
@@ -82,6 +83,7 @@ def initial_state(
         market=market,
         product_info=product_info or {},
         research=None,
+        selection=None,
         rules=None,
         generated=None,
         compliance=None,

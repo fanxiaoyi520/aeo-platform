@@ -110,17 +110,35 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         graph_node="review",
         timeout_seconds=30,
     ),
-)
-
-_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="selection_agent",
         display_name="Selection Agent",
         category=AgentCategory.SELECTION,
-        description="Market research and SKU selection scoring.",
-        status="planned",
+        description="Market research, competitor analysis, and SKU selection scoring.",
+        capabilities=[
+            AgentCapability(
+                name="selection.score",
+                description="Score product candidates using 4-dimension model.",
+                tools=["scoring.score_product"],
+            ),
+            AgentCapability(
+                name="selection.competitor_research",
+                description="Analyze competitor pool and market signals.",
+                tools=["integrations.competitors"],
+            ),
+            AgentCapability(
+                name="selection.report",
+                description="Generate selection analysis report with recommendation.",
+                tools=["llm.chat"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="selection",
+        timeout_seconds=90,
     ),
+)
+
+_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="ads_agent",
         display_name="Ads Agent",
