@@ -9,6 +9,7 @@ from aeo_llm.provider import Message
 from aeo_shared.selection_scoring import (
     CompetitorData,
     SelectionInput,
+    SelectionResult,
     score_product,
 )
 
@@ -64,7 +65,7 @@ def _opt_float(value: object) -> float | None:
     if value is None:
         return None
     try:
-        return float(value)
+        return float(str(value))
     except (TypeError, ValueError):
         return None
 
@@ -73,7 +74,7 @@ def _opt_int(value: object) -> int | None:
     if value is None:
         return None
     try:
-        return int(value)
+        return int(str(value))
     except (TypeError, ValueError):
         return None
 
@@ -98,12 +99,9 @@ def _competitor_summary(competitors: list[CompetitorData]) -> dict[str, object]:
 
 async def _generate_report(
     state: TaskState,
-    scoring_result: object,
+    scoring_result: SelectionResult,
     competitor_summary: dict[str, object],
 ) -> str:
-    from aeo_shared.selection_scoring import SelectionResult
-
-    result: SelectionResult = scoring_result
     product_info = state.get("product_info") or {}
     prompt = (
         "You are an e-commerce selection analyst.\n"
@@ -113,13 +111,15 @@ async def _generate_report(
         f"Category: {product_info.get('category', 'N/A')}\n"
         f"Price: {product_info.get('price', 'N/A')}\n"
         f"Competitor summary: {json.dumps(competitor_summary)}\n"
-        f"Scoring: total={result.total_score:.1f}, demand={result.demand_score:.1f}, "
-        f"competition={result.competition_score:.1f}, "
-        f"profitability={result.profitability_score:.1f}, "
-        f"completeness={result.completeness_score:.1f}\n"
-        f"Recommendation: {result.recommendation}\n\n"
+        f"Scoring: total={scoring_result.total_score:.1f}, "
+        f"demand={scoring_result.demand_score:.1f}, "
+        f"competition={scoring_result.competition_score:.1f}, "
+        f"profitability={scoring_result.profitability_score:.1f}, "
+        f"completeness={scoring_result.completeness_score:.1f}\n"
+        f"Recommendation: {scoring_result.recommendation}\n\n"
         "Write a concise selection analysis report (3-5 sentences) covering: "
-        "market demand signal, competitive landscape, profitability outlook, and final recommendation."
+        "market demand signal, competitive landscape, profitability outlook, "
+        "and final recommendation."
     )
     provider = get_llm_provider()
     response = await provider.chat(

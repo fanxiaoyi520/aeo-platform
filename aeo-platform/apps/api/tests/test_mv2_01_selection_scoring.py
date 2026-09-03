@@ -46,7 +46,7 @@ def test_mv2_01_migration_exists() -> None:
     ).read_text(encoding="utf-8")
     assert "competitor_listings" in migration
     assert "selection_scores" in migration
-    assert 'down_revision' in migration
+    assert "down_revision" in migration
     assert '"0002"' in migration
 
 
@@ -130,7 +130,7 @@ def test_mv2_01_recommendation_thresholds() -> None:
 
 
 def test_mv2_01_shared_exports() -> None:
-    from aeo_shared import CompetitorData, SelectionInput, SelectionResult, score_product
+    from aeo_shared import SelectionInput, SelectionResult, score_product
 
     assert callable(score_product)
     result = score_product(SelectionInput(sku="EXPORT-TEST"))

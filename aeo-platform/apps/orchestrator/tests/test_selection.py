@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import json
+from typing import Any, cast
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from aeo_llm.provider import LLMResponse
-
 from aeo_orchestrator.state import initial_state
 
 
@@ -23,7 +22,7 @@ _SAMPLE_REPORT = (
     "Recommendation: proceed with listing generation."
 )
 
-_BASE_PRODUCT_INFO: dict[str, object] = {
+_BASE_PRODUCT_INFO: dict[str, Any] = {
     "title": "Wireless Charger",
     "price": 29.99,
     "rating": 4.2,
@@ -55,7 +54,7 @@ async def test_selection_node_basic_scoring() -> None:
     with patch("aeo_orchestrator.nodes.selection.get_llm_provider", return_value=mock):
         result = await selection_node(state)
 
-    selection = result["selection"]
+    selection = cast(dict[str, Any], result["selection"])
     assert isinstance(selection, dict)
     assert selection["sku"] == "TEST-001"
     assert 0 <= selection["total_score"] <= 100
@@ -69,7 +68,7 @@ async def test_selection_node_basic_scoring() -> None:
 async def test_selection_node_no_competitors() -> None:
     from aeo_orchestrator.nodes.selection import selection_node
 
-    info: dict[str, object] = {"title": "Basic Product", "price": 15.0}
+    info: dict[str, Any] = {"title": "Basic Product", "price": 15.0}
     state = initial_state(
         task_id="sel-2",
         platform="amazon",
@@ -80,7 +79,7 @@ async def test_selection_node_no_competitors() -> None:
     with patch("aeo_orchestrator.nodes.selection.get_llm_provider", return_value=mock):
         result = await selection_node(state)
 
-    selection = result["selection"]
+    selection = cast(dict[str, Any], result["selection"])
     assert selection["competitor_count"] == 0
     assert selection["competition_score"] == 80.0
 
@@ -99,7 +98,7 @@ async def test_selection_node_trace_events() -> None:
     with patch("aeo_orchestrator.nodes.selection.get_llm_provider", return_value=mock):
         result = await selection_node(state)
 
-    trace = result["trace"]
+    trace = cast(list[dict[str, Any]], result["trace"])
     assert len(trace) == 2
     assert trace[0]["agent"] == "selection_agent"
     assert trace[0]["status"] == "started"
@@ -123,10 +122,10 @@ async def test_selection_node_llm_failure_fallback() -> None:
     with patch("aeo_orchestrator.nodes.selection.get_llm_provider", return_value=mock):
         result = await selection_node(state)
 
-    selection = result["selection"]
+    selection = cast(dict[str, Any], result["selection"])
     assert selection["total_score"] > 0
     assert "LLM report generation failed" in selection["report"]
-    trace = result["trace"]
+    trace = cast(list[dict[str, Any]], result["trace"])
     statuses = [e["status"] for e in trace]
     assert "failed" in statuses
     assert "completed" in statuses
@@ -136,7 +135,7 @@ async def test_selection_node_llm_failure_fallback() -> None:
 async def test_selection_node_completeness_scoring() -> None:
     from aeo_orchestrator.nodes.selection import selection_node
 
-    info: dict[str, object] = {
+    info: dict[str, Any] = {
         "title": "Full Product",
         "bullet_points": ["a", "b"],
         "keywords": ["kw1"],
@@ -153,7 +152,8 @@ async def test_selection_node_completeness_scoring() -> None:
     with patch("aeo_orchestrator.nodes.selection.get_llm_provider", return_value=mock):
         result = await selection_node(state)
 
-    assert result["selection"]["completeness_score"] == 100.0
+    selection = cast(dict[str, Any], result["selection"])
+    assert selection["completeness_score"] == 100.0
 
 
 def test_extract_competitors_empty() -> None:
@@ -182,9 +182,8 @@ def test_extract_competitors_valid() -> None:
 
 
 def test_competitor_summary() -> None:
-    from aeo_shared.selection_scoring import CompetitorData
-
     from aeo_orchestrator.nodes.selection import _competitor_summary
+    from aeo_shared.selection_scoring import CompetitorData
 
     summary = _competitor_summary([])
     assert summary["count"] == 0

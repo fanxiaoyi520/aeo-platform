@@ -39,9 +39,7 @@ def upgrade() -> None:
     )
     op.create_index("ix_competitor_listings_asin", "competitor_listings", ["asin"])
     op.create_index("ix_competitor_listings_sku", "competitor_listings", ["sku"])
-    op.create_index(
-        "idx_competitor_platform_asin", "competitor_listings", ["platform", "asin"]
-    )
+    op.create_index("idx_competitor_platform_asin", "competitor_listings", ["platform", "asin"])
 
     op.create_table(
         "selection_scores",

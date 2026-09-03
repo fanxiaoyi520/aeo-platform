@@ -84,9 +84,7 @@ async def test_selection_graph_e2e() -> None:
     )
 
     with patch("aeo_orchestrator.nodes.selection.get_llm_provider", return_value=mock_provider):
-        result = await graph.ainvoke(
-            state, config={"configurable": {"thread_id": "mv2-02-e2e"}}
-        )
+        result = await graph.ainvoke(state, config={"configurable": {"thread_id": "mv2-02-e2e"}})
 
     selection = result.get("selection")
     assert selection is not None

@@ -64,7 +64,8 @@ async def run_selection_task(
         market=market,
         product_info=product_info,
     )
-    return await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
 
 
 def serialize_run_result(state: TaskState, *, waiting_hitl: bool) -> dict[str, Any]:
