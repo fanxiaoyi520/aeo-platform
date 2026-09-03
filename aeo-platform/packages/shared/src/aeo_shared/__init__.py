@@ -34,6 +34,12 @@ from aeo_shared.risk_dsl import (
     default_production_rule_set,
     evaluate_action,
 )
+from aeo_shared.selection_scoring import (
+    CompetitorData,
+    SelectionInput,
+    SelectionResult,
+    score_product,
+)
 from aeo_shared.task_scheduler import (
     AgentTaskScheduler,
     ScheduledAgentTask,
@@ -48,6 +54,7 @@ __all__ = [
     "AgentDeclaration",
     "AgentRegistry",
     "AgentTaskScheduler",
+    "CompetitorData",
     "MultiGraphOrchestrator",
     "OrderMetricRecord",
     "ParentTask",
@@ -64,6 +71,8 @@ __all__ = [
     "ScheduledAgentTask",
     "ScheduledTaskStatus",
     "SchedulerConfig",
+    "SelectionInput",
+    "SelectionResult",
     "SubGraphDefinition",
     "TaskPriority",
     "build_daily_snapshot",
@@ -77,4 +86,5 @@ __all__ = [
     "get_default_registry",
     "get_graph_catalog",
     "get_subgraph",
+    "score_product",
 ]
