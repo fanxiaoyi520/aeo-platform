@@ -73,6 +73,7 @@ def test_default_registry_includes_listing_chain() -> None:
         "compliance_agent",
         "human_review",
         "review_agent",
+        "image_copy_agent",
     }
 
 

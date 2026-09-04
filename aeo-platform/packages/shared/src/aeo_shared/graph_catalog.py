@@ -42,9 +42,18 @@ _SELECTION_GRAPH = SubGraphDefinition(
     agent_ids=["selection_agent"],
 )
 
+_IMAGE_COPY_GRAPH = SubGraphDefinition(
+    graph_id="image_copy",
+    display_name="Image Copywriting",
+    description="Main image callouts + scene image lifestyle copy.",
+    category=AgentCategory.LISTING,
+    agent_ids=["image_copy_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
+    _IMAGE_COPY_GRAPH.graph_id: _IMAGE_COPY_GRAPH,
 }
 
 
