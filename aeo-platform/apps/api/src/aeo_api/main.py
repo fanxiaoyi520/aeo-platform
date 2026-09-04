@@ -15,7 +15,18 @@ from aeo_api.db.redis import close_redis
 from aeo_api.logging_setup import setup_logging
 from aeo_api.middleware.rate_limit import RateLimitMiddleware
 from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
-from aeo_api.routers import agents, audit, health, knowledge, metrics, risk, root, selection, tasks
+from aeo_api.routers import (
+    agents,
+    audit,
+    health,
+    intelligence,
+    knowledge,
+    metrics,
+    risk,
+    root,
+    selection,
+    tasks,
+)
 
 logger = structlog.get_logger(__name__)
 settings = get_settings()
@@ -61,6 +72,7 @@ def create_app() -> FastAPI:
     app.include_router(agents.router)
     app.include_router(risk.router)
     app.include_router(selection.router)
+    app.include_router(intelligence.router)
     app.include_router(tasks.router)
 
     @app.exception_handler(RequestValidationError)
