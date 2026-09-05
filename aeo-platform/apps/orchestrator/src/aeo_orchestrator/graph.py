@@ -11,6 +11,7 @@ from langgraph.graph.state import CompiledStateGraph
 from aeo_orchestrator.checkpoint import create_memory_checkpointer
 from aeo_orchestrator.nodes.compliance import compliance_node, route_after_compliance
 from aeo_orchestrator.nodes.generate import generate_node
+from aeo_orchestrator.nodes.image_copy import image_copy_node
 from aeo_orchestrator.nodes.research import research_node
 from aeo_orchestrator.nodes.review import human_review_node, review_node, route_after_human_review
 from aeo_orchestrator.nodes.rules import rules_node
@@ -64,6 +65,19 @@ def build_selection_graph(
     builder.add_node("selection", selection_node)
     builder.set_entry_point("selection")
     builder.add_edge("selection", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
+
+
+def build_image_copy_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the image copywriting graph (single image_copy node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("image_copy", image_copy_node)
+    builder.set_entry_point("image_copy")
+    builder.add_edge("image_copy", END)
 
     memory = checkpointer or create_memory_checkpointer()
     return builder.compile(checkpointer=memory)

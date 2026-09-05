@@ -8,6 +8,14 @@ from aeo_shared.agent_registry import (
     AgentRegistry,
     RiskLevel,
 )
+from aeo_shared.competitor_monitor import (
+    ListingChange,
+    ListingSnapshot,
+    MonitorDiff,
+    compute_diff,
+)
+from aeo_shared.cron_parser import CronSchedule, matches, next_run, parse_cron
+from aeo_shared.cron_scheduler import CronJob, CronScheduler, CronSchedulerConfig
 from aeo_shared.graph_catalog import (
     SubGraphDefinition,
     build_graph_catalog,
@@ -55,6 +63,13 @@ __all__ = [
     "AgentRegistry",
     "AgentTaskScheduler",
     "CompetitorData",
+    "CronJob",
+    "CronSchedule",
+    "CronScheduler",
+    "CronSchedulerConfig",
+    "ListingChange",
+    "ListingSnapshot",
+    "MonitorDiff",
     "MultiGraphOrchestrator",
     "OrderMetricRecord",
     "ParentTask",
@@ -78,10 +93,14 @@ __all__ = [
     "build_daily_snapshot",
     "build_default_registry",
     "build_graph_catalog",
+    "compute_diff",
     "compute_gmv",
     "compute_roi",
     "default_production_rule_set",
     "evaluate_action",
+    "matches",
+    "next_run",
+    "parse_cron",
     "parse_money",
     "get_default_registry",
     "get_graph_catalog",

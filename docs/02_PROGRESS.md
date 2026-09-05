@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-03  
-**当前阶段：** **MV2 in_progress** — MV2-01~02 ✅；MV1 全部完成  
-**下一任务：** **MV2-03** 市场情报定时任务（cron）（依赖 MV2-01）  
-**Git：** `main` @ MV4-07 merged；`feat/mv2-01-selection-scoring` 待 merge（含 MV2-01 + MV2-02）  
+**最后更新：** 2026-09-04  
+**当前阶段：** **MV2 in_progress** — MV2-01~04 ✅；MV1 全部完成  
+**下一任务：** **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜  
+**Git：** `main` @ MV4-07 merged；`feat/mv2-03-market-intelligence-cron` PR 已创建  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -332,3 +332,5 @@
 | 2026-09-03 | **MV1-08** 风控规则配置页；`GET /api/v1/risk/rules` + `/risk` 页面（规则表+评估+审计）；test **299/299** |
 | 2026-09-03 | **MV2-01** 选品评分模型与竞品池；`competitor_listings` + `selection_scores` 表 + 四维评分 API；test **308/308** |
 | 2026-09-03 | **MV2-02** A01 选品 Agent；`selection_node` + `build_selection_graph` + `run_selection_task`；18 项新测试 |
+| 2026-09-04 | **MV2-03** 市场情报定时任务（cron）；`CronScheduler` + `MarketIntelService` + `intelligence_schedules` 表 + API；test **411/411**，coverage **86%** |
+| 2026-09-05 | **MV2-04** A03 扩展：主图/场景图文案；`image_copy_node` + 知识库指南；mypy/cron 测试修复；test **418/418**，coverage **86%** |

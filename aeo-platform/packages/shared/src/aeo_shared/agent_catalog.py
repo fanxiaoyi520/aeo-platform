@@ -136,6 +136,20 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         graph_node="selection",
         timeout_seconds=90,
     ),
+    AgentDeclaration(
+        agent_id="image_copy_agent",
+        display_name="Image Copy Agent",
+        category=AgentCategory.LISTING,
+        description="Main image callouts and scene image copywriting.",
+        capabilities=[
+            AgentCapability(
+                name="generate.image_copy",
+                description="Produce main image callouts, badge text, and scene image copy.",
+                tools=["llm.chat"],
+            ),
+        ],
+        timeout_seconds=60,
+    ),
 )
 
 _MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (

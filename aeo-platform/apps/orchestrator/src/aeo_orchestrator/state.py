@@ -43,6 +43,7 @@ class TaskState(TypedDict, total=False):
     selection: dict[str, Any] | None
     rules: dict[str, Any] | None
     generated: dict[str, Any] | None
+    image_copy: dict[str, Any] | None
     compliance: dict[str, Any] | None
     human_feedback: str | None
     hitl_decision: Literal["approve", "reject"] | None
@@ -86,6 +87,7 @@ def initial_state(
         selection=None,
         rules=None,
         generated=None,
+        image_copy=None,
         compliance=None,
         human_feedback=None,
         hitl_decision=None,

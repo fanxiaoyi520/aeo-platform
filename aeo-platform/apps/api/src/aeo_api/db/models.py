@@ -211,6 +211,27 @@ class SelectionScore(Base):
     )
 
 
+class IntelligenceSchedule(Base):
+    """MV2-03 — cron schedule for periodic market intelligence scans."""
+
+    __tablename__ = "intelligence_schedules"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    job_id: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
+    sku: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    cron_expression: Mapped[str] = mapped_column(String(64), nullable=False)
+    enabled: Mapped[bool] = mapped_column(nullable=False, default=True)
+    payload: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    last_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    next_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (
+        Index("idx_intel_sched_sku", "sku"),
+        Index("idx_intel_sched_enabled", "enabled"),
+    )
+
+
 settings = get_settings()
 engine = create_async_engine(settings.db_url, echo=settings.app_debug, pool_size=10, max_overflow=5)
 async_session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
