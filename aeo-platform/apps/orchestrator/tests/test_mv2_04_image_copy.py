@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any, cast
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -184,7 +185,7 @@ async def test_image_copy_node_normalizes_missing_fields() -> None:
     ):
         result = await image_copy_node(state)
 
-    image_copy = result["image_copy"]
+    image_copy = cast("dict[str, Any]", result["image_copy"])
     main = image_copy["main_image"]
     assert len(main["callouts"]) == 3
     assert main["badge_text"] == ""
@@ -221,7 +222,7 @@ async def test_image_copy_node_strips_markdown_fences() -> None:
     ):
         result = await image_copy_node(state)
 
-    image_copy = result["image_copy"]
+    image_copy = cast("dict[str, Any]", result["image_copy"])
     assert image_copy["main_image"]["badge_text"] == "热销爆款"
 
 
@@ -246,7 +247,7 @@ async def test_image_copy_node_trace_events() -> None:
     ):
         result = await image_copy_node(state)
 
-    trace = result["trace"]
+    trace = cast("list[Any]", result["trace"])
     assert len(trace) == 2
     assert trace[0]["status"] == "started"
     assert trace[0]["agent"] == "image_copy_agent"

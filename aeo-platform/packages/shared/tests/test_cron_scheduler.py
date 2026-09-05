@@ -70,7 +70,8 @@ class TestCronJobRegistration:
 class TestCronSchedulerTick:
     def test_tick_returns_due_job(self) -> None:
         scheduler = CronScheduler()
-        scheduler.register(job_id="j1", cron_expression="0 9 * * *")
+        ref = datetime(2026, 9, 4, 8, 0, tzinfo=UTC)
+        scheduler.register(job_id="j1", cron_expression="0 9 * * *", now=ref)
         now = datetime(2026, 9, 4, 9, 0, tzinfo=UTC)
         due = scheduler.tick(now)
         assert len(due) == 1
@@ -85,8 +86,9 @@ class TestCronSchedulerTick:
 
     def test_tick_multiple_due_jobs(self) -> None:
         scheduler = CronScheduler()
-        scheduler.register(job_id="j1", cron_expression="0 9 * * *")
-        scheduler.register(job_id="j2", cron_expression="0 9 * * *")
+        ref = datetime(2026, 9, 4, 8, 0, tzinfo=UTC)
+        scheduler.register(job_id="j1", cron_expression="0 9 * * *", now=ref)
+        scheduler.register(job_id="j2", cron_expression="0 9 * * *", now=ref)
         now = datetime(2026, 9, 4, 9, 0, tzinfo=UTC)
         due = scheduler.tick(now)
         assert len(due) == 2
@@ -101,7 +103,8 @@ class TestCronSchedulerTick:
 
     def test_tick_updates_last_run(self) -> None:
         scheduler = CronScheduler()
-        scheduler.register(job_id="j1", cron_expression="0 9 * * *")
+        ref = datetime(2026, 9, 4, 8, 0, tzinfo=UTC)
+        scheduler.register(job_id="j1", cron_expression="0 9 * * *", now=ref)
         now = datetime(2026, 9, 4, 9, 0, tzinfo=UTC)
         scheduler.tick(now)
         job = scheduler.get("j1")
@@ -126,7 +129,8 @@ class TestCronSchedulerTick:
 
     def test_tick_naive_datetime_treated_as_utc(self) -> None:
         scheduler = CronScheduler()
-        scheduler.register(job_id="j1", cron_expression="0 9 * * *")
+        ref = datetime(2026, 9, 4, 8, 0, tzinfo=UTC)
+        scheduler.register(job_id="j1", cron_expression="0 9 * * *", now=ref)
         now = datetime(2026, 9, 4, 9, 0)
         due = scheduler.tick(now)
         assert len(due) == 1
@@ -167,8 +171,9 @@ class TestCronSchedulerConfig:
     def test_scheduler_with_config(self) -> None:
         config = CronSchedulerConfig(max_jobs_per_tick=1)
         scheduler = CronScheduler(config=config)
-        scheduler.register(job_id="j1", cron_expression="0 9 * * *")
-        scheduler.register(job_id="j2", cron_expression="0 9 * * *")
+        ref = datetime(2026, 9, 4, 8, 0, tzinfo=UTC)
+        scheduler.register(job_id="j1", cron_expression="0 9 * * *", now=ref)
+        scheduler.register(job_id="j2", cron_expression="0 9 * * *", now=ref)
         now = datetime(2026, 9, 4, 9, 0, tzinfo=UTC)
         due = scheduler.tick(now)
         assert len(due) == 1

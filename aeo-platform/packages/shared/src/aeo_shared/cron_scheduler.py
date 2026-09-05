@@ -52,17 +52,19 @@ class CronScheduler:
         job_id: str,
         cron_expression: str,
         payload: dict[str, Any] | None = None,
+        now: datetime | None = None,
     ) -> CronJob:
         if job_id in self._jobs:
             msg = f"Job already registered: {job_id}"
             raise ValueError(msg)
         schedule = parse_cron(cron_expression)
+        ref = now or datetime.now(UTC)
         job = CronJob(
             job_id=job_id,
             cron_expression=cron_expression,
             schedule=schedule,
             payload=payload or {},
-            next_run_at=next_run(schedule, datetime.now(UTC)),
+            next_run_at=next_run(schedule, ref),
         )
         self._jobs[job_id] = job
         return job
