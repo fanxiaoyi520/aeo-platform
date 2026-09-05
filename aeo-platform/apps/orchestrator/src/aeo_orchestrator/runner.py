@@ -8,7 +8,12 @@ from typing import Any, Literal
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
-from aeo_orchestrator.graph import build_graph, build_image_copy_graph, build_selection_graph
+from aeo_orchestrator.graph import (
+    build_graph,
+    build_image_copy_graph,
+    build_selection_graph,
+    build_tiktok_video_graph,
+)
 from aeo_orchestrator.hitl import approve_hitl, is_waiting_hitl, run_until_hitl
 from aeo_orchestrator.state import TaskState, TaskStatus, initial_state
 
@@ -133,5 +138,40 @@ def serialize_image_copy_result(state: TaskState) -> dict[str, Any]:
         "platform": state["platform"],
         "market": state.get("market", "US"),
         "image_copy": image_copy,
+        "trace": state.get("trace", []),
+    }
+
+
+async def run_tiktok_video_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "tiktok",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+    graph: CompiledStateGraph[TaskState, None, TaskState, TaskState] | None = None,
+) -> TaskState:
+    """Run the TikTok video script graph (single tiktok_video_agent node)."""
+    resolved_id = task_id or str(uuid.uuid4())
+    compiled = graph or build_tiktok_video_graph(checkpointer=MemorySaver())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
+
+
+def serialize_tiktok_video_result(state: TaskState) -> dict[str, Any]:
+    tiktok_video = state.get("tiktok_video") or {}
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "tiktok_video": tiktok_video,
         "trace": state.get("trace", []),
     }

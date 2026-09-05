@@ -9,7 +9,7 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · **MV2 in_progress** — MV2-01~04 完成 |
+| **当前阶段** | MV1 ✅ · **MV2 in_progress** — MV2-01~05 完成 |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
@@ -99,7 +99,7 @@
 | MV2-02 | A01 选品 Agent：趋势 + 竞品 + 评分报告 | MV-M03 | `completed` | MV2-01 |
 | MV2-03 | 市场情报定时任务（cron） | MV-M03 | `completed` | MV2-01 |
 | MV2-04 | A03 扩展：主图/场景图文案 | MV-M04 | `completed` | MV1 |
-| MV2-05 | A03 扩展：TikTok 短视频脚本 + 分镜 | MV-M04 | `blocked` | MV2-04 |
+| MV2-05 | A03 扩展：TikTok 短视频脚本 + 分镜 | MV-M04 | `completed` | MV2-04 |
 | MV2-06 | 多平台内容模板库（Amazon/TikTok） | MV-M04 | `blocked` | MV2-04 |
 | MV2-07 | 选品 → 内容 AIGC 自动任务链 | MV-M01 | `blocked` | MV2-02, MV2-05 |
 | MV2-08 | MV2 **生产验收**：10 真实 SKU 选品→内容包端到端 | ALL | `blocked` | MV2-01~07 |
@@ -183,3 +183,4 @@
 | 2026-09-03 | **MV2-02** A01 选品 Agent；`selection_node` + `build_selection_graph` + `run_selection_task`；selection_agent planned→active |
 | 2026-09-04 | **MV2-03** 市场情报定时任务（cron）；`CronScheduler` + `MarketIntelService` + `intelligence_schedules` 表 + API（scan/schedules CRUD）；test **411/411**，coverage **86%** |
 | 2026-09-05 | **MV2-04** A03 扩展：主图/场景图文案；`image_copy_node` + Amazon/TikTok 双平台 prompt + JSON 解析/规范化；`image-copy-guidelines.md` 知识库；test **418/418**，coverage **86%** |
+| 2026-09-05 | **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜；`tiktok_video_node` + 脚本/分镜生成 + agent/graph catalog 注册；test **427/427**，coverage **86%** |

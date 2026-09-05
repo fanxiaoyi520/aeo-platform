@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-04  
-**当前阶段：** **MV2 in_progress** — MV2-01~04 ✅；MV1 全部完成  
-**下一任务：** **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜  
+**当前阶段：** **MV2 in_progress** — MV2-01~05 ✅；MV1 全部完成  
+**下一任务：** **MV2-06** 多平台内容模板库（Amazon/TikTok）  
 **Git：** `main` @ MV4-07 merged；`feat/mv2-03-market-intelligence-cron` PR 已创建  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
@@ -334,3 +334,4 @@
 | 2026-09-03 | **MV2-02** A01 选品 Agent；`selection_node` + `build_selection_graph` + `run_selection_task`；18 项新测试 |
 | 2026-09-04 | **MV2-03** 市场情报定时任务（cron）；`CronScheduler` + `MarketIntelService` + `intelligence_schedules` 表 + API；test **411/411**，coverage **86%** |
 | 2026-09-05 | **MV2-04** A03 扩展：主图/场景图文案；`image_copy_node` + 知识库指南；mypy/cron 测试修复；test **418/418**，coverage **86%** |
+| 2026-09-05 | **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜；`tiktok_video_node` + catalog 注册；test **427/427**，coverage **86%** |

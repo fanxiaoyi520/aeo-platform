@@ -50,10 +50,19 @@ _IMAGE_COPY_GRAPH = SubGraphDefinition(
     agent_ids=["image_copy_agent"],
 )
 
+_TIKTOK_VIDEO_GRAPH = SubGraphDefinition(
+    graph_id="tiktok_video",
+    display_name="TikTok Video Script",
+    description="Short video script + shot-by-shot storyboard for TikTok Shop.",
+    category=AgentCategory.LISTING,
+    agent_ids=["tiktok_video_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
     _IMAGE_COPY_GRAPH.graph_id: _IMAGE_COPY_GRAPH,
+    _TIKTOK_VIDEO_GRAPH.graph_id: _TIKTOK_VIDEO_GRAPH,
 }
 
 

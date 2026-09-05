@@ -16,6 +16,7 @@ from aeo_orchestrator.nodes.research import research_node
 from aeo_orchestrator.nodes.review import human_review_node, review_node, route_after_human_review
 from aeo_orchestrator.nodes.rules import rules_node
 from aeo_orchestrator.nodes.selection import selection_node
+from aeo_orchestrator.nodes.tiktok_video import tiktok_video_node
 from aeo_orchestrator.state import TaskState
 
 HUMAN_REVIEW_NODE = "human_review"
@@ -78,6 +79,19 @@ def build_image_copy_graph(
     builder.add_node("image_copy", image_copy_node)
     builder.set_entry_point("image_copy")
     builder.add_edge("image_copy", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
+
+
+def build_tiktok_video_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the TikTok video script graph (single tiktok_video node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("tiktok_video", tiktok_video_node)
+    builder.set_entry_point("tiktok_video")
+    builder.add_edge("tiktok_video", END)
 
     memory = checkpointer or create_memory_checkpointer()
     return builder.compile(checkpointer=memory)

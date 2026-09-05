@@ -150,6 +150,21 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         ],
         timeout_seconds=60,
     ),
+    AgentDeclaration(
+        agent_id="tiktok_video_agent",
+        display_name="TikTok Video Agent",
+        category=AgentCategory.LISTING,
+        description="TikTok short video script and storyboard generation.",
+        capabilities=[
+            AgentCapability(
+                name="generate.tiktok_video",
+                description="Produce video script and shot-by-shot storyboard.",
+                tools=["llm.chat"],
+            ),
+        ],
+        platforms=["tiktok"],
+        timeout_seconds=60,
+    ),
 )
 
 _MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
