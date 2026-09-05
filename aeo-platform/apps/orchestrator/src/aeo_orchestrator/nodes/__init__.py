@@ -7,6 +7,7 @@ from aeo_orchestrator.nodes.research import research_node
 from aeo_orchestrator.nodes.review import review_node
 from aeo_orchestrator.nodes.rules import rules_node
 from aeo_orchestrator.nodes.selection import selection_node
+from aeo_orchestrator.nodes.tiktok_video import tiktok_video_node
 
 __all__ = [
     "compliance_node",
@@ -16,4 +17,5 @@ __all__ = [
     "review_node",
     "rules_node",
     "selection_node",
+    "tiktok_video_node",
 ]
