@@ -1,0 +1,62 @@
+[
+  {
+    "product_id": "SP-001",
+    "title": "Electric Kettle 1.0L",
+    "handle": "electric-kettle-1l",
+    "status": "active",
+    "vendor": "HomeBrew",
+    "product_type": "Kitchen",
+    "price": "29.99",
+    "compare_at_price": "39.99",
+    "sku": "KETTLE-001",
+    "inventory_quantity": 50,
+    "tags": ["kitchen", "kettle", "home"],
+    "created_at": "2026-08-01T00:00:00Z",
+    "updated_at": "2026-09-01T00:00:00Z"
+  },
+  {
+    "product_id": "SP-002",
+    "title": "Stainless Steel Vacuum Flask 500ml",
+    "handle": "vacuum-flask-500ml",
+    "status": "active",
+    "vendor": "HomeBrew",
+    "product_type": "Kitchen",
+    "price": "24.99",
+    "compare_at_price": null,
+    "sku": "VACUUM-001",
+    "inventory_quantity": 8,
+    "tags": ["kitchen", "flask", "travel"],
+    "created_at": "2026-08-05T00:00:00Z",
+    "updated_at": "2026-09-05T00:00:00Z"
+  },
+  {
+    "product_id": "SP-003",
+    "title": "Ceramic Pour-Over Dripper",
+    "handle": "pour-over-dripper",
+    "status": "active",
+    "vendor": "HomeBrew",
+    "product_type": "Coffee",
+    "price": "18.50",
+    "compare_at_price": "22.00",
+    "sku": "DRIPPER-001",
+    "inventory_quantity": 120,
+    "tags": ["coffee", "pour-over", "ceramic"],
+    "created_at": "2026-08-10T00:00:00Z",
+    "updated_at": "2026-09-02T00:00:00Z"
+  },
+  {
+    "product_id": "SP-004",
+    "title": "Bamboo Tea Infuser",
+    "handle": "bamboo-tea-infuser",
+    "status": "draft",
+    "vendor": "HomeBrew",
+    "product_type": "Tea",
+    "price": "9.99",
+    "compare_at_price": null,
+    "sku": "INFUSER-001",
+    "inventory_quantity": 200,
+    "tags": ["tea", "bamboo"],
+    "created_at": "2026-09-01T00:00:00Z",
+    "updated_at": "2026-09-06T00:00:00Z"
+  }
+]
