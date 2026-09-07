@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-07  
-**当前阶段：** **MV4 进行中**；MV4-06 完成  
-**下一任务：** **MV4-07** 六 Agent 指挥台（前端）  
-**Git：** `feat/mv4-06-business-dashboard` PR 待合并  
+**当前阶段：** **MV4 进行中**；MV4-01~07 全部完成  
+**下一任务：** **MV4-08** MV4 生产验收（7 天连续自动日报 + 客服抽检）  
+**Git：** `feat/mv4-07-metrics-page` PR 待合并  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -351,3 +351,4 @@
 | 2026-09-07 | **MV4-04** A06 复盘 Agent；`analytics_node`（mock 7天指标 → LLM 日报/周报 + 策略建议 + KPI 追踪）+ `build_analytics_graph` + `run_analytics_task` + `GET /api/v1/analytics/report`；analytics_agent active（3 capabilities）；test **599/599**（+9），coverage **87%** |
 | 2026-09-07 | **MV4-05** 策略建议 → 下轮任务自动创建；`ActionMapping`（7 种 action 路由）+ `StrategyTaskCreator`（→ `AgentTaskScheduler.enqueue`）+ `analytics_node` 集成 `created_tasks` + `POST /api/v1/analytics/create_tasks`；analytics.create_tasks capability；test **615/615**（+16），coverage **87%** |
 | 2026-09-07 | **MV4-06** GMV/ROI/人工替代率看板；`BusinessMetricsSnapshot` 新增 `automation_rate` + `compute_automation_rate()` + `DashboardService`（聚合 GMV/ROI/trend）+ `GET /api/v1/business-metrics/dashboard`；analytics.dashboard capability；test **631/631**（+16），coverage **87%** |
+| 2026-09-07 | **MV4-07** /metrics 前端看板页面；BFF `/api/metrics` + `/metrics` 页面（GMV/ROI/替代率/趋势图/明细表）+ 侧边栏导航；test **631/631**（前端无新增后端测试） |

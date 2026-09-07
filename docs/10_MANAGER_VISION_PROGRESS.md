@@ -9,7 +9,7 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· **MV4 进行中**（MV4-01 ✅） |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· **MV4 进行中**（MV4-01~07 ✅，MV4-08 待验收） |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
@@ -123,10 +123,10 @@
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
 | MV4-01 | 订单/物流数据 ingest | MV-M10 | `completed` | MV3 |
-| MV4-02 | A05 客服 Agent：RAG + 订单工具 | MV-M07 | `blocked` | MV4-01 |
-| MV4-03 | 售后话术库与升级人工规则 | MV-M07 | `blocked` | MV4-02 |
-| MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `blocked` | MV1-07 |
-| MV4-05 | 策略建议 → 下轮任务自动创建 | MV-M09 | `blocked` | MV4-04, MV1-02 |
+| MV4-02 | A05 客服 Agent：RAG + 订单工具 | MV-M07 | `completed` | MV4-01 |
+| MV4-03 | 售后话术库与升级人工规则 | MV-M07 | `completed` | MV4-02 |
+| MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `completed` | MV1-07 |
+| MV4-05 | 策略建议 → 下轮任务自动创建 | MV-M09 | `completed` | MV4-04, MV1-02 |
 | MV4-06 | GMV/ROI/人工替代率看板 | MV-M09 | `completed` | MV1-07 |
 | MV4-07 | 六 Agent 指挥台（前端） | MV-M01 | `completed` | MV1-03 |
 | MV4-08 | MV4 **生产验收**：7 天连续自动日报 + 客服 50 条抽检 ≥85% | ALL | `blocked` | MV4-01~07 |
