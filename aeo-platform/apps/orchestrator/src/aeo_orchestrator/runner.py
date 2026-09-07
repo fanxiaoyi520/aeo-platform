@@ -14,6 +14,7 @@ from aeo_orchestrator.graph import (
     build_image_copy_graph,
     build_ops_graph,
     build_selection_graph,
+    build_support_graph,
     build_tiktok_video_graph,
 )
 from aeo_orchestrator.hitl import approve_hitl, is_waiting_hitl, run_until_hitl
@@ -315,5 +316,40 @@ def serialize_ops_result(state: TaskState) -> dict[str, Any]:
         "platform": state["platform"],
         "market": state.get("market", "US"),
         "ops": ops,
+        "trace": state.get("trace", []),
+    }
+
+
+async def run_support_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "amazon",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+    graph: CompiledStateGraph[TaskState, None, TaskState, TaskState] | None = None,
+) -> TaskState:
+    """Run the support agent graph (single support_agent node)."""
+    resolved_id = task_id or str(uuid.uuid4())
+    compiled = graph or build_support_graph(checkpointer=MemorySaver())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
+
+
+def serialize_support_result(state: TaskState) -> dict[str, Any]:
+    support = state.get("support") or {}
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "support": support,
         "trace": state.get("trace", []),
     }

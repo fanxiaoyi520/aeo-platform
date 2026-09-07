@@ -47,6 +47,7 @@ class TaskState(TypedDict, total=False):
     tiktok_video: dict[str, Any] | None
     ads: dict[str, Any] | None
     ops: dict[str, Any] | None
+    support: dict[str, Any] | None
     compliance: dict[str, Any] | None
     human_feedback: str | None
     hitl_decision: Literal["approve", "reject"] | None
@@ -94,6 +95,7 @@ def initial_state(
         tiktok_video=None,
         ads=None,
         ops=None,
+        support=None,
         compliance=None,
         human_feedback=None,
         hitl_decision=None,

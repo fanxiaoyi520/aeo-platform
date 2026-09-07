@@ -207,17 +207,25 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         graph_node="ops",
         timeout_seconds=90,
     ),
-)
-
-_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="support_agent",
         display_name="Support Agent",
         category=AgentCategory.SUPPORT,
-        description="Customer message triage and draft replies.",
-        status="planned",
+        description="Customer message triage and draft replies using RAG + order context.",
+        capabilities=[
+            AgentCapability(
+                name="support.reply_draft",
+                description="Generate customer service reply drafts.",
+                tools=["rag.search", "orders.lookup"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="support",
+        timeout_seconds=90,
     ),
+)
+
+_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="analytics_agent",
         display_name="Analytics Agent",

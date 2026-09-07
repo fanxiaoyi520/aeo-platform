@@ -92,6 +92,14 @@ _OPS_GRAPH = SubGraphDefinition(
     agent_ids=["operations_agent"],
 )
 
+_SUPPORT_GRAPH = SubGraphDefinition(
+    graph_id="support",
+    display_name="Support Agent",
+    description="Customer service reply drafts using RAG + order context.",
+    category=AgentCategory.SUPPORT,
+    agent_ids=["support_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
@@ -100,6 +108,7 @@ _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _SELECTION_TO_CONTENT_GRAPH.graph_id: _SELECTION_TO_CONTENT_GRAPH,
     _ADS_GRAPH.graph_id: _ADS_GRAPH,
     _OPS_GRAPH.graph_id: _OPS_GRAPH,
+    _SUPPORT_GRAPH.graph_id: _SUPPORT_GRAPH,
 }
 
 
