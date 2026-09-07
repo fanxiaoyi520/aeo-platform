@@ -1,4 +1,4 @@
-"""support_agent — MV4-02/03 customer service reply drafts with RAG + order context + script library + escalation."""
+"""support_agent — customer service reply drafts with RAG + script library + escalation."""
 
 from __future__ import annotations
 
@@ -77,9 +77,7 @@ def _build_user_prompt(
 
     script_section = ""
     if matched_script:
-        script_section = (
-            f"Matching reply template:\n{json.dumps(matched_script, indent=2)}\n\n"
-        )
+        script_section = f"Matching reply template:\n{json.dumps(matched_script, indent=2)}\n\n"
 
     return (
         f"You are a customer service specialist.\n"
@@ -130,7 +128,7 @@ def _detect_scenario(parsed: dict[str, Any], order_context: list[dict[str, Any]]
 
 
 async def support_node(state: TaskState) -> dict[str, object]:
-    """support_agent — generate customer service reply drafts using RAG + order data + script library + escalation."""
+    """support_agent — generate customer service reply drafts using RAG + scripts + escalation."""
     trace = [with_started_trace(state, "support_agent")]
 
     try:
@@ -153,8 +151,10 @@ async def support_node(state: TaskState) -> dict[str, object]:
                     role="system",
                     content=(
                         "You are a customer service specialist. "
-                        "Generate professional, helpful reply drafts for customer inquiries. "
-                        "Use the order context, knowledge base references, and reply template provided. "
+                        "Generate professional, helpful reply drafts "
+                        "for customer inquiries. "
+                        "Use the order context, knowledge base references, "
+                        "and reply template provided. "
                         "Output valid JSON only."
                     ),
                 ),

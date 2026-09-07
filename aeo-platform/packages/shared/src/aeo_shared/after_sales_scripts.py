@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from functools import lru_cache
 from typing import Any
 
 
@@ -131,10 +130,7 @@ class ScriptLibrary:
         self._scripts = scripts if scripts is not None else list(_BUILTIN_SCRIPTS)
 
     def match(self, *, scenario: str, platform: str) -> list[AfterSalesScript]:
-        return [
-            s for s in self._scripts
-            if s.scenario == scenario and s.platform == platform
-        ]
+        return [s for s in self._scripts if s.scenario == scenario and s.platform == platform]
 
     def get_best(self, *, scenario: str, platform: str) -> AfterSalesScript | None:
         results = self.match(scenario=scenario, platform=platform)

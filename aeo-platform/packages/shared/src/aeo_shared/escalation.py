@@ -17,7 +17,7 @@ class EscalationRule:
     field: str
     operator: Operator = "gt"
     threshold: Any = None
-    scenarios: list[str] = field(default_factory=list)
+    scenarios: list[str] = field(default_factory=list)  # type: ignore[operator]
     priority: int = 100
 
 
@@ -41,15 +41,15 @@ def _match(op: Operator, actual: Any, threshold: Any) -> bool:
     if actual is None:
         return False
     if op == "eq":
-        return actual == threshold
+        return bool(actual == threshold)
     if op == "gt":
-        return actual > threshold
+        return bool(actual > threshold)
     if op == "gte":
-        return actual >= threshold
+        return bool(actual >= threshold)
     if op == "lt":
-        return actual < threshold
+        return bool(actual < threshold)
     if op == "lte":
-        return actual <= threshold
+        return bool(actual <= threshold)
     return False
 
 

@@ -40,9 +40,7 @@ async def test_list_support_scripts() -> None:
 async def test_filter_scripts_by_scenario() -> None:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get(
-            "/api/v1/support/scripts?scenario=return", headers=_HEADERS
-        )
+        response = await client.get("/api/v1/support/scripts?scenario=return", headers=_HEADERS)
 
     assert response.status_code == 200
     data = response.json()["data"]
@@ -55,9 +53,7 @@ async def test_filter_scripts_by_scenario() -> None:
 async def test_filter_scripts_by_platform() -> None:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get(
-            "/api/v1/support/scripts?platform=amazon", headers=_HEADERS
-        )
+        response = await client.get("/api/v1/support/scripts?platform=amazon", headers=_HEADERS)
 
     assert response.status_code == 200
     data = response.json()["data"]

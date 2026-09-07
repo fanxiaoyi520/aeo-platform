@@ -100,6 +100,14 @@ _SUPPORT_GRAPH = SubGraphDefinition(
     agent_ids=["support_agent"],
 )
 
+_ANALYTICS_GRAPH = SubGraphDefinition(
+    graph_id="analytics",
+    display_name="Analytics Agent",
+    description="Daily/weekly business review reports with strategy suggestions.",
+    category=AgentCategory.ANALYTICS,
+    agent_ids=["analytics_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
@@ -109,6 +117,7 @@ _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _ADS_GRAPH.graph_id: _ADS_GRAPH,
     _OPS_GRAPH.graph_id: _OPS_GRAPH,
     _SUPPORT_GRAPH.graph_id: _SUPPORT_GRAPH,
+    _ANALYTICS_GRAPH.graph_id: _ANALYTICS_GRAPH,
 }
 
 

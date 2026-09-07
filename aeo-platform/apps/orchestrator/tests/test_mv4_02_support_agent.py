@@ -76,9 +76,7 @@ async def test_support_graph_e2e() -> None:
     )
 
     with patch("aeo_orchestrator.nodes.support.get_llm_provider", return_value=mock_provider):
-        result = await graph.ainvoke(
-            state, config={"configurable": {"thread_id": "mv4-02-e2e"}}
-        )
+        result = await graph.ainvoke(state, config={"configurable": {"thread_id": "mv4-02-e2e"}})
 
     support = result.get("support")
     assert support is not None

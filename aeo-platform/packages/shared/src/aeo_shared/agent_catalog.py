@@ -233,23 +233,38 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         graph_node="support",
         timeout_seconds=90,
     ),
-)
-
-_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="analytics_agent",
         display_name="Analytics Agent",
         category=AgentCategory.ANALYTICS,
-        description="GMV/ROI reporting and strategy iteration.",
-        status="planned",
+        description="GMV/ROI reporting, daily/weekly business review, and strategy iteration.",
+        capabilities=[
+            AgentCapability(
+                name="analytics.daily_report",
+                description="Generate daily business performance report.",
+                tools=["metrics.snapshot", "llm.chat"],
+            ),
+            AgentCapability(
+                name="analytics.weekly_report",
+                description="Generate weekly trend and review report.",
+                tools=["metrics.snapshot", "llm.chat"],
+            ),
+            AgentCapability(
+                name="analytics.strategy",
+                description="Produce strategy suggestions and KPI targets.",
+                tools=["llm.chat"],
+            ),
+        ],
         risk_level=RiskLevel.L0,
+        graph_node="analytics",
+        timeout_seconds=120,
     ),
 )
 
 
 def build_default_registry() -> AgentRegistry:
     registry = AgentRegistry()
-    for declaration in (*_LISTING_AGENTS, *_MV_PLANNED_AGENTS):
+    for declaration in _LISTING_AGENTS:
         registry.register(declaration)
     return registry
 

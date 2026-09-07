@@ -1,4 +1,4 @@
-"""Tests for MV4-07 agents command console API."""
+"""MV4-04 acceptance tests — GET /api/v1/analytics/report."""
 
 from __future__ import annotations
 
@@ -23,30 +23,28 @@ _HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
 @pytest.mark.asyncio
-async def test_list_agents_returns_catalog() -> None:
+async def test_get_analytics_report() -> None:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/v1/agents", headers=_HEADERS)
+        response = await client.get("/api/v1/analytics/report", headers=_HEADERS)
 
     assert response.status_code == 200
     body = response.json()
     assert body["code"] == 0
     data = body["data"]
-    assert data["summary"]["total"] >= 10
-    assert data["summary"]["active"] >= 9
-    assert data["summary"]["planned"] >= 0
-    agent_ids = {item["agent_id"] for item in data["agents"]}
-    assert "research_agent" in agent_ids
-    assert "selection_agent" in agent_ids
+    assert "report" in data
+    assert "generated_at" in data
 
 
 @pytest.mark.asyncio
-async def test_list_agents_includes_listing_graph() -> None:
+async def test_analytics_report_has_metrics_summary() -> None:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/v1/agents", headers=_HEADERS)
+        response = await client.get("/api/v1/analytics/report", headers=_HEADERS)
 
-    graphs = response.json()["data"]["graphs"]
-    listing = next(item for item in graphs if item["graph_id"] == "listing")
-    assert listing["step_count"] == 6
-    assert listing["agent_ids"][0] == "research_agent"
+    data = response.json()["data"]
+    assert "metrics_summary" in data
+    metrics = data["metrics_summary"]
+    assert "total_gmv" in metrics
+    assert "total_ad_spend" in metrics
+    assert "total_orders" in metrics

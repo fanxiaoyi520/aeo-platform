@@ -22,11 +22,13 @@ async def test_support_node_uses_script_library() -> None:
         product_info={"title": "Electric Kettle", "price": 29.99},
     )
 
-    mock_llm_response = json.dumps({
-        "reply_draft": "Your return has been processed.",
-        "confidence": "high",
-        "requires_human_review": False,
-    })
+    mock_llm_response = json.dumps(
+        {
+            "reply_draft": "Your return has been processed.",
+            "confidence": "high",
+            "requires_human_review": False,
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(content=mock_llm_response, model="test")
@@ -56,12 +58,14 @@ async def test_support_node_escalation_driven_by_rules() -> None:
         product_info={"title": "Electric Kettle", "price": 29.99},
     )
 
-    mock_llm_response = json.dumps({
-        "reply_draft": "Refund processed.",
-        "confidence": "high",
-        "requires_human_review": False,
-        "refund_amount": 100.0,
-    })
+    mock_llm_response = json.dumps(
+        {
+            "reply_draft": "Refund processed.",
+            "confidence": "high",
+            "requires_human_review": False,
+            "refund_amount": 100.0,
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(content=mock_llm_response, model="test")
@@ -92,11 +96,13 @@ async def test_support_node_low_refund_no_escalation() -> None:
         product_info={"title": "Electric Kettle", "price": 29.99},
     )
 
-    mock_llm_response = json.dumps({
-        "reply_draft": "Thank you for your inquiry.",
-        "confidence": "high",
-        "requires_human_review": False,
-    })
+    mock_llm_response = json.dumps(
+        {
+            "reply_draft": "Thank you for your inquiry.",
+            "confidence": "high",
+            "requires_human_review": False,
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(content=mock_llm_response, model="test")
