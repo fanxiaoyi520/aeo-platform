@@ -7,29 +7,15 @@ from typing import Any
 
 from aeo_llm.openai_compatible import get_llm_provider
 from aeo_llm.provider import Message
+from aeo_shared.content_templates import get_content_template_library
 
 from aeo_orchestrator.nodes._helpers import with_started_trace
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, make_trace_event
 
-_AMAZON_SYSTEM = """You are an Amazon listing copywriter for automotive diagnostic tools.
-Return ONLY valid JSON with keys:
-- title (string, max 200 chars)
-- bullets (array of exactly 5 strings)
-- search_terms (string)
-- description (string, optional)
-Follow the rules and research context. No markdown fences."""
-
-_TIKTOK_SYSTEM = """You are a TikTok Shop listing copywriter for automotive tools.
-Return ONLY valid JSON with keys:
-- title (string)
-- bullets (array of exactly 5 short punchy strings)
-- search_terms (string)
-- description (string, optional)
-Follow the rules and research context. No markdown fences."""
-
 
 def _system_prompt(platform: str) -> str:
-    return _TIKTOK_SYSTEM if platform == "tiktok" else _AMAZON_SYSTEM
+    lib = get_content_template_library()
+    return lib.get("listing", platform).system_prompt
 
 
 def _build_user_prompt(state: TaskState) -> str:

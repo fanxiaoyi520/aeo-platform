@@ -14,6 +14,11 @@ from aeo_shared.competitor_monitor import (
     MonitorDiff,
     compute_diff,
 )
+from aeo_shared.content_templates import (
+    ContentTemplate,
+    ContentTemplateLibrary,
+    get_content_template_library,
+)
 from aeo_shared.cron_parser import CronSchedule, matches, next_run, parse_cron
 from aeo_shared.cron_scheduler import CronJob, CronScheduler, CronSchedulerConfig
 from aeo_shared.graph_catalog import (
@@ -63,6 +68,8 @@ __all__ = [
     "AgentRegistry",
     "AgentTaskScheduler",
     "CompetitorData",
+    "ContentTemplate",
+    "ContentTemplateLibrary",
     "CronJob",
     "CronSchedule",
     "CronScheduler",
@@ -105,5 +112,6 @@ __all__ = [
     "get_default_registry",
     "get_graph_catalog",
     "get_subgraph",
+    "get_content_template_library",
     "score_product",
 ]

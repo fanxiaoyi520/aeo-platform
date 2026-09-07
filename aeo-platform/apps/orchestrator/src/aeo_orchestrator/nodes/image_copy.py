@@ -7,39 +7,15 @@ from typing import Any
 
 from aeo_llm.openai_compatible import get_llm_provider
 from aeo_llm.provider import Message
+from aeo_shared.content_templates import get_content_template_library
 
 from aeo_orchestrator.nodes._helpers import with_started_trace
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, make_trace_event
 
-_AMAZON_SYSTEM = """You are an Amazon product image copywriter for automotive tools.
-Return ONLY valid JSON with keys:
-- main_image (object):
-  - callouts (array of exactly 3 strings, each ≤10 chars — short punchy labels for the main image)
-  - badge_text (string — promotional badge text)
-  - compliance_note (string — disclaimer or compliance note)
-- scene_images (array of exactly 3 objects):
-  - scene (string — scene name)
-  - description (string, ≤30 chars — what the scene shows)
-  - lifestyle_copy (string — lifestyle marketing copy)
-  - mood (string — one word mood descriptor)
-Follow the product context. No markdown fences."""
-
-_TIKTOK_SYSTEM = """You are a TikTok Shop product image copywriter for automotive tools.
-Return ONLY valid JSON with keys:
-- main_image (object):
-  - callouts (array of exactly 3 strings, each ≤10 chars — trendy short labels)
-  - badge_text (string — catchy badge text)
-  - compliance_note (string — short disclaimer)
-- scene_images (array of exactly 3 objects):
-  - scene (string — trendy scene name)
-  - description (string, ≤30 chars — what the scene shows)
-  - lifestyle_copy (string — punchy lifestyle copy)
-  - mood (string — one word mood)
-Keep it trendy and short. No markdown fences."""
-
 
 def _system_prompt(platform: str) -> str:
-    return _TIKTOK_SYSTEM if platform == "tiktok" else _AMAZON_SYSTEM
+    lib = get_content_template_library()
+    return lib.get("image_copy", platform).system_prompt
 
 
 def _build_user_prompt(state: TaskState) -> str:

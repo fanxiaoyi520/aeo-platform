@@ -18,6 +18,7 @@ from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
 from aeo_api.routers import (
     agents,
     audit,
+    content_templates,
     health,
     intelligence,
     knowledge,
@@ -70,6 +71,7 @@ def create_app() -> FastAPI:
     app.include_router(metrics.router)
     app.include_router(audit.router)
     app.include_router(agents.router)
+    app.include_router(content_templates.router)
     app.include_router(risk.router)
     app.include_router(selection.router)
     app.include_router(intelligence.router)

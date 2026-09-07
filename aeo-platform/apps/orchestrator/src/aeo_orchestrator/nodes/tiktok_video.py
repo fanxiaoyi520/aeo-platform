@@ -7,24 +7,15 @@ from typing import Any
 
 from aeo_llm.openai_compatible import get_llm_provider
 from aeo_llm.provider import Message
+from aeo_shared.content_templates import get_content_template_library
 
 from aeo_orchestrator.nodes._helpers import with_started_trace
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, make_trace_event
 
-_SYSTEM = """You are a TikTok Shop short video scriptwriter for automotive tools.
-Return ONLY valid JSON with keys:
-- script (object):
-  - hook (string, ≤20 chars — attention-grabbing opening line)
-  - selling_points (array of exactly 3 strings, each ≤15 chars — key product benefits)
-  - cta (string — call-to-action phrase)
-  - duration_seconds (integer — target video duration: 15, 30, or 60)
-- storyboard (array of 3 to 5 objects):
-  - shot (integer — shot number starting from 1)
-  - visual (string, ≤40 chars — what the camera shows)
-  - duration (string — e.g. "5s", "10s")
-  - subtitle (string — on-screen text overlay)
-  - bgm_mood (string — one word: energetic, relaxed, funny, dramatic, trendy)
-Keep it trendy, short, and punchy. No markdown fences."""
+
+def _system_prompt() -> str:
+    lib = get_content_template_library()
+    return lib.get("tiktok_video", "tiktok").system_prompt
 
 
 def _build_user_prompt(state: TaskState) -> str:
@@ -134,7 +125,7 @@ async def tiktok_video_node(state: TaskState) -> dict[str, object]:
         provider = get_llm_provider()
         response = await provider.chat(
             [
-                Message(role="system", content=_SYSTEM),
+                Message(role="system", content=_system_prompt()),
                 Message(role="user", content=_build_user_prompt(state)),
             ],
             temperature=0.6,
