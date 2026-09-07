@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-07  
-**当前阶段：** **MV4 进行中**；MV4-04 完成  
-**下一任务：** **MV4-05** 策略建议 → 自动创建后续任务  
-**Git：** `feat/mv4-04-analytics-agent` PR 待合并  
+**当前阶段：** **MV4 进行中**；MV4-05 完成  
+**下一任务：** **MV4-06** GMV/ROI/人工替代率看板  
+**Git：** `feat/mv4-05-strategy-task-creator` PR 待合并  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -349,3 +349,4 @@
 | 2026-09-07 | **MV4-02** A05 客服 Agent；`support_node`（RAG + 订单上下文 → 回复草稿）+ `build_support_graph` + `run_support_task`；support_agent active；test **562/562**（+14），coverage **87%** |
 | 2026-09-07 | **MV4-03** 售后话术库 + 升级规则；`AfterSalesScript` + `ScriptLibrary`（6 场景）+ `EscalationEvaluator`（退款/投诉/重复 → 升级人工）+ `GET /api/v1/support/scripts`；support_node 集成；test **590/590**（+28），coverage **87%** |
 | 2026-09-07 | **MV4-04** A06 复盘 Agent；`analytics_node`（mock 7天指标 → LLM 日报/周报 + 策略建议 + KPI 追踪）+ `build_analytics_graph` + `run_analytics_task` + `GET /api/v1/analytics/report`；analytics_agent active（3 capabilities）；test **599/599**（+9），coverage **87%** |
+| 2026-09-07 | **MV4-05** 策略建议 → 下轮任务自动创建；`ActionMapping`（7 种 action 路由）+ `StrategyTaskCreator`（→ `AgentTaskScheduler.enqueue`）+ `analytics_node` 集成 `created_tasks` + `POST /api/v1/analytics/create_tasks`；analytics.create_tasks capability；test **615/615**（+16），coverage **87%** |
