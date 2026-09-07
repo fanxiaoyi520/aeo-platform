@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-04  
-**当前阶段：** **MV2 ✅ 全部完成**；MV1 全部完成  
-**下一任务：** **MV3-01** Amazon SP-API 只读接入（投放与运维阶段）  
-**Git：** `main` @ MV4-07 merged；`feat/mv2-03-market-intelligence-cron` PR 已创建  
+**当前阶段：** **MV3 进行中**；MV3-01 ✅；MV2 ✅；MV1 全部完成  
+**下一任务：** **MV3-02** A02 投放 Agent：结构建议 + 出价模拟  
+**Git：** `main` @ MV4-07 merged；`feat/mv3-01-spapi-readonly` PR 待创建  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -338,3 +338,4 @@
 | 2026-09-07 | **MV2-06** 多平台内容模板库；`ContentTemplate` + `ContentTemplateLibrary` + 三 node 重构 + API；test **450/450**，coverage **86%** |
 | 2026-09-07 | **MV2-07** 选品→内容 AIGC 自动任务链；pipeline runner + 子图定义；test **454/454**，coverage **87%** |
 | 2026-09-07 | **MV2-08** MV2 生产验收；10 SKU 端到端 + 批跑脚本；test **457/457**，coverage **87%**；**MV2 ✅** |
+| 2026-09-07 | **MV3-01** Amazon SP-API 广告/库存只读接入（Mock 层）；advertising + inventory Protocol/Mock/Factory + 3 模型 + 2 夹具；test **483/483**（+26），coverage **87%** |

@@ -9,7 +9,7 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · **MV2 ✅** — 全部完成 |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · **MV3 进行中**（MV3-01 ✅） |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
@@ -108,7 +108,7 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV3-01 | Amazon SP-API 只读接入（广告/库存） | MV-M10 | `blocked` | MV1 |
+| MV3-01 | Amazon SP-API 只读接入（广告/库存） | MV-M10 | `completed` | MV1 |
 | MV3-02 | A02 投放 Agent：结构建议 + 出价模拟 | MV-M05 | `blocked` | MV3-01 |
 | MV3-03 | 预算分配与 ROI 预估引擎 | MV-M05 | `blocked` | MV3-02 |
 | MV3-04 | A04 运维 Agent：调价/库存建议（L1 人审） | MV-M06 | `blocked` | MV3-01 |
@@ -187,3 +187,4 @@
 | 2026-09-07 | **MV2-06** 多平台内容模板库；`ContentTemplate` + `ContentTemplateLibrary`（5 模板）+ 三 node 重构 + `GET /api/v1/content-templates` API；test **450/450**（+1 pre-existing flaky），coverage **86%** |
 | 2026-09-07 | **MV2-07** 选品→内容 AIGC 自动任务链；`run_selection_to_content_task()` pipeline（selection→listing→image_copy→tiktok_video）+ `selection_to_content` 子图定义；test **454/454**，coverage **87%** |
 | 2026-09-07 | **MV2-08** MV2 生产验收；10 SKU 端到端验收测试 + `batch_mv2_pilot.py` 批跑脚本；test **457/457**，coverage **87%**；**MV2 里程碑全部完成** |
+| 2026-09-07 | **MV3-01** Amazon SP-API 广告/库存只读接入（Mock 层）；`AmazonAdCampaign` / `AmazonAdSpendSnapshot` / `AmazonInventoryItem` 模型 + `advertising.py` / `inventory.py` Protocol + MockAdapter + Factory + SP-API 桩；test **483/483**（+26），coverage **87%** |
