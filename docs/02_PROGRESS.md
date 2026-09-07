@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-07  
-**当前阶段：** **MV4 进行中**；MV4-02 完成  
-**下一任务：** **MV4-03** 售后话术库 + 升级规则  
-**Git：** `feat/mv4-02-support-agent` PR #41 待合并  
+**当前阶段：** **MV4 进行中**；MV4-03 完成  
+**下一任务：** **MV4-04** A06 复盘 Agent：日报/周报生成  
+**Git：** `feat/mv4-03-after-sales-scripts` PR #42 待合并  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -347,3 +347,4 @@
 | 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas；cron 测试时间锚定修复；test **535/535**（+5），coverage **87%** |
 | 2026-09-07 | **MV4-01** 订单/物流数据 ingest；`AmazonOrderItem` 物流字段扩展 + `OrderIngestService` + `GET /api/v1/orders` API；test **548/548**（+13），coverage **87%** |
 | 2026-09-07 | **MV4-02** A05 客服 Agent；`support_node`（RAG + 订单上下文 → 回复草稿）+ `build_support_graph` + `run_support_task`；support_agent active；test **562/562**（+14），coverage **87%** |
+| 2026-09-07 | **MV4-03** 售后话术库 + 升级规则；`AfterSalesScript` + `ScriptLibrary`（6 场景）+ `EscalationEvaluator`（退款/投诉/重复 → 升级人工）+ `GET /api/v1/support/scripts`；support_node 集成；test **590/590**（+28），coverage **87%** |
