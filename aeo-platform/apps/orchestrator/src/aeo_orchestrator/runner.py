@@ -175,3 +175,73 @@ def serialize_tiktok_video_result(state: TaskState) -> dict[str, Any]:
         "tiktok_video": tiktok_video,
         "trace": state.get("trace", []),
     }
+
+
+async def run_selection_to_content_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "amazon",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+) -> TaskState:
+    """Run the full selection → listing → image_copy → tiktok_video pipeline."""
+    resolved_id = task_id or str(uuid.uuid4())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+
+    selection_graph = build_selection_graph(checkpointer=MemorySaver())
+    state = await selection_graph.ainvoke(  # type: ignore[assignment]
+        state,
+        config={"configurable": {"thread_id": resolved_id}},
+    )
+
+    listing_graph = build_runner_graph()
+    listing_result = await run_until_hitl(listing_graph, state)
+    if is_waiting_hitl(listing_graph, resolved_id):
+        listing_result = await approve_hitl(listing_graph, resolved_id)
+    state = listing_result
+
+    image_copy_graph = build_image_copy_graph(checkpointer=MemorySaver())
+    state = await image_copy_graph.ainvoke(  # type: ignore[assignment]
+        state,
+        config={"configurable": {"thread_id": resolved_id}},
+    )
+
+    tiktok_graph = build_tiktok_video_graph(checkpointer=MemorySaver())
+    state = await tiktok_graph.ainvoke(  # type: ignore[assignment]
+        state,
+        config={"configurable": {"thread_id": resolved_id}},
+    )
+
+    return state
+
+
+def serialize_selection_to_content_result(state: TaskState) -> dict[str, Any]:
+    stages_completed: list[str] = []
+    if state.get("selection"):
+        stages_completed.append("selection")
+    if state.get("generated"):
+        stages_completed.append("listing")
+    if state.get("image_copy"):
+        stages_completed.append("image_copy")
+    if state.get("tiktok_video"):
+        stages_completed.append("tiktok_video")
+
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "selection": state.get("selection"),
+        "generated": state.get("generated"),
+        "image_copy": state.get("image_copy"),
+        "tiktok_video": state.get("tiktok_video"),
+        "stages_completed": stages_completed,
+        "trace": state.get("trace", []),
+    }
