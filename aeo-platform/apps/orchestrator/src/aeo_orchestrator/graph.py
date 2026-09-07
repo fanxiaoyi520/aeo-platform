@@ -9,6 +9,7 @@ from langgraph.graph import END, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
 from aeo_orchestrator.checkpoint import create_memory_checkpointer
+from aeo_orchestrator.nodes.ads import ads_node
 from aeo_orchestrator.nodes.compliance import compliance_node, route_after_compliance
 from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.image_copy import image_copy_node
@@ -92,6 +93,19 @@ def build_tiktok_video_graph(
     builder.add_node("tiktok_video", tiktok_video_node)
     builder.set_entry_point("tiktok_video")
     builder.add_edge("tiktok_video", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
+
+
+def build_ads_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the ads analysis graph (single ads_agent node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("ads", ads_node)
+    builder.set_entry_point("ads")
+    builder.add_edge("ads", END)
 
     memory = checkpointer or create_memory_checkpointer()
     return builder.compile(checkpointer=memory)

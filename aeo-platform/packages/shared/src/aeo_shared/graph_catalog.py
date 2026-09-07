@@ -76,12 +76,21 @@ _SELECTION_TO_CONTENT_GRAPH = SubGraphDefinition(
     ],
 )
 
+_ADS_GRAPH = SubGraphDefinition(
+    graph_id="ads",
+    display_name="Ads Analysis",
+    description="Campaign performance analysis + bid/structure optimization suggestions.",
+    category=AgentCategory.ADS,
+    agent_ids=["ads_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
     _IMAGE_COPY_GRAPH.graph_id: _IMAGE_COPY_GRAPH,
     _TIKTOK_VIDEO_GRAPH.graph_id: _TIKTOK_VIDEO_GRAPH,
     _SELECTION_TO_CONTENT_GRAPH.graph_id: _SELECTION_TO_CONTENT_GRAPH,
+    _ADS_GRAPH.graph_id: _ADS_GRAPH,
 }
 
 

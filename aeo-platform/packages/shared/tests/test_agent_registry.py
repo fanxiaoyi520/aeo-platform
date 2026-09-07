@@ -83,7 +83,7 @@ def test_default_registry_lists_future_mv_agents_as_planned() -> None:
     planned = registry.list_agents(status="planned")
     planned_ids = {item.agent_id for item in planned}
     assert "selection_agent" not in planned_ids
-    assert "ads_agent" in planned_ids
+    assert "ads_agent" not in planned_ids
     assert "operations_agent" in planned_ids
 
 

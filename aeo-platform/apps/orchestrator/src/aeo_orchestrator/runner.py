@@ -9,6 +9,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
 from aeo_orchestrator.graph import (
+    build_ads_graph,
     build_graph,
     build_image_copy_graph,
     build_selection_graph,
@@ -243,5 +244,40 @@ def serialize_selection_to_content_result(state: TaskState) -> dict[str, Any]:
         "image_copy": state.get("image_copy"),
         "tiktok_video": state.get("tiktok_video"),
         "stages_completed": stages_completed,
+        "trace": state.get("trace", []),
+    }
+
+
+async def run_ads_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "amazon",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+    graph: CompiledStateGraph[TaskState, None, TaskState, TaskState] | None = None,
+) -> TaskState:
+    """Run the ads analysis graph (single ads_agent node)."""
+    resolved_id = task_id or str(uuid.uuid4())
+    compiled = graph or build_ads_graph(checkpointer=MemorySaver())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
+
+
+def serialize_ads_result(state: TaskState) -> dict[str, Any]:
+    ads = state.get("ads") or {}
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "ads": ads,
         "trace": state.get("trace", []),
     }

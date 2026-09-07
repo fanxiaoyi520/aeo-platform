@@ -165,17 +165,30 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         platforms=["tiktok"],
         timeout_seconds=60,
     ),
-)
-
-_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="ads_agent",
         display_name="Ads Agent",
         category=AgentCategory.ADS,
         description="Campaign structure and bid recommendations.",
-        status="planned",
+        capabilities=[
+            AgentCapability(
+                name="ads.analyze",
+                description="Analyze campaign performance and calculate ROI/ACoS/CTR.",
+                tools=["integrations.advertising", "integrations.inventory"],
+            ),
+            AgentCapability(
+                name="ads.suggest",
+                description="Generate bid/structure optimization suggestions.",
+                tools=["llm.chat"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="ads",
+        timeout_seconds=90,
     ),
+)
+
+_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="operations_agent",
         display_name="Operations Agent",
