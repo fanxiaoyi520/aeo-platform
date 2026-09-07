@@ -8,6 +8,12 @@ from aeo_shared.agent_registry import (
     AgentRegistry,
     RiskLevel,
 )
+from aeo_shared.budget_optimizer import (
+    BudgetAllocation,
+    BudgetOptimizer,
+    ROIProjection,
+    WhatIfResult,
+)
 from aeo_shared.competitor_monitor import (
     ListingChange,
     ListingSnapshot,
@@ -67,6 +73,8 @@ __all__ = [
     "AgentDeclaration",
     "AgentRegistry",
     "AgentTaskScheduler",
+    "BudgetAllocation",
+    "BudgetOptimizer",
     "CompetitorData",
     "ContentTemplate",
     "ContentTemplateLibrary",
@@ -90,6 +98,7 @@ __all__ = [
     "RiskEffect",
     "RiskRule",
     "RiskRuleSet",
+    "ROIProjection",
     "ScheduledAgentTask",
     "ScheduledTaskStatus",
     "SchedulerConfig",
@@ -97,6 +106,7 @@ __all__ = [
     "SelectionResult",
     "SubGraphDefinition",
     "TaskPriority",
+    "WhatIfResult",
     "build_daily_snapshot",
     "build_default_registry",
     "build_graph_catalog",
