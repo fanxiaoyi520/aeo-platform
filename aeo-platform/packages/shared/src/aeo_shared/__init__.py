@@ -5,6 +5,11 @@ from aeo_shared.ads_inventory_linkage import (
     LinkageRecommendation,
     StockStatus,
 )
+from aeo_shared.after_sales_scripts import (
+    AfterSalesScript,
+    ScriptLibrary,
+    get_script_library,
+)
 from aeo_shared.agent_catalog import build_default_registry, get_default_registry
 from aeo_shared.agent_registry import (
     AgentCapability,
@@ -32,6 +37,7 @@ from aeo_shared.content_templates import (
 )
 from aeo_shared.cron_parser import CronSchedule, matches, next_run, parse_cron
 from aeo_shared.cron_scheduler import CronJob, CronScheduler, CronSchedulerConfig
+from aeo_shared.escalation import EscalationEvaluator, EscalationResult, EscalationRule
 from aeo_shared.graph_catalog import (
     SubGraphDefinition,
     build_graph_catalog,
@@ -75,6 +81,7 @@ from aeo_shared.task_scheduler import (
 
 __all__ = [
     "AdsInventoryLinkage",
+    "AfterSalesScript",
     "AgentCapability",
     "AgentCategory",
     "AgentDeclaration",
@@ -89,6 +96,9 @@ __all__ = [
     "CronSchedule",
     "CronScheduler",
     "CronSchedulerConfig",
+    "EscalationEvaluator",
+    "EscalationResult",
+    "EscalationRule",
     "ListingChange",
     "ListingSnapshot",
     "LinkageRecommendation",
@@ -111,6 +121,7 @@ __all__ = [
     "ScheduledAgentTask",
     "ScheduledTaskStatus",
     "SchedulerConfig",
+    "ScriptLibrary",
     "SelectionInput",
     "SelectionResult",
     "StockStatus",
@@ -132,6 +143,7 @@ __all__ = [
     "parse_money",
     "get_default_registry",
     "get_graph_catalog",
+    "get_script_library",
     "get_subgraph",
     "get_content_template_library",
     "score_product",

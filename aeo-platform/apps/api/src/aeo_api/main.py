@@ -28,6 +28,7 @@ from aeo_api.routers import (
     risk,
     root,
     selection,
+    support,
     tasks,
 )
 
@@ -80,6 +81,7 @@ def create_app() -> FastAPI:
     app.include_router(tasks.router)
     app.include_router(recommendations.router)
     app.include_router(orders.router)
+    app.include_router(support.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:

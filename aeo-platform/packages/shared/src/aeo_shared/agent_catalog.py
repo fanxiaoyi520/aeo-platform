@@ -218,6 +218,16 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
                 description="Generate customer service reply drafts.",
                 tools=["rag.search", "orders.lookup"],
             ),
+            AgentCapability(
+                name="support.script_library",
+                description="Match after-sales scripts by scenario.",
+                tools=["scripts.match"],
+            ),
+            AgentCapability(
+                name="support.escalation",
+                description="Evaluate escalation rules for human review.",
+                tools=["escalation.evaluate"],
+            ),
         ],
         risk_level=RiskLevel.L1,
         graph_node="support",
