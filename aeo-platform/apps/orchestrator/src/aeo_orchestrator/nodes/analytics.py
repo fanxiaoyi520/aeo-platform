@@ -9,9 +9,12 @@ from typing import Any
 
 from aeo_llm.openai_compatible import get_llm_provider
 from aeo_llm.provider import Message
+from aeo_shared.agent_catalog import get_default_registry
 from aeo_shared.metrics_sdk import (
     BusinessMetricsSnapshot,
 )
+from aeo_shared.strategy_task_creator import StrategyTaskCreator, get_action_mapping
+from aeo_shared.task_scheduler import AgentTaskScheduler
 
 from aeo_orchestrator.nodes._helpers import with_started_trace
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, make_trace_event
@@ -165,6 +168,23 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
                 report_lines.append(f"{i}. **{s.get('action', 'N/A')}** — {s.get('reason', '')}")
         report = "\n".join(report_lines)
 
+        registry = get_default_registry()
+        scheduler = AgentTaskScheduler(registry)
+        creator = StrategyTaskCreator(scheduler=scheduler, mapping=get_action_mapping())
+        task_id = state.get("task_id")
+        created = creator.create_tasks(strategy_suggestions, parent_task_id=task_id)
+        created_tasks = [
+            {
+                "task_id": t.task_id,
+                "agent_id": t.agent_id,
+                "capability": t.capability,
+                "priority": t.priority.value,
+                "payload": t.payload,
+                "parent_task_id": t.parent_task_id,
+            }
+            for t in created
+        ]
+
         result = {
             "daily_summary": daily_summary,
             "weekly_trend": weekly_trend,
@@ -172,6 +192,7 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
             "kpi_targets": kpi_targets,
             "metrics_summary": metrics_summary,
             "report": report,
+            "created_tasks": created_tasks,
         }
 
         trace.append(
@@ -196,6 +217,7 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
             "metrics_summary": {},
             "report": f"Analytics report generation failed: {exc}",
             "error": str(exc),
+            "created_tasks": [],
         }
         trace.append(
             make_trace_event(

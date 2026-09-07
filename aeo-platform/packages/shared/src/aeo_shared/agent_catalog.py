@@ -254,6 +254,11 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
                 description="Produce strategy suggestions and KPI targets.",
                 tools=["llm.chat"],
             ),
+            AgentCapability(
+                name="analytics.create_tasks",
+                description="Auto-create follow-up tasks from strategy suggestions.",
+                tools=["scheduler.enqueue"],
+            ),
         ],
         risk_level=RiskLevel.L0,
         graph_node="analytics",

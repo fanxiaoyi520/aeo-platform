@@ -1,19 +1,34 @@
-"""Analytics report API — MV4-04: daily/weekly business review."""
+"""Analytics report API — MV4-04/05: daily/weekly business review + strategy task creation."""
 
 from __future__ import annotations
 
 from datetime import date
 from typing import Any
 
+from aeo_shared.agent_catalog import get_default_registry
 from aeo_shared.metrics_sdk import BusinessMetricsSnapshot
 from aeo_shared.responses import success_response
+from aeo_shared.strategy_task_creator import StrategyTaskCreator, get_action_mapping
+from aeo_shared.task_scheduler import AgentTaskScheduler
 from fastapi import APIRouter, Request
+from pydantic import BaseModel, Field
 
 router = APIRouter(prefix="/api/v1/analytics", tags=["analytics"])
 
 
 def _ok(request: Request, data: dict[str, Any]) -> dict[str, Any]:
     return success_response(data, request.state.request_id).model_dump()
+
+
+class SuggestionInput(BaseModel):
+    action: str
+    sku: str = ""
+    reason: str = ""
+
+
+class CreateTasksRequest(BaseModel):
+    suggestions: list[SuggestionInput] = Field(default_factory=list)
+    parent_task_id: str | None = None
 
 
 def _build_mock_report() -> dict[str, Any]:
@@ -62,3 +77,29 @@ async def get_analytics_report(request: Request) -> dict[str, Any]:
     """Return a business review report with metrics summary."""
     report = _build_mock_report()
     return _ok(request, report)
+
+
+@router.post("/create_tasks")
+async def create_tasks_from_strategy(
+    request: Request,
+    body: CreateTasksRequest,
+) -> dict[str, Any]:
+    """Create follow-up tasks from strategy suggestions."""
+    registry = get_default_registry()
+    scheduler = AgentTaskScheduler(registry)
+    creator = StrategyTaskCreator(scheduler=scheduler, mapping=get_action_mapping())
+
+    suggestions = [s.model_dump() for s in body.suggestions]
+    created = creator.create_tasks(suggestions, parent_task_id=body.parent_task_id)
+    created_tasks = [
+        {
+            "task_id": t.task_id,
+            "agent_id": t.agent_id,
+            "capability": t.capability,
+            "priority": t.priority.value,
+            "payload": t.payload,
+            "parent_task_id": t.parent_task_id,
+        }
+        for t in created
+    ]
+    return _ok(request, {"created_tasks": created_tasks})

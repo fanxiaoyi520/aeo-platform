@@ -71,6 +71,12 @@ from aeo_shared.selection_scoring import (
     SelectionResult,
     score_product,
 )
+from aeo_shared.strategy_task_creator import (
+    ActionMapping,
+    ActionMappingEntry,
+    StrategyTaskCreator,
+    get_action_mapping,
+)
 from aeo_shared.task_scheduler import (
     AgentTaskScheduler,
     ScheduledAgentTask,
@@ -80,6 +86,8 @@ from aeo_shared.task_scheduler import (
 )
 
 __all__ = [
+    "ActionMapping",
+    "ActionMappingEntry",
     "AdsInventoryLinkage",
     "AfterSalesScript",
     "AgentCapability",
@@ -146,5 +154,7 @@ __all__ = [
     "get_script_library",
     "get_subgraph",
     "get_content_template_library",
+    "get_action_mapping",
     "score_product",
+    "StrategyTaskCreator",
 ]
