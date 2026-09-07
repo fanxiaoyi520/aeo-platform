@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-07  
-**当前阶段：** **MV3 进行中**；MV3-01~08 ✅；MV3-09 待开始  
-**下一任务：** **MV3-09** MV3 生产验收  
-**Git：** `main` @ MV4-07 merged；`feat/mv3-08-recommendations-api` PR 待创建  
+**当前阶段：** **MV4 进行中**；MV4-01 开发中  
+**下一任务：** **MV4-02** A05 客服 Agent  
+**Git：** `feat/mv4-01-orders-ingest` 开发中  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -345,3 +345,4 @@
 | 2026-09-07 | **MV3-06** Shopify Store API 只读接入（Mock 层）；`ShopifyProduct` / `ShopifyOrder` / `ShopifyInventoryItem` 模型 + `StoreClient` Protocol + `MockStoreAdapter` + Factory；test **537/537**（+16），coverage **88%** |
 | 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage` + `StockStatus` + `LinkageRecommendation`；库存状态驱动广告预算协调；test **521/521**（+10），coverage **87%** |
 | 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas；cron 测试时间锚定修复；test **535/535**（+5），coverage **87%** |
+| 2026-09-07 | **MV4-01** 订单/物流数据 ingest；`AmazonOrderItem` 物流字段扩展 + `OrderIngestService` + `GET /api/v1/orders` API；test **548/548**（+13），coverage **87%** |

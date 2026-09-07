@@ -48,6 +48,7 @@ from aeo_shared.metrics_sdk import (
     parse_money,
 )
 from aeo_shared.multi_graph import MultiGraphOrchestrator, ParentTask, ParentTaskStatus
+from aeo_shared.order_ingest import OrderIngestService, UnifiedOrderRecord
 from aeo_shared.risk_dsl import (
     RiskAction,
     RiskCondition,
@@ -93,6 +94,7 @@ __all__ = [
     "LinkageRecommendation",
     "MonitorDiff",
     "MultiGraphOrchestrator",
+    "OrderIngestService",
     "OrderMetricRecord",
     "ParentTask",
     "ParentTaskStatus",
@@ -114,6 +116,7 @@ __all__ = [
     "StockStatus",
     "SubGraphDefinition",
     "TaskPriority",
+    "UnifiedOrderRecord",
     "WhatIfResult",
     "build_daily_snapshot",
     "build_default_registry",

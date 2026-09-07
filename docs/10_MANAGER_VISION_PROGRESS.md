@@ -9,7 +9,7 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · **MV3 进行中**（MV3-01~08 ✅） |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· **MV4 进行中**（MV4-01 ✅） |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
@@ -122,7 +122,7 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV4-01 | 订单/物流数据 ingest | MV-M10 | `blocked` | MV3 |
+| MV4-01 | 订单/物流数据 ingest | MV-M10 | `completed` | MV3 |
 | MV4-02 | A05 客服 Agent：RAG + 订单工具 | MV-M07 | `blocked` | MV4-01 |
 | MV4-03 | 售后话术库与升级人工规则 | MV-M07 | `blocked` | MV4-02 |
 | MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `blocked` | MV1-07 |
@@ -194,3 +194,4 @@
 | 2026-09-07 | **MV3-06** Shopify Store API 只读接入（Mock 层）；`ShopifyProduct` / `ShopifyOrder` / `ShopifyInventoryItem` + `StoreClient` Protocol + `MockStoreAdapter` + Factory；test **537/537**（+16），coverage **88%** |
 | 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage`（库存状态分类 + 广告预算协调）+ `StockStatus` + `LinkageRecommendation`；test **521/521**（+10），coverage **87%** |
 | 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas + 审批工作流骨架；test **535/535**（+5），coverage **87%** |
+| 2026-09-07 | **MV4-01** 订单/物流数据 ingest；`AmazonOrderItem` 物流字段扩展（tracking/carrier/ship_date/delivery_date/return_status）+ `OrderIngestService`（Amazon+Shopify → UnifiedOrderRecord）+ `GET /api/v1/orders` API（分页+过滤）；test **548/548**（+13），coverage **87%** |

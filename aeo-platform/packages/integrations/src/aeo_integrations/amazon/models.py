@@ -34,6 +34,11 @@ class AmazonOrderItem(BaseModel):
     currency: str = "USD"
     order_status: Literal["Pending", "Unshipped", "Shipped", "Canceled"] = "Unshipped"
     purchase_date: str = ""
+    tracking_number: str = ""
+    carrier: str = ""
+    ship_date: str = ""
+    delivery_date: str = ""
+    return_status: Literal["none", "requested", "in_transit", "completed", "rejected"] = "none"
 
 
 class AmazonAccessToken(BaseModel):
