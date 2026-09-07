@@ -84,7 +84,7 @@ def test_default_registry_lists_future_mv_agents_as_planned() -> None:
     planned_ids = {item.agent_id for item in planned}
     assert "selection_agent" not in planned_ids
     assert "ads_agent" not in planned_ids
-    assert "operations_agent" in planned_ids
+    assert "operations_agent" not in planned_ids
 
 
 def test_listing_graph_node_names_match_m03() -> None:

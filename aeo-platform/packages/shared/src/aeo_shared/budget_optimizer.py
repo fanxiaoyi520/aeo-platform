@@ -84,8 +84,10 @@ class BudgetOptimizer:
                 continue
             cid = str(camp.get("campaign_id", ""))
             camp_snaps = by_campaign.get(cid, [])
-            total_spend = sum(_to_decimal(s.get("spend")) for s in camp_snaps)
-            total_gmv = sum(_to_decimal(s.get("attributed_gmv")) for s in camp_snaps)
+            total_spend = sum((_to_decimal(s.get("spend")) for s in camp_snaps), Decimal("0"))
+            total_gmv = sum(
+                (_to_decimal(s.get("attributed_gmv")) for s in camp_snaps), Decimal("0")
+            )
             acos = _calculate_acos(total_spend, total_gmv)
             campaign_perf.append((camp, total_spend, total_gmv, acos))
 
@@ -94,7 +96,7 @@ class BudgetOptimizer:
 
         best_acos = min(p[3] for p in campaign_perf)
         allocations = []
-        for camp, spend, gmv, acos in campaign_perf:
+        for camp, _spend, _gmv, acos in campaign_perf:
             cid = str(camp.get("campaign_id", ""))
             current = _to_decimal(camp.get("daily_budget"))
 
@@ -129,9 +131,7 @@ class BudgetOptimizer:
         days: int = 7,
     ) -> ROIProjection:
         """Project ROI for a campaign over the specified time period."""
-        camp_snaps = [
-            s for s in snapshots if str(s.get("campaign_id", "")) == campaign_id
-        ]
+        camp_snaps = [s for s in snapshots if str(s.get("campaign_id", "")) == campaign_id]
         if not camp_snaps:
             return ROIProjection(
                 campaign_id=campaign_id,
@@ -142,8 +142,8 @@ class BudgetOptimizer:
                 confidence=0.0,
             )
 
-        total_spend = sum(_to_decimal(s.get("spend")) for s in camp_snaps)
-        total_gmv = sum(_to_decimal(s.get("attributed_gmv")) for s in camp_snaps)
+        total_spend = sum((_to_decimal(s.get("spend")) for s in camp_snaps), Decimal("0"))
+        total_gmv = sum((_to_decimal(s.get("attributed_gmv")) for s in camp_snaps), Decimal("0"))
         num_days = len(camp_snaps)
 
         avg_daily_spend = total_spend / num_days
@@ -171,9 +171,7 @@ class BudgetOptimizer:
         budget_change_percent: float,
     ) -> WhatIfResult:
         """Simulate the impact of a budget change on a campaign."""
-        camp_snaps = [
-            s for s in snapshots if str(s.get("campaign_id", "")) == campaign_id
-        ]
+        camp_snaps = [s for s in snapshots if str(s.get("campaign_id", "")) == campaign_id]
         if not camp_snaps:
             return WhatIfResult(
                 campaign_id=campaign_id,
@@ -184,8 +182,8 @@ class BudgetOptimizer:
                 projected_acos_change=0.0,
             )
 
-        current_spend = sum(_to_decimal(s.get("spend")) for s in camp_snaps)
-        current_gmv = sum(_to_decimal(s.get("attributed_gmv")) for s in camp_snaps)
+        current_spend = sum((_to_decimal(s.get("spend")) for s in camp_snaps), Decimal("0"))
+        current_gmv = sum((_to_decimal(s.get("attributed_gmv")) for s in camp_snaps), Decimal("0"))
         current_acos = _calculate_acos(current_spend, current_gmv)
 
         multiplier = 1 + budget_change_percent / 100

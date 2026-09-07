@@ -54,30 +54,32 @@ async def test_ads_graph_e2e() -> None:
         },
     )
 
-    mock_llm_response = json.dumps({
-        "suggestions": [
-            {
+    mock_llm_response = json.dumps(
+        {
+            "suggestions": [
+                {
+                    "campaign_id": "camp-001",
+                    "type": "bid_increase",
+                    "reason": "Low ACoS indicates room for higher bids",
+                    "suggested_value": "12.00",
+                },
+                {
+                    "campaign_id": "camp-003",
+                    "type": "pause",
+                    "reason": "High ACoS above 40% threshold",
+                    "suggested_value": None,
+                },
+            ],
+            "bid_simulation": {
                 "campaign_id": "camp-001",
-                "type": "bid_increase",
-                "reason": "Low ACoS indicates room for higher bids",
-                "suggested_value": "12.00",
+                "current_bid": "8.00",
+                "suggested_bid": "12.00",
+                "estimated_impression_lift": "25%",
+                "estimated_gmv_change": "15%",
             },
-            {
-                "campaign_id": "camp-003",
-                "type": "pause",
-                "reason": "High ACoS above 40% threshold",
-                "suggested_value": None,
-            },
-        ],
-        "bid_simulation": {
-            "campaign_id": "camp-001",
-            "current_bid": "8.00",
-            "suggested_bid": "12.00",
-            "estimated_impression_lift": "25%",
-            "estimated_gmv_change": "15%",
-        },
-        "report": "Campaign camp-001 shows strong ROI. Consider increasing bid.",
-    })
+            "report": "Campaign camp-001 shows strong ROI. Consider increasing bid.",
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(
@@ -86,9 +88,7 @@ async def test_ads_graph_e2e() -> None:
     )
 
     with patch("aeo_orchestrator.nodes.ads.get_llm_provider", return_value=mock_provider):
-        result = await graph.ainvoke(
-            state, config={"configurable": {"thread_id": "mv3-02-e2e"}}
-        )
+        result = await graph.ainvoke(state, config={"configurable": {"thread_id": "mv3-02-e2e"}})
 
     ads = result.get("ads")
     assert ads is not None
@@ -122,11 +122,13 @@ async def test_ads_graph_e2e() -> None:
 async def test_run_ads_task() -> None:
     from aeo_orchestrator.runner import run_ads_task
 
-    mock_llm_response = json.dumps({
-        "suggestions": [],
-        "bid_simulation": None,
-        "report": "No significant optimization opportunities.",
-    })
+    mock_llm_response = json.dumps(
+        {
+            "suggestions": [],
+            "bid_simulation": None,
+            "report": "No significant optimization opportunities.",
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(

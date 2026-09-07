@@ -13,6 +13,7 @@ from aeo_orchestrator.nodes.ads import ads_node
 from aeo_orchestrator.nodes.compliance import compliance_node, route_after_compliance
 from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.image_copy import image_copy_node
+from aeo_orchestrator.nodes.operations import operations_node
 from aeo_orchestrator.nodes.research import research_node
 from aeo_orchestrator.nodes.review import human_review_node, review_node, route_after_human_review
 from aeo_orchestrator.nodes.rules import rules_node
@@ -106,6 +107,19 @@ def build_ads_graph(
     builder.add_node("ads", ads_node)
     builder.set_entry_point("ads")
     builder.add_edge("ads", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
+
+
+def build_ops_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the operations analysis graph (single operations_agent node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("ops", operations_node)
+    builder.set_entry_point("ops")
+    builder.add_edge("ops", END)
 
     memory = checkpointer or create_memory_checkpointer()
     return builder.compile(checkpointer=memory)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
+from typing import Any
 
 import pytest
 from aeo_shared.budget_optimizer import (
@@ -62,7 +63,7 @@ class TestBudgetOptimizer:
         return BudgetOptimizer()
 
     @pytest.fixture
-    def sample_campaigns(self) -> list[dict]:
+    def sample_campaigns(self) -> list[dict[str, Any]]:
         return [
             {
                 "campaign_id": "camp-001",
@@ -85,7 +86,7 @@ class TestBudgetOptimizer:
         ]
 
     @pytest.fixture
-    def sample_snapshots(self) -> list[dict]:
+    def sample_snapshots(self) -> list[dict[str, Any]]:
         return [
             {
                 "campaign_id": "camp-001",
@@ -118,7 +119,10 @@ class TestBudgetOptimizer:
         ]
 
     def test_allocate_budget_returns_allocation_for_enabled(
-        self, optimizer: BudgetOptimizer, sample_campaigns: list, sample_snapshots: list
+        self,
+        optimizer: BudgetOptimizer,
+        sample_campaigns: list[dict[str, Any]],
+        sample_snapshots: list[dict[str, Any]],
     ) -> None:
         allocations = optimizer.allocate_budget(sample_campaigns, sample_snapshots)
         assert len(allocations) >= 2
@@ -127,14 +131,20 @@ class TestBudgetOptimizer:
         assert "camp-002" in camp_ids
 
     def test_allocate_budget_skips_paused(
-        self, optimizer: BudgetOptimizer, sample_campaigns: list, sample_snapshots: list
+        self,
+        optimizer: BudgetOptimizer,
+        sample_campaigns: list[dict[str, Any]],
+        sample_snapshots: list[dict[str, Any]],
     ) -> None:
         allocations = optimizer.allocate_budget(sample_campaigns, sample_snapshots)
         camp_ids = [a.campaign_id for a in allocations]
         assert "camp-003" not in camp_ids
 
     def test_allocate_budget_favors_low_acos(
-        self, optimizer: BudgetOptimizer, sample_campaigns: list, sample_snapshots: list
+        self,
+        optimizer: BudgetOptimizer,
+        sample_campaigns: list[dict[str, Any]],
+        sample_snapshots: list[dict[str, Any]],
     ) -> None:
         allocations = optimizer.allocate_budget(sample_campaigns, sample_snapshots)
         camp_001 = next(a for a in allocations if a.campaign_id == "camp-001")
@@ -143,7 +153,7 @@ class TestBudgetOptimizer:
         assert camp_002.change_percent > 0
 
     def test_project_roi_returns_projection(
-        self, optimizer: BudgetOptimizer, sample_snapshots: list
+        self, optimizer: BudgetOptimizer, sample_snapshots: list[dict[str, Any]]
     ) -> None:
         projection = optimizer.project_roi("camp-001", sample_snapshots, days=7)
         assert projection.campaign_id == "camp-001"
@@ -154,32 +164,44 @@ class TestBudgetOptimizer:
         assert 0 <= projection.confidence <= 1
 
     def test_project_roi_unknown_campaign(
-        self, optimizer: BudgetOptimizer, sample_snapshots: list
+        self, optimizer: BudgetOptimizer, sample_snapshots: list[dict[str, Any]]
     ) -> None:
         projection = optimizer.project_roi("camp-unknown", sample_snapshots, days=7)
         assert projection.estimated_spend == 0
         assert projection.estimated_gmv == 0
 
     def test_simulate_budget_increase(
-        self, optimizer: BudgetOptimizer, sample_snapshots: list
+        self, optimizer: BudgetOptimizer, sample_snapshots: list[dict[str, Any]]
     ) -> None:
-        result = optimizer.simulate_what_if("camp-001", sample_snapshots, budget_change_percent=50.0)
+        result = optimizer.simulate_what_if(
+            "camp-001",
+            sample_snapshots,
+            budget_change_percent=50.0,
+        )
         assert result.campaign_id == "camp-001"
         assert result.budget_change_percent == 50.0
         assert result.projected_spend > result.current_spend
         assert result.projected_gmv_change_percent > 0
 
     def test_simulate_budget_decrease(
-        self, optimizer: BudgetOptimizer, sample_snapshots: list
+        self, optimizer: BudgetOptimizer, sample_snapshots: list[dict[str, Any]]
     ) -> None:
-        result = optimizer.simulate_what_if("camp-001", sample_snapshots, budget_change_percent=-25.0)
+        result = optimizer.simulate_what_if(
+            "camp-001",
+            sample_snapshots,
+            budget_change_percent=-25.0,
+        )
         assert result.budget_change_percent == -25.0
         assert result.projected_spend < result.current_spend
 
     def test_simulate_unknown_campaign(
-        self, optimizer: BudgetOptimizer, sample_snapshots: list
+        self, optimizer: BudgetOptimizer, sample_snapshots: list[dict[str, Any]]
     ) -> None:
-        result = optimizer.simulate_what_if("camp-unknown", sample_snapshots, budget_change_percent=50.0)
+        result = optimizer.simulate_what_if(
+            "camp-unknown",
+            sample_snapshots,
+            budget_change_percent=50.0,
+        )
         assert result.current_spend == 0
         assert result.projected_spend == 0
 

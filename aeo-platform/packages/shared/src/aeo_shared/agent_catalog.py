@@ -186,17 +186,30 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         graph_node="ads",
         timeout_seconds=90,
     ),
-)
-
-_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="operations_agent",
         display_name="Operations Agent",
         category=AgentCategory.OPERATIONS,
-        description="Inventory and listing health monitoring.",
-        status="planned",
+        description="Inventory health monitoring and pricing/restock suggestions.",
+        capabilities=[
+            AgentCapability(
+                name="ops.monitor",
+                description="Monitor inventory levels and calculate health metrics.",
+                tools=["integrations.inventory"],
+            ),
+            AgentCapability(
+                name="ops.suggest",
+                description="Generate pricing and restock recommendations.",
+                tools=["llm.chat"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="ops",
+        timeout_seconds=90,
     ),
+)
+
+_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
     AgentDeclaration(
         agent_id="support_agent",
         display_name="Support Agent",

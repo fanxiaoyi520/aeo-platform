@@ -26,13 +26,7 @@ from aeo_integrations.amazon.spapi_adapter import (
     SpApiInventoryAdapter,
 )
 
-_MOCK_DIR = (
-    Path(__file__).resolve().parents[1]
-    / "src"
-    / "aeo_integrations"
-    / "amazon"
-    / "mock"
-)
+_MOCK_DIR = Path(__file__).resolve().parents[1] / "src" / "aeo_integrations" / "amazon" / "mock"
 _AD_FIXTURE = _MOCK_DIR / "sample_advertising.json"
 _INV_FIXTURE = _MOCK_DIR / "sample_inventory.json"
 

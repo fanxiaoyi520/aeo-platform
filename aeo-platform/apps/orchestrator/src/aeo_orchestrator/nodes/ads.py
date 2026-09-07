@@ -63,19 +63,21 @@ def _build_campaign_summary(
         acos = (spend / gmv * 100) if gmv > 0 else None
         ctr = (clicks / impressions * 100) if impressions > 0 else None
 
-        summaries.append({
-            "campaign_id": cid,
-            "name": camp.get("name", ""),
-            "status": camp.get("status", ""),
-            "campaign_type": camp.get("campaign_type", ""),
-            "daily_budget": str(camp.get("daily_budget", "")),
-            "total_spend": round(spend, 2),
-            "total_gmv": round(gmv, 2),
-            "acos": round(acos, 2) if acos is not None else None,
-            "ctr": round(ctr, 2) if ctr is not None else None,
-            "impressions": impressions,
-            "clicks": clicks,
-        })
+        summaries.append(
+            {
+                "campaign_id": cid,
+                "name": camp.get("name", ""),
+                "status": camp.get("status", ""),
+                "campaign_type": camp.get("campaign_type", ""),
+                "daily_budget": str(camp.get("daily_budget", "")),
+                "total_spend": round(spend, 2),
+                "total_gmv": round(gmv, 2),
+                "acos": round(acos, 2) if acos is not None else None,
+                "ctr": round(ctr, 2) if ctr is not None else None,
+                "impressions": impressions,
+                "clicks": clicks,
+            }
+        )
     return summaries
 
 

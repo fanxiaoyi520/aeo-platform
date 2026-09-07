@@ -84,6 +84,14 @@ _ADS_GRAPH = SubGraphDefinition(
     agent_ids=["ads_agent"],
 )
 
+_OPS_GRAPH = SubGraphDefinition(
+    graph_id="ops",
+    display_name="Operations Analysis",
+    description="Inventory health monitoring + pricing/restock recommendations.",
+    category=AgentCategory.OPERATIONS,
+    agent_ids=["operations_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
@@ -91,6 +99,7 @@ _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _TIKTOK_VIDEO_GRAPH.graph_id: _TIKTOK_VIDEO_GRAPH,
     _SELECTION_TO_CONTENT_GRAPH.graph_id: _SELECTION_TO_CONTENT_GRAPH,
     _ADS_GRAPH.graph_id: _ADS_GRAPH,
+    _OPS_GRAPH.graph_id: _OPS_GRAPH,
 }
 
 
