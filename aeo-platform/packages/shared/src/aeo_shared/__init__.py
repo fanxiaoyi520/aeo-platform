@@ -1,5 +1,10 @@
 """AEO Platform shared types, errors, and utilities."""
 
+from aeo_shared.ads_inventory_linkage import (
+    AdsInventoryLinkage,
+    LinkageRecommendation,
+    StockStatus,
+)
 from aeo_shared.agent_catalog import build_default_registry, get_default_registry
 from aeo_shared.agent_registry import (
     AgentCapability,
@@ -68,6 +73,7 @@ from aeo_shared.task_scheduler import (
 )
 
 __all__ = [
+    "AdsInventoryLinkage",
     "AgentCapability",
     "AgentCategory",
     "AgentDeclaration",
@@ -84,6 +90,7 @@ __all__ = [
     "CronSchedulerConfig",
     "ListingChange",
     "ListingSnapshot",
+    "LinkageRecommendation",
     "MonitorDiff",
     "MultiGraphOrchestrator",
     "OrderMetricRecord",
@@ -104,6 +111,7 @@ __all__ = [
     "SchedulerConfig",
     "SelectionInput",
     "SelectionResult",
+    "StockStatus",
     "SubGraphDefinition",
     "TaskPriority",
     "WhatIfResult",
