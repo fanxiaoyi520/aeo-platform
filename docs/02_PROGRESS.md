@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-04  
-**当前阶段：** **MV3 进行中**；MV3-01~03 ✅；MV2 ✅；MV1 全部完成  
-**下一任务：** **MV3-04** A04 运维 Agent：调价/库存建议（L1 人审）  
-**Git：** `main` @ MV4-07 merged；`feat/mv3-03-budget-roi-engine` PR 待创建  
+**最后更新：** 2026-09-07  
+**当前阶段：** **MV3 进行中**；MV3-01~04 ✅；MV3-05 待开始；MV2 ✅；MV1 全部完成  
+**下一任务：** **MV3-05** A05 分析 Agent：GMV/ROI 报表 + 策略迭代  
+**Git：** `main` @ MV4-07 merged；`feat/mv3-04-operations-agent` PR 待创建  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -341,3 +341,4 @@
 | 2026-09-07 | **MV3-01** Amazon SP-API 广告/库存只读接入（Mock 层）；advertising + inventory Protocol/Mock/Factory + 3 模型 + 2 夹具；test **483/483**（+26），coverage **87%** |
 | 2026-09-07 | **MV3-02** A02 投放 Agent；`ads_node` + `build_ads_graph` + `run_ads_task`；ads_agent active；test **491/491**（+8），coverage **87%** |
 | 2026-09-07 | **MV3-03** 预算分配与 ROI 预估引擎；`BudgetOptimizer` + 3 模型；test **503/503**（+12），coverage **87%** |
+| 2026-09-07 | **MV3-04** A04 运维 Agent；`operations_node` + `build_ops_graph` + `run_ops_task`；operations_agent active；test **511/511**（+8），coverage **87%** |
