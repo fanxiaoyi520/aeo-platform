@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "source": "MV3-01 mock inventory data — pilot SKUs",
+  "inventory": [
+    {
+      "sku": "HOMEBREW-KETTLE-1L",
+      "fulfillment_channel": "MFN",
+      "available_quantity": 120,
+      "inbound_quantity": 50,
+      "reserved_quantity": 5,
+      "warehouse": "US-EAST-1",
+      "last_updated": "2026-09-06T08:00:00Z"
+    },
+    {
+      "sku": "HOMEBREW-VACUUM-S",
+      "fulfillment_channel": "MFN",
+      "available_quantity": 45,
+      "inbound_quantity": 0,
+      "reserved_quantity": 2,
+      "warehouse": "US-EAST-1",
+      "last_updated": "2026-09-06T08:00:00Z"
+    },
+    {
+      "sku": "KITCHEN-AIRFRYER-4QT",
+      "fulfillment_channel": "AFN",
+      "available_quantity": 60,
+      "inbound_quantity": 30,
+      "reserved_quantity": 8,
+      "warehouse": "FBA-US-EAST",
+      "last_updated": "2026-09-06T08:00:00Z"
+    },
+    {
+      "sku": "KITCHEN-BLENDER-PRO",
+      "fulfillment_channel": "MFN",
+      "available_quantity": 80,
+      "inbound_quantity": 0,
+      "reserved_quantity": 3,
+      "warehouse": "US-WEST-2",
+      "last_updated": "2026-09-06T08:00:00Z"
+    },
+    {
+      "sku": "GLOW-HAIRDRYER-ION",
+      "fulfillment_channel": "AFN",
+      "available_quantity": 95,
+      "inbound_quantity": 20,
+      "reserved_quantity": 4,
+      "warehouse": "FBA-US-WEST",
+      "last_updated": "2026-09-06T08:00:00Z"
+    }
+  ]
+}
