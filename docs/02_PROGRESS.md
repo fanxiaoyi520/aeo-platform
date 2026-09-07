@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-07  
-**当前阶段：** **MV3 进行中**；MV3-01~04 ✅，MV3-07 ✅；MV3-08 待开始  
+**当前阶段：** **MV3 进行中**；MV3-01~04 ✅，MV3-06~07 ✅；MV3-08 待开始  
 **下一任务：** **MV3-08** 前端：广告建议 + 审批执行页  
-**Git：** `main` @ MV4-07 merged；`feat/mv3-07-ads-inventory-linkage` PR 待创建  
+**Git：** `main` @ MV4-07 merged；`feat/mv3-06-shopify-store-api` PR 待创建  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -342,4 +342,5 @@
 | 2026-09-07 | **MV3-02** A02 投放 Agent；`ads_node` + `build_ads_graph` + `run_ads_task`；ads_agent active；test **491/491**（+8），coverage **87%** |
 | 2026-09-07 | **MV3-03** 预算分配与 ROI 预估引擎；`BudgetOptimizer` + 3 模型；test **503/503**（+12），coverage **87%** |
 | 2026-09-07 | **MV3-04** A04 运维 Agent；`operations_node` + `build_ops_graph` + `run_ops_task`；operations_agent active；test **511/511**（+8），coverage **87%** |
+| 2026-09-07 | **MV3-06** Shopify Store API 只读接入（Mock 层）；`ShopifyProduct` / `ShopifyOrder` / `ShopifyInventoryItem` 模型 + `StoreClient` Protocol + `MockStoreAdapter` + Factory；test **537/537**（+16），coverage **88%** |
 | 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage` + `StockStatus` + `LinkageRecommendation`；库存状态驱动广告预算协调；test **521/521**（+10），coverage **87%** |
