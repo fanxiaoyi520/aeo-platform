@@ -120,8 +120,8 @@ class TestCronSchedulerTick:
 
     def test_tick_fires_again_next_period(self) -> None:
         scheduler = CronScheduler()
-        scheduler.register(job_id="j1", cron_expression="0 9 * * *")
         day1 = datetime(2026, 9, 4, 9, 0, tzinfo=UTC)
+        scheduler.register(job_id="j1", cron_expression="0 9 * * *", now=day1)
         scheduler.tick(day1)
         day2 = datetime(2026, 9, 5, 9, 0, tzinfo=UTC)
         due = scheduler.tick(day2)

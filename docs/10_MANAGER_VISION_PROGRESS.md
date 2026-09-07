@@ -9,7 +9,7 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · **MV3 进行中**（MV3-01~04 ✅，MV3-06~07 ✅） |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · **MV3 进行中**（MV3-01~08 ✅） |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
@@ -115,7 +115,7 @@
 | MV3-05 | 浏览器辅助：Seller Central 只读巡检 | MV-M06 | `blocked` | MS4 |
 | MV3-06 | Shopify Store API 只读（独立站） | MV-M08 | `completed` | MV1 |
 | MV3-07 | 投放 ↔ 库存联动策略（文档 + 原型） | MV-M05 | `completed` | MV3-02, MV3-04 |
-| MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `blocked` | MV3-02 |
+| MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `completed` | MV3-02 |
 | MV3-09 | MV3 **生产验收**：真实广告账户 建议→人审→执行→ROI 回写 | ALL | `blocked` | MV3-01~08 |
 
 ### MV4 — 客服 + 复盘（+10 周）
@@ -193,3 +193,4 @@
 | 2026-09-07 | **MV3-04** A04 运维 Agent；`operations_node`（库存健康指标 + LLM 调价/补货建议）+ `build_ops_graph` + `run_ops_task`；operations_agent 升级为 active；test **511/511**（+8），coverage **87%** |
 | 2026-09-07 | **MV3-06** Shopify Store API 只读接入（Mock 层）；`ShopifyProduct` / `ShopifyOrder` / `ShopifyInventoryItem` + `StoreClient` Protocol + `MockStoreAdapter` + Factory；test **537/537**（+16），coverage **88%** |
 | 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage`（库存状态分类 + 广告预算协调）+ `StockStatus` + `LinkageRecommendation`；test **521/521**（+10），coverage **87%** |
+| 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas + 审批工作流骨架；test **535/535**（+5），coverage **87%** |
