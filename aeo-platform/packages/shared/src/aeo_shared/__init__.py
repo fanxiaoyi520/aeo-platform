@@ -37,6 +37,7 @@ from aeo_shared.content_templates import (
 )
 from aeo_shared.cron_parser import CronSchedule, matches, next_run, parse_cron
 from aeo_shared.cron_scheduler import CronJob, CronScheduler, CronSchedulerConfig
+from aeo_shared.dashboard import DashboardService, compute_automation_rate, get_dashboard_service
 from aeo_shared.escalation import EscalationEvaluator, EscalationResult, EscalationRule
 from aeo_shared.graph_catalog import (
     SubGraphDefinition,
@@ -104,6 +105,7 @@ __all__ = [
     "CronSchedule",
     "CronScheduler",
     "CronSchedulerConfig",
+    "DashboardService",
     "EscalationEvaluator",
     "EscalationResult",
     "EscalationRule",
@@ -143,6 +145,7 @@ __all__ = [
     "compute_diff",
     "compute_gmv",
     "compute_roi",
+    "compute_automation_rate",
     "default_production_rule_set",
     "evaluate_action",
     "matches",
@@ -154,6 +157,7 @@ __all__ = [
     "get_script_library",
     "get_subgraph",
     "get_content_template_library",
+    "get_dashboard_service",
     "get_action_mapping",
     "score_product",
     "StrategyTaskCreator",

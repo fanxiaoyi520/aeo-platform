@@ -259,6 +259,11 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
                 description="Auto-create follow-up tasks from strategy suggestions.",
                 tools=["scheduler.enqueue"],
             ),
+            AgentCapability(
+                name="analytics.dashboard",
+                description="Aggregate GMV/ROI/automation-rate dashboard.",
+                tools=["metrics.snapshot"],
+            ),
         ],
         risk_level=RiskLevel.L0,
         graph_node="analytics",

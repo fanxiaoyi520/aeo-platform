@@ -39,6 +39,7 @@ class BusinessMetricsSnapshot:
     roi: Decimal | None
     order_count: int
     unique_skus: int
+    automation_rate: Decimal | None = None
     data_source: str = "mock"
 
     def to_dict(self) -> dict[str, Any]:
@@ -51,12 +52,16 @@ class BusinessMetricsSnapshot:
             "roi": str(self.roi) if self.roi is not None else None,
             "order_count": self.order_count,
             "unique_skus": self.unique_skus,
+            "automation_rate": str(self.automation_rate)
+            if self.automation_rate is not None
+            else None,
             "data_source": self.data_source,
         }
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> BusinessMetricsSnapshot:
         roi_raw = payload.get("roi")
+        automation_raw = payload.get("automation_rate")
         return cls(
             snapshot_date=date.fromisoformat(str(payload["snapshot_date"])),
             platform=str(payload["platform"]),
@@ -66,6 +71,7 @@ class BusinessMetricsSnapshot:
             roi=Decimal(str(roi_raw)) if roi_raw is not None else None,
             order_count=int(payload["order_count"]),
             unique_skus=int(payload["unique_skus"]),
+            automation_rate=Decimal(str(automation_raw)) if automation_raw is not None else None,
             data_source=str(payload.get("data_source", "mock")),
         )
 
