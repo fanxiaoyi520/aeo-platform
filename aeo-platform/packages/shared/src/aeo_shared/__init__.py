@@ -45,6 +45,12 @@ from aeo_shared.cron_parser import CronSchedule, matches, next_run, parse_cron
 from aeo_shared.cron_scheduler import CronJob, CronScheduler, CronSchedulerConfig
 from aeo_shared.dashboard import DashboardService, compute_automation_rate, get_dashboard_service
 from aeo_shared.escalation import EscalationEvaluator, EscalationResult, EscalationRule
+from aeo_shared.final_acceptance import (
+    AcceptanceResult,
+    BizKpi,
+    FinalAcceptanceReport,
+    compute_final_acceptance,
+)
 from aeo_shared.graph_catalog import (
     SubGraphDefinition,
     build_graph_catalog,
@@ -187,6 +193,9 @@ __all__ = [
     "TrialMonitor",
     "TrialRecord",
     "TrialStatus",
+    "BizKpi",
+    "AcceptanceResult",
+    "FinalAcceptanceReport",
     "analyze_incidents",
     "build_daily_snapshot",
     "build_default_registry",
@@ -203,6 +212,7 @@ __all__ = [
     "compute_availability",
     "compute_p95_latency",
     "compute_recovery_time",
+    "compute_final_acceptance",
     "default_production_rule_set",
     "evaluate_action",
     "generate_tuning_suggestions",

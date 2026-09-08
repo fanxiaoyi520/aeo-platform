@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-08
-**当前阶段：** **MV5-06** 商业终验（待开工）
-**下一任务：** **MV5-06** 商业终验（MV5 最后一项任务）
-**Git：** `feat/mv5-05-prod-trial`（MV5-05 已提交，待 PR）
+**当前阶段：** **MV5 收官**（全部任务完成，待用户批准）
+**下一任务：** — （MV5 为 Phase 2 最后一项里程碑）
+**Git：** `feat/mv5-06-final-acceptance`（MV5-06 已提交，待 PR）
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -358,3 +358,4 @@
 | 2026-09-08 | **MV5-03** 人工替代率 / ROI 对比报告；`mv5_03_roi_report.py` + `roi_comparison.py`（AI vs 人工 ROI lift）；PR #46 merged |
 | 2026-09-08 | **MV5-04** 风控事故复盘与规则调优；`mv5_04_risk_review.py` + `risk_review.py`（事故率/关键度/调优建议）；PR #47 merged |
 | 2026-09-08 | **MV5-05** 生产部署验证 + 7×24 试运行；`trial_monitor.py` + `mv5_05_trial_run.py`（--dry-run）+ `mv5_05_trial_report.py`；test **724/724**，coverage **88.85%** |
+| 2026-09-08 | **MV5-06** 商业终验；`final_acceptance.py`（六项 KPI：人工替代率/ROI/GMV追溯/风控事故/客服质量/首审通过率）+ `mv5_06_final_report.py`；12 项测试 |
