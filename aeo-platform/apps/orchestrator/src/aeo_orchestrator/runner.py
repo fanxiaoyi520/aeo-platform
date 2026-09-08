@@ -21,7 +21,7 @@ from aeo_orchestrator.graph import (
 from aeo_orchestrator.hitl import approve_hitl, is_waiting_hitl, run_until_hitl
 from aeo_orchestrator.state import TaskState, TaskStatus, initial_state
 
-PlatformChoice = Literal["amazon", "tiktok"]
+PlatformChoice = Literal["amazon", "tiktok", "shopify"]
 
 
 def build_runner_graph() -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:

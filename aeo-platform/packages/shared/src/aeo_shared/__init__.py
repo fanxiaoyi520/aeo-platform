@@ -18,6 +18,12 @@ from aeo_shared.agent_registry import (
     AgentRegistry,
     RiskLevel,
 )
+from aeo_shared.batch_metrics import (
+    AgentExecRecord,
+    BatchMetricsAggregator,
+    KpiTarget,
+    SkuBatchResult,
+)
 from aeo_shared.budget_optimizer import (
     BudgetAllocation,
     BudgetOptimizer,
@@ -94,8 +100,10 @@ __all__ = [
     "AgentCapability",
     "AgentCategory",
     "AgentDeclaration",
+    "AgentExecRecord",
     "AgentRegistry",
     "AgentTaskScheduler",
+    "BatchMetricsAggregator",
     "BudgetAllocation",
     "BudgetOptimizer",
     "CompetitorData",
@@ -109,6 +117,7 @@ __all__ = [
     "EscalationEvaluator",
     "EscalationResult",
     "EscalationRule",
+    "KpiTarget",
     "ListingChange",
     "ListingSnapshot",
     "LinkageRecommendation",
@@ -134,6 +143,7 @@ __all__ = [
     "ScriptLibrary",
     "SelectionInput",
     "SelectionResult",
+    "SkuBatchResult",
     "StockStatus",
     "SubGraphDefinition",
     "TaskPriority",
