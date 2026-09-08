@@ -10,9 +10,12 @@ from aeo_llm.provider import LLMResponse
 
 
 def _mock_analytics_llm(day_index: int) -> AsyncMock:
+    gmv = 800 + day_index * 50
+    orders = 20 + day_index * 2
+    summary = f"Day {day_index}: GMV ${gmv} with {orders} orders."
     response_body = json.dumps(
         {
-            "daily_summary": f"Day {day_index}: GMV ${{800 + day_index * 50}} with {{20 + day_index * 2}} orders.",
+            "daily_summary": summary,
             "weekly_trend": f"Revenue trending up. Day {day_index} of 7-day cycle.",
             "strategy_suggestions": [
                 {
@@ -45,18 +48,38 @@ _SUPPORT_SCENARIOS = [
 
 def _mock_support_llm(scenario: str, customer_message: str) -> AsyncMock:
     reply_map = {
-        "shipping": "I apologize for the delay. Your order is in transit and should arrive within 1-2 business days.",
-        "return": "I'm sorry the product didn't match expectations. I've initiated a return label for you.",
-        "refund": "I'm sorry about the damage. A full refund has been processed to your original payment method.",
-        "complaint": "I apologize for the defect. We'll send a replacement immediately or process a refund.",
-        "exchange": "I sincerely apologize for the mix-up. A correct item will be shipped today with express delivery.",
-        "inquiry": "Thank you for your interest! The product dimensions are 10x8x6 inches, weighing 1.5 lbs.",
+        "shipping": (
+            "I apologize for the delay. Your order is in transit "
+            "and should arrive within 1-2 business days."
+        ),
+        "return": (
+            "I'm sorry the product didn't match expectations. "
+            "I've initiated a return label for you."
+        ),
+        "refund": (
+            "I'm sorry about the damage. A full refund has been "
+            "processed to your original payment method."
+        ),
+        "complaint": (
+            "I apologize for the defect. We'll send a replacement "
+            "immediately or process a refund."
+        ),
+        "exchange": (
+            "I sincerely apologize for the mix-up. A correct item "
+            "will be shipped today with express delivery."
+        ),
+        "inquiry": (
+            "Thank you for your interest! The product dimensions "
+            "are 10x8x6 inches, weighing 1.5 lbs."
+        ),
     }
     requires_human = scenario in ("refund", "complaint")
 
     response_body = json.dumps(
         {
-            "reply_draft": reply_map.get(scenario, "Thank you for contacting us. We are looking into your issue."),
+            "reply_draft": reply_map.get(
+                scenario, "Thank you for contacting us. We are looking into your issue.",
+            ),
             "order_context": {
                 "order_id": "111-2222222-3333333",
                 "status": "Shipped",
@@ -194,15 +217,21 @@ def test_mv4_08_escalation_rules_trigger_correctly() -> None:
     ]
     evaluator = EscalationEvaluator(rules=rules)
 
-    result_refund = evaluator.evaluate(scenario="refund", context={"refund_amount": 75, "contact_count": 1})
+    result_refund = evaluator.evaluate(
+        scenario="refund", context={"refund_amount": 75, "contact_count": 1},
+    )
     assert result_refund.escalate
     assert result_refund.matched_rule_id == "refund"
 
-    result_repeat = evaluator.evaluate(scenario="complaint", context={"refund_amount": 10, "contact_count": 3})
+    result_repeat = evaluator.evaluate(
+        scenario="complaint", context={"refund_amount": 10, "contact_count": 3},
+    )
     assert result_repeat.escalate
     assert result_repeat.matched_rule_id == "complaint"
 
-    result_normal = evaluator.evaluate(scenario="inquiry", context={"refund_amount": 10, "contact_count": 1})
+    result_normal = evaluator.evaluate(
+        scenario="inquiry", context={"refund_amount": 10, "contact_count": 1},
+    )
     assert not result_normal.escalate
 
 
@@ -216,4 +245,7 @@ def test_mv4_08_script_library_covers_all_scenarios() -> None:
     expected = {"return", "refund", "shipping", "complaint", "inquiry", "exchange"}
     covered = expected.intersection(set(scenarios))
     coverage_rate = len(covered) / len(expected)
-    assert coverage_rate >= 0.8, f"Script coverage {coverage_rate:.0%} < 80%, missing: {expected - covered}"
+    missing = expected - covered
+    assert coverage_rate >= 0.8, (
+        f"Script coverage {coverage_rate:.0%} < 80%, missing: {missing}"
+    )
