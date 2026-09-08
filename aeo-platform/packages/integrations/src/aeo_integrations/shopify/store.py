@@ -35,21 +35,15 @@ class StoreClient(Protocol):
         self, *, sku: str | None = None, limit: int = 100
     ) -> list[ShopifyInventoryItem]: ...
 
-    def list_abandoned_carts(
-        self, *, limit: int = 50
-    ) -> list[ShopifyAbandonedCart]: ...
+    def list_abandoned_carts(self, *, limit: int = 50) -> list[ShopifyAbandonedCart]: ...
 
-    def list_customers(
-        self, *, limit: int = 50
-    ) -> list[ShopifyCustomer]: ...
+    def list_customers(self, *, limit: int = 50) -> list[ShopifyCustomer]: ...
 
     def list_discount_codes(
         self, *, is_active: bool | None = None, limit: int = 50
     ) -> list[ShopifyDiscountCode]: ...
 
-    def get_store_metrics(
-        self, *, limit: int = 30
-    ) -> list[ShopifyStoreMetrics]: ...
+    def get_store_metrics(self, *, limit: int = 30) -> list[ShopifyStoreMetrics]: ...
 
 
 class MockStoreAdapter:
@@ -121,14 +115,10 @@ class MockStoreAdapter:
             results = [i for i in results if i.sku == sku]
         return results[:limit]
 
-    def list_abandoned_carts(
-        self, *, limit: int = 50
-    ) -> list[ShopifyAbandonedCart]:
+    def list_abandoned_carts(self, *, limit: int = 50) -> list[ShopifyAbandonedCart]:
         return self._abandoned_carts[:limit]
 
-    def list_customers(
-        self, *, limit: int = 50
-    ) -> list[ShopifyCustomer]:
+    def list_customers(self, *, limit: int = 50) -> list[ShopifyCustomer]:
         return self._customers[:limit]
 
     def list_discount_codes(
@@ -139,9 +129,7 @@ class MockStoreAdapter:
             results = [c for c in results if c.is_active == is_active]
         return results[:limit]
 
-    def get_store_metrics(
-        self, *, limit: int = 30
-    ) -> list[ShopifyStoreMetrics]:
+    def get_store_metrics(self, *, limit: int = 30) -> list[ShopifyStoreMetrics]:
         return self._store_metrics[:limit]
 
 

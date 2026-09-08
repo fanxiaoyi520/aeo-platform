@@ -33,14 +33,10 @@ class ShopifyApiAdapter:
     ) -> list[ShopifyInventoryItem]:
         raise NotImplementedError("Shopify Admin API integration pending")
 
-    def list_abandoned_carts(
-        self, *, limit: int = 50
-    ) -> list[ShopifyAbandonedCart]:
+    def list_abandoned_carts(self, *, limit: int = 50) -> list[ShopifyAbandonedCart]:
         raise NotImplementedError("Shopify Admin API integration pending")
 
-    def list_customers(
-        self, *, limit: int = 50
-    ) -> list[ShopifyCustomer]:
+    def list_customers(self, *, limit: int = 50) -> list[ShopifyCustomer]:
         raise NotImplementedError("Shopify Admin API integration pending")
 
     def list_discount_codes(
@@ -48,7 +44,5 @@ class ShopifyApiAdapter:
     ) -> list[ShopifyDiscountCode]:
         raise NotImplementedError("Shopify Admin API integration pending")
 
-    def get_store_metrics(
-        self, *, limit: int = 30
-    ) -> list[ShopifyStoreMetrics]:
+    def get_store_metrics(self, *, limit: int = 30) -> list[ShopifyStoreMetrics]:
         raise NotImplementedError("Shopify Admin API integration pending")
