@@ -32,8 +32,8 @@ async def test_list_all_content_templates() -> None:
     body = response.json()
     assert body["code"] == 0
     data = body["data"]
-    assert len(data["templates"]) == 5
-    assert data["summary"]["total"] == 5
+    assert len(data["templates"]) == 9
+    assert data["summary"]["total"] == 9
     content_types = {t["content_type"] for t in data["templates"]}
     assert "listing" in content_types
     assert "image_copy" in content_types
@@ -50,7 +50,7 @@ async def test_filter_by_content_type() -> None:
 
     assert response.status_code == 200
     data = response.json()["data"]
-    assert len(data["templates"]) == 2
+    assert len(data["templates"]) == 3
     for tpl in data["templates"]:
         assert tpl["content_type"] == "listing"
 
