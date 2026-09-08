@@ -9,10 +9,10 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-08 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· MV4 ✅ · **MV5 in_progress（MV5-01~05 ✅，MV5-06 待开工）** |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· MV4 ✅ · **MV5 ✅ 全部完成** |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **45%**（MV1~MV4 全部完成；MV5-01~04 完成） |
+| **整体完成度** | **50%**（MV1~MV5 全部完成；Phase 2 收官） |
 
 ---
 
@@ -22,10 +22,10 @@
 |--------|------|--------|------------|------|
 | MV0 计划批准 | `completed` | — | 2026-08-30 |
 | MV1 平台与风控底座 | `completed` | W1–W8 | 2026-09-03 | mock 路径 |
-| MV2 选品 + 内容扩展 | `blocked` | W9–W18 | — | MV1 |
-| MV3 投放与运维 | `blocked` | W19–W30 | — | MV2 |
+| MV2 选品 + 内容扩展 | `completed` | W9–W18 | 2026-09-07 | MV1 |
+| MV3 投放与运维 | `completed`（MV3-09 blocked） | W19–W30 | 2026-09-07 | MV2 |
 | MV4 客服 + 复盘 | `completed` | W31–W40 | 2026-09-07 | MV3 |
-| MV5 全链路试点 | `in_progress` | W41–W48 | — | MV4 |
+| MV5 全链路试点 | `completed` | W41–W48 | 2026-09-08 | MV4 |
 
 ---
 
@@ -140,7 +140,7 @@
 | MV5-03 | 人工替代率 / ROI 对比报告 | MV-M09 | `completed` | MV5-02 |
 | MV5-04 | 风控事故复盘与规则调优 | MV-M02 | `completed` | MV5-02 |
 | MV5-05 | 生产部署与 7×24 试运行 | MV-M10 | `completed` | MV5-03 |
-| MV5-06 | MV5 **商业终验**：MV-BIZ-01~06 全部达标 + 试点报告 | ALL | `blocked` | MV5-01~05 |
+| MV5-06 | MV5 **商业终验**：MV-BIZ-01~06 全部达标 + 试点报告 | ALL | `completed` | MV5-01~05 |
 
 ---
 
@@ -200,3 +200,4 @@
 | 2026-09-08 | **MV5-03** 人工替代率 / ROI 对比报告；`mv5_03_roi_report.py` + `roi_comparison.py`；test 全绿 |
 | 2026-09-08 | **MV5-04** 风控事故复盘与规则调优；`mv5_04_risk_review.py` + `risk_review.py`；PR #47 merged |
 | 2026-09-08 | **MV5-05** 生产部署验证 + 7×24 试运行；`trial_monitor.py`（可用性/P95/恢复时间）+ `mv5_05_trial_run.py`（--dry-run）+ `mv5_05_trial_report.py`；test **724/724**，coverage **88.85%** |
+| 2026-09-08 | **MV5-06** 商业终验；`final_acceptance.py`（六项 KPI）+ `mv5_06_final_report.py`；12 项测试；**MV5 里程碑全部完成** |
