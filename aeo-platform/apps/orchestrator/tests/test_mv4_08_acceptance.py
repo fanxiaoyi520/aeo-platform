@@ -61,8 +61,7 @@ def _mock_support_llm(scenario: str, customer_message: str) -> AsyncMock:
             "processed to your original payment method."
         ),
         "complaint": (
-            "I apologize for the defect. We'll send a replacement "
-            "immediately or process a refund."
+            "I apologize for the defect. We'll send a replacement immediately or process a refund."
         ),
         "exchange": (
             "I sincerely apologize for the mix-up. A correct item "
@@ -78,7 +77,8 @@ def _mock_support_llm(scenario: str, customer_message: str) -> AsyncMock:
     response_body = json.dumps(
         {
             "reply_draft": reply_map.get(
-                scenario, "Thank you for contacting us. We are looking into your issue.",
+                scenario,
+                "Thank you for contacting us. We are looking into your issue.",
             ),
             "order_context": {
                 "order_id": "111-2222222-3333333",
@@ -218,19 +218,22 @@ def test_mv4_08_escalation_rules_trigger_correctly() -> None:
     evaluator = EscalationEvaluator(rules=rules)
 
     result_refund = evaluator.evaluate(
-        scenario="refund", context={"refund_amount": 75, "contact_count": 1},
+        scenario="refund",
+        context={"refund_amount": 75, "contact_count": 1},
     )
     assert result_refund.escalate
     assert result_refund.matched_rule_id == "refund"
 
     result_repeat = evaluator.evaluate(
-        scenario="complaint", context={"refund_amount": 10, "contact_count": 3},
+        scenario="complaint",
+        context={"refund_amount": 10, "contact_count": 3},
     )
     assert result_repeat.escalate
     assert result_repeat.matched_rule_id == "complaint"
 
     result_normal = evaluator.evaluate(
-        scenario="inquiry", context={"refund_amount": 10, "contact_count": 1},
+        scenario="inquiry",
+        context={"refund_amount": 10, "contact_count": 1},
     )
     assert not result_normal.escalate
 
@@ -246,6 +249,4 @@ def test_mv4_08_script_library_covers_all_scenarios() -> None:
     covered = expected.intersection(set(scenarios))
     coverage_rate = len(covered) / len(expected)
     missing = expected - covered
-    assert coverage_rate >= 0.8, (
-        f"Script coverage {coverage_rate:.0%} < 80%, missing: {missing}"
-    )
+    assert coverage_rate >= 0.8, f"Script coverage {coverage_rate:.0%} < 80%, missing: {missing}"

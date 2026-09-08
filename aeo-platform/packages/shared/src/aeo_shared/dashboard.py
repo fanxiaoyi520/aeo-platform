@@ -69,9 +69,7 @@ class DashboardService:
         total_orders = sum(s.order_count for s in snapshots)
         rois = [s.roi for s in snapshots if s.roi is not None]
         avg_roi: Decimal | None = (
-            Decimal(str(sum(rois) / len(rois))).quantize(Decimal("0.01"))
-            if rois
-            else None
+            Decimal(str(sum(rois) / len(rois))).quantize(Decimal("0.01")) if rois else None
         )
         automation_rate = compute_automation_rate(auto_completed=auto_completed, total=total)
 
