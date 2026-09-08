@@ -113,6 +113,48 @@ _AMAZON_EXCHANGE = AfterSalesScript(
     confidence_threshold=0.6,
 )
 
+_SHOPIFY_ABANDONED_CART = AfterSalesScript(
+    script_id="shopify-abandoned-cart-001",
+    scenario="abandoned_cart",
+    platform="shopify",
+    template_text=(
+        "Hi there! We noticed you left some items in your cart. "
+        "Would you like to complete your purchase? "
+        "As a thank-you, here's a 10% discount code: COMEBACK10. "
+        "Your cart is waiting at our store!"
+    ),
+    keywords=["abandoned cart", "left items", "forgot", "comeback"],
+    confidence_threshold=0.7,
+)
+
+_SHOPIFY_SHIPPING = AfterSalesScript(
+    script_id="shopify-shipping-001",
+    scenario="shipping",
+    platform="shopify",
+    template_text=(
+        "Thank you for reaching out about your order. "
+        "You can track your shipment using the tracking link in your confirmation email. "
+        "Standard shipping takes 5-7 business days. "
+        "If your package hasn't arrived, please reply and we'll investigate with the carrier."
+    ),
+    keywords=["shipping", "delivery", "track", "package", "where is my order"],
+    confidence_threshold=0.6,
+)
+
+_SHOPIFY_DISCOUNT_ISSUE = AfterSalesScript(
+    script_id="shopify-discount-001",
+    scenario="discount_issue",
+    platform="shopify",
+    template_text=(
+        "We're sorry the discount code didn't work. "
+        "Please check that the code is entered correctly and hasn't expired. "
+        "Some codes have minimum order requirements or product exclusions. "
+        "If the issue persists, we'd be happy to provide a new code for you."
+    ),
+    keywords=["discount", "promo code", "coupon", "code not working", "voucher"],
+    confidence_threshold=0.5,
+)
+
 _BUILTIN_SCRIPTS: list[AfterSalesScript] = [
     _AMAZON_RETURN,
     _AMAZON_REFUND,
@@ -120,6 +162,9 @@ _BUILTIN_SCRIPTS: list[AfterSalesScript] = [
     _AMAZON_COMPLAINT,
     _AMAZON_INQUIRY,
     _AMAZON_EXCHANGE,
+    _SHOPIFY_ABANDONED_CART,
+    _SHOPIFY_SHIPPING,
+    _SHOPIFY_DISCOUNT_ISSUE,
 ]
 
 
