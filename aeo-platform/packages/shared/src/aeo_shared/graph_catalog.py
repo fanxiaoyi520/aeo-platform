@@ -108,6 +108,14 @@ _ANALYTICS_GRAPH = SubGraphDefinition(
     agent_ids=["analytics_agent"],
 )
 
+_DTC_CONTENT_GRAPH = SubGraphDefinition(
+    graph_id="dtc_content",
+    display_name="DTC Content Agent",
+    description="DTC landing page, email campaign, and social media content for Shopify.",
+    category=AgentCategory.LISTING,
+    agent_ids=["dtc_content_agent"],
+)
+
 _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _LISTING_GRAPH.graph_id: _LISTING_GRAPH,
     _SELECTION_GRAPH.graph_id: _SELECTION_GRAPH,
@@ -118,6 +126,7 @@ _GRAPH_CATALOG: dict[str, SubGraphDefinition] = {
     _OPS_GRAPH.graph_id: _OPS_GRAPH,
     _SUPPORT_GRAPH.graph_id: _SUPPORT_GRAPH,
     _ANALYTICS_GRAPH.graph_id: _ANALYTICS_GRAPH,
+    _DTC_CONTENT_GRAPH.graph_id: _DTC_CONTENT_GRAPH,
 }
 
 

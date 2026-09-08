@@ -269,6 +269,23 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         graph_node="analytics",
         timeout_seconds=120,
     ),
+    AgentDeclaration(
+        agent_id="dtc_content_agent",
+        display_name="DTC Content Agent",
+        category=AgentCategory.LISTING,
+        description=(
+            "DTC landing page, email campaign, and social media content for Shopify stores."
+        ),
+        capabilities=[
+            AgentCapability(
+                name="generate.dtc_content",
+                description="Produce landing page copy, email sequences, and social posts.",
+                tools=["llm.chat"],
+            ),
+        ],
+        platforms=["shopify"],
+        timeout_seconds=90,
+    ),
 )
 
 

@@ -75,6 +75,7 @@ def test_default_registry_includes_listing_chain() -> None:
         "review_agent",
         "image_copy_agent",
         "tiktok_video_agent",
+        "dtc_content_agent",
     }
 
 
