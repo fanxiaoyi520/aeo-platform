@@ -9,10 +9,10 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-08 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· MV4 ✅ · **MV5 ✅ 全部完成** |
+| **当前阶段** | Phase 2 **收官** — MV1 ✅ · MV2 ✅ · MV3 ✅ · MV4 ✅ · MV5 ✅ |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **50%**（MV1~MV5 全部完成；Phase 2 收官） |
+| **整体完成度** | **50%**（Phase 2 MV1~MV5 全部完成；待 Phase 3 扩展） |
 
 ---
 
@@ -33,16 +33,16 @@
 
 | 模块 | 名称 | 状态 | 完成度 | 阶段 |
 |------|------|------|--------|------|
-| MV-M01 | 多 Agent 平台与调度 | `in_progress` | 55% | MV1 |
-| MV-M02 | 风控与决策分级 | `in_progress` | 20% | MV1 |
-| MV-M03 | 选品与市场情报 | `blocked` | 0% | MV2 |
-| MV-M04 | 内容 AIGC（全媒介） | `blocked` | 0% | MV2 |
-| MV-M05 | 广告投放与 ROI | `blocked` | 0% | MV3 |
-| MV-M06 | 店铺运维自动化 | `blocked` | 0% | MV3 |
-| MV-M07 | 客服与履约 | `blocked` | 0% | MV4 |
-| MV-M08 | 独立站 / DTC | `blocked` | 0% | MV3–MV4 |
-| MV-M09 | 商业指标与复盘闭环 | `blocked` | 0% | MV1 基础 / MV4 完整 |
-| MV-M10 | 数据集成层 | `in_progress` | 25% | MV1 起并行（mock 已就绪） |
+| MV-M01 | 多 Agent 平台与调度 | `completed` | 100% | MV1 ✅ |
+| MV-M02 | 风控与决策分级 | `completed` | 100% | MV1 ✅ |
+| MV-M03 | 选品与市场情报 | `completed` | 100% | MV2 ✅ |
+| MV-M04 | 内容 AIGC（全媒介） | `completed` | 100% | MV2 ✅ |
+| MV-M05 | 广告投放与 ROI | `completed` | 100% | MV3 ✅ |
+| MV-M06 | 店铺运维自动化 | `completed` | 100% | MV3 ✅ |
+| MV-M07 | 客服与履约 | `completed` | 100% | MV4 ✅ |
+| MV-M08 | 独立站 / DTC | `blocked` | 10% | Phase 3（Shopify mock 已就绪，完整 DTC 待规划） |
+| MV-M09 | 商业指标与复盘闭环 | `completed` | 100% | MV4 ✅ + MV5 终验 |
+| MV-M10 | 数据集成层 | `completed` | 100% | MV1~MV5（mock 路径全链路） |
 
 ---
 

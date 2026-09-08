@@ -60,7 +60,9 @@ async def _run_single_item(
 ) -> PilotRunRecord:
     started = time.perf_counter()
     product_info = build_product_info(item)
-    platform = cast(Literal["amazon", "tiktok"], item["platform"])
+    platform = cast(
+        Literal["amazon", "tiktok", "shopify"], item["platform"]
+    )
     state = initial_state(
         task_id=f"pilot-{item['id']}",
         platform=platform,

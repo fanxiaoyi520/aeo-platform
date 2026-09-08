@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/metrics", label: "指标" },
   { href: "/agents", label: "指挥台" },
   { href: "/tasks", label: "任务" },
+  { href: "/dtc", label: "独立站" },
   { href: "/knowledge", label: "知识库" },
   { href: "/settings", label: "设置" },
 ];
