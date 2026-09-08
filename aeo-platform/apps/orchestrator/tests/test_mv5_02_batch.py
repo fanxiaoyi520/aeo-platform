@@ -2,12 +2,26 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 from aeo_shared.batch_metrics import AgentExecRecord, SkuBatchResult
+
+SCRIPT_PATH = Path(__file__).resolve().parents[3] / "scripts" / "batch_mv5_pilot.py"
+
+
+@pytest.fixture(scope="module")
+def batch_mod() -> Any:
+    spec = importlib.util.spec_from_file_location("batch_mv5_pilot", SCRIPT_PATH)
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["batch_mv5_pilot"] = mod
+    spec.loader.exec_module(mod)
+    return mod
 
 
 @pytest.fixture()
@@ -64,7 +78,10 @@ def sample_items() -> list[dict[str, Any]]:
     ]
 
 
-def test_load_testset_from_file(tmp_path: Path) -> None:
+def test_load_testset_from_file(
+    batch_mod: Any,
+    tmp_path: Path,
+) -> None:
     testset = {
         "version": "2.0",
         "items": [{"id": "T1", "sku": "SKU1", "platform": "amazon"}],
@@ -72,27 +89,28 @@ def test_load_testset_from_file(tmp_path: Path) -> None:
     p = tmp_path / "test.json"
     p.write_text(json.dumps(testset), encoding="utf-8")
 
-    from scripts.batch_mv5_pilot import load_testset
-
-    items = load_testset(p)
+    items = batch_mod.load_testset(p)
     assert len(items) == 1
     assert items[0]["sku"] == "SKU1"
 
 
-def test_dry_run_mode(sample_items: list[dict[str, Any]], tmp_path: Path) -> None:
+def test_dry_run_mode(
+    batch_mod: Any,
+    sample_items: list[dict[str, Any]],
+    tmp_path: Path,
+) -> None:
     testset = {"items": sample_items}
     p = tmp_path / "test.json"
     p.write_text(json.dumps(testset), encoding="utf-8")
 
-    from scripts.batch_mv5_pilot import main
-
-    rc = main(["--testset", str(p), "--dry-run", "--limit", "2"])
+    rc = batch_mod.main(["--testset", str(p), "--dry-run", "--limit", "2"])
     assert rc == 0
 
 
-def test_build_report_structure(sample_items: list[dict[str, Any]]) -> None:
-    from scripts.batch_mv5_pilot import build_report
-
+def test_build_report_structure(
+    batch_mod: Any,
+    sample_items: list[dict[str, Any]],
+) -> None:
     results = [
         SkuBatchResult(
             sku_id="MV5-001",
@@ -145,7 +163,7 @@ def test_build_report_structure(sample_items: list[dict[str, Any]]) -> None:
         ),
     ]
 
-    report = build_report(results, testset_path="test.json")
+    report = batch_mod.build_report(results, testset_path="test.json")
 
     assert report["milestone"] == "MV5"
     assert report["task"] == "MV5-02"
@@ -163,9 +181,10 @@ def test_build_report_structure(sample_items: list[dict[str, Any]]) -> None:
     assert "shopify" in s["per_platform"]
 
 
-def test_kpi_check_in_report(sample_items: list[dict[str, Any]]) -> None:
-    from scripts.batch_mv5_pilot import build_report
-
+def test_kpi_check_in_report(
+    batch_mod: Any,
+    sample_items: list[dict[str, Any]],
+) -> None:
     results = [
         SkuBatchResult(
             sku_id=f"MV5-{i:03d}",
@@ -184,7 +203,7 @@ def test_kpi_check_in_report(sample_items: list[dict[str, Any]]) -> None:
         for i in range(3)
     ]
 
-    report = build_report(results, testset_path="test.json")
+    report = batch_mod.build_report(results, testset_path="test.json")
     kpi_check = report["kpi_check"]
 
     assert isinstance(kpi_check, list)
@@ -194,20 +213,18 @@ def test_kpi_check_in_report(sample_items: list[dict[str, Any]]) -> None:
         assert "passed" in check
 
 
-def test_is_degraded_detection() -> None:
-    from scripts.batch_mv5_pilot import _is_degraded
-
+def test_is_degraded_detection(batch_mod: Any) -> None:
     item_no_comp = {"competitor_asins": [], "knowledge_doc": "doc.md"}
-    assert _is_degraded(item_no_comp, "selection") is True
-    assert _is_degraded(item_no_comp, "ads") is False
+    assert batch_mod._is_degraded(item_no_comp, "selection") is True
+    assert batch_mod._is_degraded(item_no_comp, "ads") is False
 
     item_no_knowledge = {"competitor_asins": ["B123"], "knowledge_doc": None}
-    assert _is_degraded(item_no_knowledge, "content") is True
-    assert _is_degraded(item_no_knowledge, "selection") is False
+    assert batch_mod._is_degraded(item_no_knowledge, "content") is True
+    assert batch_mod._is_degraded(item_no_knowledge, "selection") is False
 
     item_full = {"competitor_asins": ["B123"], "knowledge_doc": "doc.md"}
-    assert _is_degraded(item_full, "selection") is False
-    assert _is_degraded(item_full, "content") is False
+    assert batch_mod._is_degraded(item_full, "selection") is False
+    assert batch_mod._is_degraded(item_full, "content") is False
 
 
 def test_platform_choice_includes_shopify() -> None:
