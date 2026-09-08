@@ -30,7 +30,7 @@ class AgentTraceEvent(TypedDict):
     detail: dict[str, Any]
 
 
-Platform = Literal["amazon", "tiktok"]
+Platform = Literal["amazon", "tiktok", "shopify"]
 
 
 class TaskState(TypedDict, total=False):
