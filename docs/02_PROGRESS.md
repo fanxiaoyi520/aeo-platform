@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-07  
-**当前阶段：** **MV4 完成**；MV4-01~08 全部通过  
-**下一任务：** **MV5-01** 50 SKU 多平台测试集（待 MV4 PR 合并后开启）  
-**Git：** `feat/mv4-08-acceptance` PR 待合并  
+**最后更新：** 2026-09-08  
+**当前阶段：** **MV5-01** 50 SKU 多平台测试集（in_progress）  
+**下一任务：** **MV5-02** 批量运行脚本 + 指标采集（待 MV5-01 完成）  
+**Git：** `feat/mv5-01-50sku-testset` 开发中  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -353,3 +353,4 @@
 | 2026-09-07 | **MV4-06** GMV/ROI/人工替代率看板；`BusinessMetricsSnapshot` 新增 `automation_rate` + `compute_automation_rate()` + `DashboardService`（聚合 GMV/ROI/trend）+ `GET /api/v1/business-metrics/dashboard`；analytics.dashboard capability；test **631/631**（+16），coverage **87%** |
 | 2026-09-07 | **MV4-07** /metrics 前端看板页面；BFF `/api/metrics` + `/metrics` 页面（GMV/ROI/替代率/趋势图/明细表）+ 侧边栏导航；test **631/631**（前端无新增后端测试） |
 | 2026-09-07 | **MV4-08** MV4 生产验收；7 天连续日报 7/7 + 客服 50 条抽检 50/50（100% ≥ 85%）+ 升级规则 + 话术库覆盖；`scripts/mv4_acceptance_report.py`；test **636/636**（+5）。**MV4 里程碑全部完成** |
+| 2026-09-08 | **MV5-01** 50 SKU 多平台测试集；`pilot/mv5-50sku-testset.json`（Amazon 25 + TikTok 15 + Shopify 10；10+ 品类；新增 `price_usd`/`monthly_sales`/`support_scenarios` 字段）+ 9 项 pytest 验证；test **645/645**（+9），coverage **88%** |
