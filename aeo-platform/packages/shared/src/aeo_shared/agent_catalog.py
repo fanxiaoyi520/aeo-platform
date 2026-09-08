@@ -286,6 +286,29 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         platforms=["shopify"],
         timeout_seconds=90,
     ),
+    AgentDeclaration(
+        agent_id="dtc_operations_agent",
+        display_name="DTC Operations Agent",
+        category=AgentCategory.OPERATIONS,
+        description=(
+            "Shopify store health monitoring — inventory, discounts, "
+            "AOV, fulfillment SLA, and abandoned cart recovery."
+        ),
+        capabilities=[
+            AgentCapability(
+                name="dtc_ops.monitor",
+                description="Monitor Shopify store health metrics.",
+                tools=["integrations.shopify"],
+            ),
+            AgentCapability(
+                name="dtc_ops.suggest",
+                description="Generate pricing, restock, and cart recovery recommendations.",
+                tools=["llm.chat"],
+            ),
+        ],
+        platforms=["shopify"],
+        timeout_seconds=90,
+    ),
 )
 
 
