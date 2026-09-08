@@ -128,7 +128,7 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
                 from aeo_integrations.shopify.store import get_store_client
 
                 store = get_store_client()
-                store_metrics = [m.model_dump() for m in store.get_store_metrics(days=7)]
+                store_metrics = [m.model_dump() for m in store.get_store_metrics(limit=7)]
                 customers = [c.model_dump() for c in store.list_customers()]
                 carts = [c.model_dump() for c in store.list_abandoned_carts()]
                 dtc_kpis = calculate_dtc_kpis(store_metrics, customers, carts)

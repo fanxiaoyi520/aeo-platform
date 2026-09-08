@@ -173,6 +173,7 @@ async def test_dtc_ops_node_handles_failure() -> None:
         result = await dtc_operations_node(state)
 
     dtc_ops = result["dtc_ops"]
+    assert isinstance(dtc_ops, dict)
     assert "error" in dtc_ops
     assert "Shopify unavailable" in dtc_ops["error"]
     assert dtc_ops["health_metrics"] == {}

@@ -113,6 +113,7 @@ async def test_analytics_node_shopify_includes_dtc_kpis() -> None:
         result = await analytics_node(state)
 
     analytics = result["analytics"]
+    assert isinstance(analytics, dict)
     assert "dtc_kpis" in analytics
     assert isinstance(analytics["dtc_kpis"], dict)
 
@@ -144,6 +145,7 @@ async def test_analytics_node_amazon_no_dtc_kpis() -> None:
         result = await analytics_node(state)
 
     analytics = result["analytics"]
+    assert isinstance(analytics, dict)
     assert "dtc_kpis" in analytics
     assert analytics["dtc_kpis"] == {}
 

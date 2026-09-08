@@ -136,6 +136,7 @@ async def test_dtc_content_node_handles_llm_failure() -> None:
         result = await dtc_content_node(state)
 
     dtc = result["dtc_content"]
+    assert isinstance(dtc, dict)
     assert "error" in dtc
     assert "LLM unavailable" in dtc["error"]
     assert dtc["landing_page"] == {}

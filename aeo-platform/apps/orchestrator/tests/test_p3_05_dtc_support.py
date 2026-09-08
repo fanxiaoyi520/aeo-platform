@@ -98,6 +98,7 @@ async def test_support_node_shopify_platform_routes() -> None:
         result = await support_node(state)
 
     support = result["support"]
+    assert isinstance(support, dict)
     assert "reply_draft" in support
     assert support["order_context"] == [{"product_id": "P001", "sku": "DTC-TEE-001"}]
 
@@ -135,6 +136,7 @@ async def test_support_node_amazon_platform_still_works() -> None:
         result = await support_node(state)
 
     support = result["support"]
+    assert isinstance(support, dict)
     assert support["order_context"] == [{"order_id": "A001", "sku": "AMZ-001"}]
 
 

@@ -131,7 +131,7 @@ async def dtc_operations_node(state: TaskState) -> dict[str, object]:
 
     try:
         store = get_store_client()
-        metrics = [m.model_dump() for m in store.get_store_metrics(days=7)]
+        metrics = [m.model_dump() for m in store.get_store_metrics(limit=7)]
         carts = [c.model_dump() for c in store.list_abandoned_carts()]
         customers = [c.model_dump() for c in store.list_customers()]
         discounts = [d.model_dump() for d in store.list_discount_codes()]
