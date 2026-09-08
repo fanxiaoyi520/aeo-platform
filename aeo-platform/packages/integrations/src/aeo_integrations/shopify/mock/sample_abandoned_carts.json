@@ -1,0 +1,56 @@
+[
+  {
+    "cart_id": "CART-001",
+    "customer_email": "jane.doe@example.com",
+    "customer_id": "CUST-001",
+    "total_value": "75.50",
+    "line_count": 3,
+    "recovery_email_sent": true,
+    "abandoned_at": "2026-09-01T10:30:00Z"
+  },
+  {
+    "cart_id": "CART-002",
+    "customer_email": "bob.smith@example.com",
+    "customer_id": "CUST-003",
+    "total_value": "29.99",
+    "line_count": 1,
+    "recovery_email_sent": false,
+    "abandoned_at": "2026-09-02T14:15:00Z"
+  },
+  {
+    "cart_id": "CART-003",
+    "customer_email": "alice.w@example.com",
+    "customer_id": "",
+    "total_value": "124.00",
+    "line_count": 4,
+    "recovery_email_sent": true,
+    "abandoned_at": "2026-09-03T09:45:00Z"
+  },
+  {
+    "cart_id": "CART-004",
+    "customer_email": "charlie.b@example.com",
+    "customer_id": "CUST-005",
+    "total_value": "18.50",
+    "line_count": 1,
+    "recovery_email_sent": false,
+    "abandoned_at": "2026-09-04T16:20:00Z"
+  },
+  {
+    "cart_id": "CART-005",
+    "customer_email": "emma.j@example.com",
+    "customer_id": "CUST-002",
+    "total_value": "54.98",
+    "line_count": 2,
+    "recovery_email_sent": true,
+    "abandoned_at": "2026-09-05T11:00:00Z"
+  },
+  {
+    "cart_id": "CART-006",
+    "customer_email": "david.k@example.com",
+    "customer_id": "",
+    "total_value": "89.97",
+    "line_count": 3,
+    "recovery_email_sent": false,
+    "abandoned_at": "2026-09-06T08:30:00Z"
+  }
+]

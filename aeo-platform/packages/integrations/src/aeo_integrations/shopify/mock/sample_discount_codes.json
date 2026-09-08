@@ -1,0 +1,52 @@
+[
+  {
+    "code_id": "DC-001",
+    "code": "SUMMER20",
+    "discount_type": "percentage",
+    "discount_value": "20.00",
+    "usage_limit": 100,
+    "times_used": 45,
+    "is_active": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "code_id": "DC-002",
+    "code": "FLAT10",
+    "discount_type": "fixed_amount",
+    "discount_value": "10.00",
+    "usage_limit": 0,
+    "times_used": 128,
+    "is_active": true,
+    "created_at": "2026-07-15T00:00:00Z"
+  },
+  {
+    "code_id": "DC-003",
+    "code": "WELCOME15",
+    "discount_type": "percentage",
+    "discount_value": "15.00",
+    "usage_limit": 500,
+    "times_used": 230,
+    "is_active": true,
+    "created_at": "2026-05-01T00:00:00Z"
+  },
+  {
+    "code_id": "DC-004",
+    "code": "FLASH30",
+    "discount_type": "percentage",
+    "discount_value": "30.00",
+    "usage_limit": 50,
+    "times_used": 50,
+    "is_active": false,
+    "created_at": "2026-08-01T00:00:00Z"
+  },
+  {
+    "code_id": "DC-005",
+    "code": "FREESHIP",
+    "discount_type": "free_shipping",
+    "discount_value": "0.00",
+    "usage_limit": 0,
+    "times_used": 67,
+    "is_active": true,
+    "created_at": "2026-08-20T00:00:00Z"
+  }
+]

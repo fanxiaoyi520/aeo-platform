@@ -1,0 +1,65 @@
+[
+  {
+    "date": "2026-09-01",
+    "sessions": 1520,
+    "orders": 48,
+    "revenue": "2400.00",
+    "conversion_rate": "0.0316",
+    "cart_abandonment_rate": "0.68",
+    "avg_order_value": "50.00"
+  },
+  {
+    "date": "2026-09-02",
+    "sessions": 1380,
+    "orders": 42,
+    "revenue": "2100.00",
+    "conversion_rate": "0.0304",
+    "cart_abandonment_rate": "0.71",
+    "avg_order_value": "50.00"
+  },
+  {
+    "date": "2026-09-03",
+    "sessions": 1650,
+    "orders": 55,
+    "revenue": "2887.50",
+    "conversion_rate": "0.0333",
+    "cart_abandonment_rate": "0.65",
+    "avg_order_value": "52.50"
+  },
+  {
+    "date": "2026-09-04",
+    "sessions": 1420,
+    "orders": 38,
+    "revenue": "1900.00",
+    "conversion_rate": "0.0268",
+    "cart_abandonment_rate": "0.73",
+    "avg_order_value": "50.00"
+  },
+  {
+    "date": "2026-09-05",
+    "sessions": 1780,
+    "orders": 62,
+    "revenue": "3224.00",
+    "conversion_rate": "0.0348",
+    "cart_abandonment_rate": "0.62",
+    "avg_order_value": "52.00"
+  },
+  {
+    "date": "2026-09-06",
+    "sessions": 1900,
+    "orders": 68,
+    "revenue": "3536.00",
+    "conversion_rate": "0.0358",
+    "cart_abandonment_rate": "0.60",
+    "avg_order_value": "52.00"
+  },
+  {
+    "date": "2026-09-07",
+    "sessions": 1600,
+    "orders": 52,
+    "revenue": "2704.00",
+    "conversion_rate": "0.0325",
+    "cart_abandonment_rate": "0.66",
+    "avg_order_value": "52.00"
+  }
+]
