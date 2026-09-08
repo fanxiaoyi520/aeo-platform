@@ -109,6 +109,15 @@ from aeo_shared.task_scheduler import (
     SchedulerConfig,
     TaskPriority,
 )
+from aeo_shared.trial_monitor import (
+    HealthStatus,
+    TrialMonitor,
+    TrialRecord,
+    TrialStatus,
+    compute_availability,
+    compute_p95_latency,
+    compute_recovery_time,
+)
 
 __all__ = [
     "ActionMapping",
@@ -174,6 +183,10 @@ __all__ = [
     "TuningSuggestion",
     "UnifiedOrderRecord",
     "WhatIfResult",
+    "HealthStatus",
+    "TrialMonitor",
+    "TrialRecord",
+    "TrialStatus",
     "analyze_incidents",
     "build_daily_snapshot",
     "build_default_registry",
@@ -187,6 +200,9 @@ __all__ = [
     "compute_roi",
     "compute_roi_comparison",
     "compute_automation_rate",
+    "compute_availability",
+    "compute_p95_latency",
+    "compute_recovery_time",
     "default_production_rule_set",
     "evaluate_action",
     "generate_tuning_suggestions",

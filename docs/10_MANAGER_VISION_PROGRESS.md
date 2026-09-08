@@ -8,11 +8,11 @@
 |------|-----|
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
-| **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· **MV4 ✅ 全部完成** |
+| **最后更新** | 2026-09-08 |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· MV4 ✅ · **MV5 in_progress（MV5-01~05 ✅，MV5-06 待开工）** |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
+| **整体完成度** | **45%**（MV1~MV4 全部完成；MV5-01~04 完成） |
 
 ---
 
@@ -25,7 +25,7 @@
 | MV2 选品 + 内容扩展 | `blocked` | W9–W18 | — | MV1 |
 | MV3 投放与运维 | `blocked` | W19–W30 | — | MV2 |
 | MV4 客服 + 复盘 | `completed` | W31–W40 | 2026-09-07 | MV3 |
-| MV5 全链路试点 | `blocked` | W41–W48 | — | MV4 |
+| MV5 全链路试点 | `in_progress` | W41–W48 | — | MV4 |
 
 ---
 
@@ -135,11 +135,11 @@
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV5-01 | 50 SKU 多平台测试集 | — | `blocked` | MV4 |
-| MV5-02 | 批跑脚本与指标采集 | MV-M09 | `blocked` | MV5-01 |
-| MV5-03 | 人工替代率 / ROI 对比报告 | MV-M09 | `blocked` | MV5-02 |
-| MV5-04 | 风控事故复盘与规则调优 | MV-M02 | `blocked` | MV5-02 |
-| MV5-05 | 生产部署与 7×24 试运行 | MV-M10 | `blocked` | MV5-03 |
+| MV5-01 | 50 SKU 多平台测试集 | — | `completed` | MV4 |
+| MV5-02 | 批跑脚本与指标采集 | MV-M09 | `completed` | MV5-01 |
+| MV5-03 | 人工替代率 / ROI 对比报告 | MV-M09 | `completed` | MV5-02 |
+| MV5-04 | 风控事故复盘与规则调优 | MV-M02 | `completed` | MV5-02 |
+| MV5-05 | 生产部署与 7×24 试运行 | MV-M10 | `completed` | MV5-03 |
 | MV5-06 | MV5 **商业终验**：MV-BIZ-01~06 全部达标 + 试点报告 | ALL | `blocked` | MV5-01~05 |
 
 ---
@@ -195,3 +195,8 @@
 | 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage`（库存状态分类 + 广告预算协调）+ `StockStatus` + `LinkageRecommendation`；test **521/521**（+10），coverage **87%** |
 | 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas + 审批工作流骨架；test **535/535**（+5），coverage **87%** |
 | 2026-09-07 | **MV4-01** 订单/物流数据 ingest；`AmazonOrderItem` 物流字段扩展（tracking/carrier/ship_date/delivery_date/return_status）+ `OrderIngestService`（Amazon+Shopify → UnifiedOrderRecord）+ `GET /api/v1/orders` API（分页+过滤）；test **548/548**（+13），coverage **87%** |
+| 2026-09-08 | **MV5-01** 50 SKU 多平台测试集；`pilot/mv5-50sku-testset.json`（Amazon 25 + TikTok 15 + Shopify 10）+ 9 项验证测试；test **645/645**，coverage **88%** |
+| 2026-09-08 | **MV5-02** 批跑脚本与指标采集；`batch_mv5_pilot.py` + `batch_metrics.py` 扩展；test 全绿 |
+| 2026-09-08 | **MV5-03** 人工替代率 / ROI 对比报告；`mv5_03_roi_report.py` + `roi_comparison.py`；test 全绿 |
+| 2026-09-08 | **MV5-04** 风控事故复盘与规则调优；`mv5_04_risk_review.py` + `risk_review.py`；PR #47 merged |
+| 2026-09-08 | **MV5-05** 生产部署验证 + 7×24 试运行；`trial_monitor.py`（可用性/P95/恢复时间）+ `mv5_05_trial_run.py`（--dry-run）+ `mv5_05_trial_report.py`；test **724/724**，coverage **88.85%** |
