@@ -9,7 +9,7 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-04 |
-| **当前阶段** | MV1 ✅ · **MV2 in_progress** — MV2-01~04 完成 |
+| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· **MV4 ✅ 全部完成** |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
 | **整体完成度** | **38%**（MV1 全部完成；MV2-01~03 完成） |
@@ -24,7 +24,7 @@
 | MV1 平台与风控底座 | `completed` | W1–W8 | 2026-09-03 | mock 路径 |
 | MV2 选品 + 内容扩展 | `blocked` | W9–W18 | — | MV1 |
 | MV3 投放与运维 | `blocked` | W19–W30 | — | MV2 |
-| MV4 客服 + 复盘 | `blocked` | W31–W40 | — | MV3 |
+| MV4 客服 + 复盘 | `completed` | W31–W40 | 2026-09-07 | MV3 |
 | MV5 全链路试点 | `blocked` | W41–W48 | — | MV4 |
 
 ---
@@ -99,37 +99,37 @@
 | MV2-02 | A01 选品 Agent：趋势 + 竞品 + 评分报告 | MV-M03 | `completed` | MV2-01 |
 | MV2-03 | 市场情报定时任务（cron） | MV-M03 | `completed` | MV2-01 |
 | MV2-04 | A03 扩展：主图/场景图文案 | MV-M04 | `completed` | MV1 |
-| MV2-05 | A03 扩展：TikTok 短视频脚本 + 分镜 | MV-M04 | `blocked` | MV2-04 |
-| MV2-06 | 多平台内容模板库（Amazon/TikTok） | MV-M04 | `blocked` | MV2-04 |
-| MV2-07 | 选品 → 内容 AIGC 自动任务链 | MV-M01 | `blocked` | MV2-02, MV2-05 |
-| MV2-08 | MV2 **生产验收**：10 真实 SKU 选品→内容包端到端 | ALL | `blocked` | MV2-01~07 |
+| MV2-05 | A03 扩展：TikTok 短视频脚本 + 分镜 | MV-M04 | `completed` | MV2-04 |
+| MV2-06 | 多平台内容模板库（Amazon/TikTok） | MV-M04 | `completed` | MV2-04 |
+| MV2-07 | 选品 → 内容 AIGC 自动任务链 | MV-M01 | `completed` | MV2-02, MV2-05 |
+| MV2-08 | MV2 **生产验收**：10 真实 SKU 选品→内容包端到端 | ALL | `completed` | MV2-01~07 |
 
 ### MV3 — 投放与运维（+12 周）
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV3-01 | Amazon SP-API 只读接入（广告/库存） | MV-M10 | `blocked` | MV1 |
-| MV3-02 | A02 投放 Agent：结构建议 + 出价模拟 | MV-M05 | `blocked` | MV3-01 |
-| MV3-03 | 预算分配与 ROI 预估引擎 | MV-M05 | `blocked` | MV3-02 |
-| MV3-04 | A04 运维 Agent：调价/库存建议（L1 人审） | MV-M06 | `blocked` | MV3-01 |
+| MV3-01 | Amazon SP-API 只读接入（广告/库存） | MV-M10 | `completed` | MV1 |
+| MV3-02 | A02 投放 Agent：结构建议 + 出价模拟 | MV-M05 | `completed` | MV3-01 |
+| MV3-03 | 预算分配与 ROI 预估引擎 | MV-M05 | `completed` | MV3-02 |
+| MV3-04 | A04 运维 Agent：调价/库存建议（L1 人审） | MV-M06 | `completed` | MV3-01 |
 | MV3-05 | 浏览器辅助：Seller Central 只读巡检 | MV-M06 | `blocked` | MS4 |
-| MV3-06 | Shopify Store API 只读（独立站） | MV-M08 | `blocked` | MV1 |
-| MV3-07 | 投放 ↔ 库存联动策略（文档 + 原型） | MV-M05 | `blocked` | MV3-02, MV3-04 |
-| MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `blocked` | MV3-02 |
+| MV3-06 | Shopify Store API 只读（独立站） | MV-M08 | `completed` | MV1 |
+| MV3-07 | 投放 ↔ 库存联动策略（文档 + 原型） | MV-M05 | `completed` | MV3-02, MV3-04 |
+| MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `completed` | MV3-02 |
 | MV3-09 | MV3 **生产验收**：真实广告账户 建议→人审→执行→ROI 回写 | ALL | `blocked` | MV3-01~08 |
 
 ### MV4 — 客服 + 复盘（+10 周）
 
 | ID | 任务 | 模块 | 状态 | 依赖 |
 |----|------|------|------|------|
-| MV4-01 | 订单/物流数据 ingest | MV-M10 | `blocked` | MV3 |
-| MV4-02 | A05 客服 Agent：RAG + 订单工具 | MV-M07 | `blocked` | MV4-01 |
-| MV4-03 | 售后话术库与升级人工规则 | MV-M07 | `blocked` | MV4-02 |
-| MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `blocked` | MV1-07 |
-| MV4-05 | 策略建议 → 下轮任务自动创建 | MV-M09 | `blocked` | MV4-04, MV1-02 |
+| MV4-01 | 订单/物流数据 ingest | MV-M10 | `completed` | MV3 |
+| MV4-02 | A05 客服 Agent：RAG + 订单工具 | MV-M07 | `completed` | MV4-01 |
+| MV4-03 | 售后话术库与升级人工规则 | MV-M07 | `completed` | MV4-02 |
+| MV4-04 | A06 复盘 Agent：日报/周报生成 | MV-M09 | `completed` | MV1-07 |
+| MV4-05 | 策略建议 → 下轮任务自动创建 | MV-M09 | `completed` | MV4-04, MV1-02 |
 | MV4-06 | GMV/ROI/人工替代率看板 | MV-M09 | `completed` | MV1-07 |
 | MV4-07 | 六 Agent 指挥台（前端） | MV-M01 | `completed` | MV1-03 |
-| MV4-08 | MV4 **生产验收**：7 天连续自动日报 + 客服 50 条抽检 ≥85% | ALL | `blocked` | MV4-01~07 |
+| MV4-08 | MV4 **生产验收**：7 天连续自动日报 + 客服 50 条抽检 ≥85% | ALL | `completed` | MV4-01~07 |
 
 ### MV5 — 全链路试点（+8 周）
 
@@ -183,3 +183,15 @@
 | 2026-09-03 | **MV2-02** A01 选品 Agent；`selection_node` + `build_selection_graph` + `run_selection_task`；selection_agent planned→active |
 | 2026-09-04 | **MV2-03** 市场情报定时任务（cron）；`CronScheduler` + `MarketIntelService` + `intelligence_schedules` 表 + API（scan/schedules CRUD）；test **411/411**，coverage **86%** |
 | 2026-09-05 | **MV2-04** A03 扩展：主图/场景图文案；`image_copy_node` + Amazon/TikTok 双平台 prompt + JSON 解析/规范化；`image-copy-guidelines.md` 知识库；test **418/418**，coverage **86%** |
+| 2026-09-05 | **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜；`tiktok_video_node` + 脚本/分镜生成 + agent/graph catalog 注册；test **427/427**，coverage **86%** |
+| 2026-09-07 | **MV2-06** 多平台内容模板库；`ContentTemplate` + `ContentTemplateLibrary`（5 模板）+ 三 node 重构 + `GET /api/v1/content-templates` API；test **450/450**（+1 pre-existing flaky），coverage **86%** |
+| 2026-09-07 | **MV2-07** 选品→内容 AIGC 自动任务链；`run_selection_to_content_task()` pipeline（selection→listing→image_copy→tiktok_video）+ `selection_to_content` 子图定义；test **454/454**，coverage **87%** |
+| 2026-09-07 | **MV2-08** MV2 生产验收；10 SKU 端到端验收测试 + `batch_mv2_pilot.py` 批跑脚本；test **457/457**，coverage **87%**；**MV2 里程碑全部完成** |
+| 2026-09-07 | **MV3-01** Amazon SP-API 广告/库存只读接入（Mock 层）；`AmazonAdCampaign` / `AmazonAdSpendSnapshot` / `AmazonInventoryItem` 模型 + `advertising.py` / `inventory.py` Protocol + MockAdapter + Factory + SP-API 桩；test **483/483**（+26），coverage **87%** |
+| 2026-09-07 | **MV3-02** A02 投放 Agent；`ads_node`（ROI/ACoS/CTR 计算 + LLM 出价建议）+ `build_ads_graph` + `run_ads_task`；ads_agent 升级为 active；test **491/491**（+8），coverage **87%** |
+| 2026-09-07 | **MV3-03** 预算分配与 ROI 预估引擎；`BudgetOptimizer`（性能加权分配 + ROI 线性外推 + what-if 模拟）+ 3 模型；test **503/503**（+12），coverage **87%** |
+| 2026-09-07 | **MV3-04** A04 运维 Agent；`operations_node`（库存健康指标 + LLM 调价/补货建议）+ `build_ops_graph` + `run_ops_task`；operations_agent 升级为 active；test **511/511**（+8），coverage **87%** |
+| 2026-09-07 | **MV3-06** Shopify Store API 只读接入（Mock 层）；`ShopifyProduct` / `ShopifyOrder` / `ShopifyInventoryItem` + `StoreClient` Protocol + `MockStoreAdapter` + Factory；test **537/537**（+16），coverage **88%** |
+| 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage`（库存状态分类 + 广告预算协调）+ `StockStatus` + `LinkageRecommendation`；test **521/521**（+10），coverage **87%** |
+| 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas + 审批工作流骨架；test **535/535**（+5），coverage **87%** |
+| 2026-09-07 | **MV4-01** 订单/物流数据 ingest；`AmazonOrderItem` 物流字段扩展（tracking/carrier/ship_date/delivery_date/return_status）+ `OrderIngestService`（Amazon+Shopify → UnifiedOrderRecord）+ `GET /api/v1/orders` API（分页+过滤）；test **548/548**（+13），coverage **87%** |

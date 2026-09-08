@@ -122,3 +122,21 @@ export type AgentCommandConsole = {
     planned: number;
   };
 };
+
+export type DashboardTrendEntry = {
+  date: string;
+  gmv: string;
+  roi: string | null;
+  order_count: number;
+  automation_rate: string | null;
+};
+
+export type DashboardData = {
+  gmv: string;
+  roi: string | null;
+  ad_spend: string;
+  order_count: number;
+  automation_rate: string | null;
+  trend: DashboardTrendEntry[];
+  period_days: number;
+};

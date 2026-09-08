@@ -1,5 +1,15 @@
 """AEO Platform shared types, errors, and utilities."""
 
+from aeo_shared.ads_inventory_linkage import (
+    AdsInventoryLinkage,
+    LinkageRecommendation,
+    StockStatus,
+)
+from aeo_shared.after_sales_scripts import (
+    AfterSalesScript,
+    ScriptLibrary,
+    get_script_library,
+)
 from aeo_shared.agent_catalog import build_default_registry, get_default_registry
 from aeo_shared.agent_registry import (
     AgentCapability,
@@ -8,14 +18,27 @@ from aeo_shared.agent_registry import (
     AgentRegistry,
     RiskLevel,
 )
+from aeo_shared.budget_optimizer import (
+    BudgetAllocation,
+    BudgetOptimizer,
+    ROIProjection,
+    WhatIfResult,
+)
 from aeo_shared.competitor_monitor import (
     ListingChange,
     ListingSnapshot,
     MonitorDiff,
     compute_diff,
 )
+from aeo_shared.content_templates import (
+    ContentTemplate,
+    ContentTemplateLibrary,
+    get_content_template_library,
+)
 from aeo_shared.cron_parser import CronSchedule, matches, next_run, parse_cron
 from aeo_shared.cron_scheduler import CronJob, CronScheduler, CronSchedulerConfig
+from aeo_shared.dashboard import DashboardService, compute_automation_rate, get_dashboard_service
+from aeo_shared.escalation import EscalationEvaluator, EscalationResult, EscalationRule
 from aeo_shared.graph_catalog import (
     SubGraphDefinition,
     build_graph_catalog,
@@ -32,6 +55,7 @@ from aeo_shared.metrics_sdk import (
     parse_money,
 )
 from aeo_shared.multi_graph import MultiGraphOrchestrator, ParentTask, ParentTaskStatus
+from aeo_shared.order_ingest import OrderIngestService, UnifiedOrderRecord
 from aeo_shared.risk_dsl import (
     RiskAction,
     RiskCondition,
@@ -48,6 +72,12 @@ from aeo_shared.selection_scoring import (
     SelectionResult,
     score_product,
 )
+from aeo_shared.strategy_task_creator import (
+    ActionMapping,
+    ActionMappingEntry,
+    StrategyTaskCreator,
+    get_action_mapping,
+)
 from aeo_shared.task_scheduler import (
     AgentTaskScheduler,
     ScheduledAgentTask,
@@ -57,20 +87,34 @@ from aeo_shared.task_scheduler import (
 )
 
 __all__ = [
+    "ActionMapping",
+    "ActionMappingEntry",
+    "AdsInventoryLinkage",
+    "AfterSalesScript",
     "AgentCapability",
     "AgentCategory",
     "AgentDeclaration",
     "AgentRegistry",
     "AgentTaskScheduler",
+    "BudgetAllocation",
+    "BudgetOptimizer",
     "CompetitorData",
+    "ContentTemplate",
+    "ContentTemplateLibrary",
     "CronJob",
     "CronSchedule",
     "CronScheduler",
     "CronSchedulerConfig",
+    "DashboardService",
+    "EscalationEvaluator",
+    "EscalationResult",
+    "EscalationRule",
     "ListingChange",
     "ListingSnapshot",
+    "LinkageRecommendation",
     "MonitorDiff",
     "MultiGraphOrchestrator",
+    "OrderIngestService",
     "OrderMetricRecord",
     "ParentTask",
     "ParentTaskStatus",
@@ -83,19 +127,25 @@ __all__ = [
     "RiskEffect",
     "RiskRule",
     "RiskRuleSet",
+    "ROIProjection",
     "ScheduledAgentTask",
     "ScheduledTaskStatus",
     "SchedulerConfig",
+    "ScriptLibrary",
     "SelectionInput",
     "SelectionResult",
+    "StockStatus",
     "SubGraphDefinition",
     "TaskPriority",
+    "UnifiedOrderRecord",
+    "WhatIfResult",
     "build_daily_snapshot",
     "build_default_registry",
     "build_graph_catalog",
     "compute_diff",
     "compute_gmv",
     "compute_roi",
+    "compute_automation_rate",
     "default_production_rule_set",
     "evaluate_action",
     "matches",
@@ -104,6 +154,11 @@ __all__ = [
     "parse_money",
     "get_default_registry",
     "get_graph_catalog",
+    "get_script_library",
     "get_subgraph",
+    "get_content_template_library",
+    "get_dashboard_service",
+    "get_action_mapping",
     "score_product",
+    "StrategyTaskCreator",
 ]

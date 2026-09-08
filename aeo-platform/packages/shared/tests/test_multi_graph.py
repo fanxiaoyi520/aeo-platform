@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 from aeo_shared.agent_catalog import build_default_registry, get_default_registry
-from aeo_shared.agent_registry import AgentCategory
+from aeo_shared.agent_registry import AgentCategory, AgentDeclaration, AgentRegistry
 from aeo_shared.graph_catalog import SubGraphDefinition
 from aeo_shared.multi_graph import MultiGraphOrchestrator, ParentTaskStatus
 from aeo_shared.task_scheduler import AgentTaskScheduler, ScheduledTaskStatus
@@ -112,13 +112,21 @@ def test_custom_graph_definition() -> None:
 
 
 def test_create_parent_rejects_inactive_agent_in_graph() -> None:
-    registry = build_default_registry()
+    registry = AgentRegistry()
+    registry.register(
+        AgentDeclaration(
+            agent_id="fake_planned_agent",
+            display_name="Fake Planned",
+            category=AgentCategory.OPERATIONS,
+            status="planned",
+        )
+    )
     scheduler = AgentTaskScheduler(registry)
     bad_graph = SubGraphDefinition(
         graph_id="bad",
         display_name="Bad",
-        category=AgentCategory.ADS,
-        agent_ids=["ads_agent"],
+        category=AgentCategory.OPERATIONS,
+        agent_ids=["fake_planned_agent"],
     )
     orchestrator = MultiGraphOrchestrator(scheduler, registry, graphs={"bad": bad_graph})
     with pytest.raises(ValueError, match="not active"):

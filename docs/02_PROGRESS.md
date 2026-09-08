@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-04  
-**当前阶段：** **MV2 in_progress** — MV2-01~04 ✅；MV1 全部完成  
-**下一任务：** **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜  
-**Git：** `main` @ MV4-07 merged；`feat/mv2-03-market-intelligence-cron` PR 已创建  
+**最后更新：** 2026-09-07  
+**当前阶段：** **MV4 完成**；MV4-01~08 全部通过  
+**下一任务：** **MV5-01** 50 SKU 多平台测试集（待 MV4 PR 合并后开启）  
+**Git：** `feat/mv4-08-acceptance` PR 待合并  
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -334,3 +334,22 @@
 | 2026-09-03 | **MV2-02** A01 选品 Agent；`selection_node` + `build_selection_graph` + `run_selection_task`；18 项新测试 |
 | 2026-09-04 | **MV2-03** 市场情报定时任务（cron）；`CronScheduler` + `MarketIntelService` + `intelligence_schedules` 表 + API；test **411/411**，coverage **86%** |
 | 2026-09-05 | **MV2-04** A03 扩展：主图/场景图文案；`image_copy_node` + 知识库指南；mypy/cron 测试修复；test **418/418**，coverage **86%** |
+| 2026-09-05 | **MV2-05** A03 扩展：TikTok 短视频脚本 + 分镜；`tiktok_video_node` + catalog 注册；test **427/427**，coverage **86%** |
+| 2026-09-07 | **MV2-06** 多平台内容模板库；`ContentTemplate` + `ContentTemplateLibrary` + 三 node 重构 + API；test **450/450**，coverage **86%** |
+| 2026-09-07 | **MV2-07** 选品→内容 AIGC 自动任务链；pipeline runner + 子图定义；test **454/454**，coverage **87%** |
+| 2026-09-07 | **MV2-08** MV2 生产验收；10 SKU 端到端 + 批跑脚本；test **457/457**，coverage **87%**；**MV2 ✅** |
+| 2026-09-07 | **MV3-01** Amazon SP-API 广告/库存只读接入（Mock 层）；advertising + inventory Protocol/Mock/Factory + 3 模型 + 2 夹具；test **483/483**（+26），coverage **87%** |
+| 2026-09-07 | **MV3-02** A02 投放 Agent；`ads_node` + `build_ads_graph` + `run_ads_task`；ads_agent active；test **491/491**（+8），coverage **87%** |
+| 2026-09-07 | **MV3-03** 预算分配与 ROI 预估引擎；`BudgetOptimizer` + 3 模型；test **503/503**（+12），coverage **87%** |
+| 2026-09-07 | **MV3-04** A04 运维 Agent；`operations_node` + `build_ops_graph` + `run_ops_task`；operations_agent active；test **511/511**（+8），coverage **87%** |
+| 2026-09-07 | **MV3-06** Shopify Store API 只读接入（Mock 层）；`ShopifyProduct` / `ShopifyOrder` / `ShopifyInventoryItem` 模型 + `StoreClient` Protocol + `MockStoreAdapter` + Factory；test **537/537**（+16），coverage **88%** |
+| 2026-09-07 | **MV3-07** 投放↔库存联动策略引擎；`AdsInventoryLinkage` + `StockStatus` + `LinkageRecommendation`；库存状态驱动广告预算协调；test **521/521**（+10），coverage **87%** |
+| 2026-09-07 | **MV3-08** Recommendations API；`GET /api/v1/recommendations/ads|ops|linkage` 三端点 + Pydantic schemas；cron 测试时间锚定修复；test **535/535**（+5），coverage **87%** |
+| 2026-09-07 | **MV4-01** 订单/物流数据 ingest；`AmazonOrderItem` 物流字段扩展 + `OrderIngestService` + `GET /api/v1/orders` API；test **548/548**（+13），coverage **87%** |
+| 2026-09-07 | **MV4-02** A05 客服 Agent；`support_node`（RAG + 订单上下文 → 回复草稿）+ `build_support_graph` + `run_support_task`；support_agent active；test **562/562**（+14），coverage **87%** |
+| 2026-09-07 | **MV4-03** 售后话术库 + 升级规则；`AfterSalesScript` + `ScriptLibrary`（6 场景）+ `EscalationEvaluator`（退款/投诉/重复 → 升级人工）+ `GET /api/v1/support/scripts`；support_node 集成；test **590/590**（+28），coverage **87%** |
+| 2026-09-07 | **MV4-04** A06 复盘 Agent；`analytics_node`（mock 7天指标 → LLM 日报/周报 + 策略建议 + KPI 追踪）+ `build_analytics_graph` + `run_analytics_task` + `GET /api/v1/analytics/report`；analytics_agent active（3 capabilities）；test **599/599**（+9），coverage **87%** |
+| 2026-09-07 | **MV4-05** 策略建议 → 下轮任务自动创建；`ActionMapping`（7 种 action 路由）+ `StrategyTaskCreator`（→ `AgentTaskScheduler.enqueue`）+ `analytics_node` 集成 `created_tasks` + `POST /api/v1/analytics/create_tasks`；analytics.create_tasks capability；test **615/615**（+16），coverage **87%** |
+| 2026-09-07 | **MV4-06** GMV/ROI/人工替代率看板；`BusinessMetricsSnapshot` 新增 `automation_rate` + `compute_automation_rate()` + `DashboardService`（聚合 GMV/ROI/trend）+ `GET /api/v1/business-metrics/dashboard`；analytics.dashboard capability；test **631/631**（+16），coverage **87%** |
+| 2026-09-07 | **MV4-07** /metrics 前端看板页面；BFF `/api/metrics` + `/metrics` 页面（GMV/ROI/替代率/趋势图/明细表）+ 侧边栏导航；test **631/631**（前端无新增后端测试） |
+| 2026-09-07 | **MV4-08** MV4 生产验收；7 天连续日报 7/7 + 客服 50 条抽检 50/50（100% ≥ 85%）+ 升级规则 + 话术库覆盖；`scripts/mv4_acceptance_report.py`；test **636/636**（+5）。**MV4 里程碑全部完成** |

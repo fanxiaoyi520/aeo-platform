@@ -1,0 +1,97 @@
+{
+  "version": "1.0",
+  "source": "MV3-01 mock advertising data",
+  "campaigns": [
+    {
+      "campaign_id": "camp-001",
+      "name": "Sponsored Kettle Push",
+      "status": "enabled",
+      "campaign_type": "sponsored_products",
+      "daily_budget": "15.00",
+      "currency": "USD",
+      "start_date": "2026-09-01",
+      "end_date": null,
+      "associated_skus": ["HOMEBREW-KETTLE-1L"]
+    },
+    {
+      "campaign_id": "camp-002",
+      "name": "AirFryer Brand Awareness",
+      "status": "enabled",
+      "campaign_type": "sponsored_brands",
+      "daily_budget": "25.00",
+      "currency": "USD",
+      "start_date": "2026-09-01",
+      "end_date": "2026-10-31",
+      "associated_skus": ["KITCHEN-AIRFRYER-4QT"]
+    },
+    {
+      "campaign_id": "camp-003",
+      "name": "Blender Display Retargeting",
+      "status": "paused",
+      "campaign_type": "sponsored_display",
+      "daily_budget": "10.00",
+      "currency": "USD",
+      "start_date": "2026-08-15",
+      "end_date": null,
+      "associated_skus": ["KITCHEN-BLENDER-PRO"]
+    },
+    {
+      "campaign_id": "camp-004",
+      "name": "Vacuum Product Highlight",
+      "status": "enabled",
+      "campaign_type": "sponsored_products",
+      "daily_budget": "20.00",
+      "currency": "USD",
+      "start_date": "2026-09-05",
+      "end_date": null,
+      "associated_skus": ["HOMEBREW-VACUUM-S"]
+    }
+  ],
+  "spend_snapshots": [
+    {
+      "campaign_id": "camp-001",
+      "snapshot_date": "2026-09-05",
+      "spend": "12.50",
+      "impressions": 3200,
+      "clicks": 85,
+      "attributed_gmv": "149.95",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "camp-001",
+      "snapshot_date": "2026-09-06",
+      "spend": "14.80",
+      "impressions": 3800,
+      "clicks": 102,
+      "attributed_gmv": "179.90",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "camp-002",
+      "snapshot_date": "2026-09-05",
+      "spend": "22.30",
+      "impressions": 8500,
+      "clicks": 210,
+      "attributed_gmv": "359.80",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "camp-003",
+      "snapshot_date": "2026-09-05",
+      "spend": "8.10",
+      "impressions": 2100,
+      "clicks": 45,
+      "attributed_gmv": "59.99",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "camp-004",
+      "snapshot_date": "2026-09-06",
+      "spend": "18.50",
+      "impressions": 4200,
+      "clicks": 130,
+      "attributed_gmv": "239.96",
+      "currency": "USD"
+    }
+  ]
+}

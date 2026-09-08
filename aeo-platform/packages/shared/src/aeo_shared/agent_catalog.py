@@ -150,47 +150,131 @@ _LISTING_AGENTS: tuple[AgentDeclaration, ...] = (
         ],
         timeout_seconds=60,
     ),
-)
-
-_MV_PLANNED_AGENTS: tuple[AgentDeclaration, ...] = (
+    AgentDeclaration(
+        agent_id="tiktok_video_agent",
+        display_name="TikTok Video Agent",
+        category=AgentCategory.LISTING,
+        description="TikTok short video script and storyboard generation.",
+        capabilities=[
+            AgentCapability(
+                name="generate.tiktok_video",
+                description="Produce video script and shot-by-shot storyboard.",
+                tools=["llm.chat"],
+            ),
+        ],
+        platforms=["tiktok"],
+        timeout_seconds=60,
+    ),
     AgentDeclaration(
         agent_id="ads_agent",
         display_name="Ads Agent",
         category=AgentCategory.ADS,
         description="Campaign structure and bid recommendations.",
-        status="planned",
+        capabilities=[
+            AgentCapability(
+                name="ads.analyze",
+                description="Analyze campaign performance and calculate ROI/ACoS/CTR.",
+                tools=["integrations.advertising", "integrations.inventory"],
+            ),
+            AgentCapability(
+                name="ads.suggest",
+                description="Generate bid/structure optimization suggestions.",
+                tools=["llm.chat"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="ads",
+        timeout_seconds=90,
     ),
     AgentDeclaration(
         agent_id="operations_agent",
         display_name="Operations Agent",
         category=AgentCategory.OPERATIONS,
-        description="Inventory and listing health monitoring.",
-        status="planned",
+        description="Inventory health monitoring and pricing/restock suggestions.",
+        capabilities=[
+            AgentCapability(
+                name="ops.monitor",
+                description="Monitor inventory levels and calculate health metrics.",
+                tools=["integrations.inventory"],
+            ),
+            AgentCapability(
+                name="ops.suggest",
+                description="Generate pricing and restock recommendations.",
+                tools=["llm.chat"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="ops",
+        timeout_seconds=90,
     ),
     AgentDeclaration(
         agent_id="support_agent",
         display_name="Support Agent",
         category=AgentCategory.SUPPORT,
-        description="Customer message triage and draft replies.",
-        status="planned",
+        description="Customer message triage and draft replies using RAG + order context.",
+        capabilities=[
+            AgentCapability(
+                name="support.reply_draft",
+                description="Generate customer service reply drafts.",
+                tools=["rag.search", "orders.lookup"],
+            ),
+            AgentCapability(
+                name="support.script_library",
+                description="Match after-sales scripts by scenario.",
+                tools=["scripts.match"],
+            ),
+            AgentCapability(
+                name="support.escalation",
+                description="Evaluate escalation rules for human review.",
+                tools=["escalation.evaluate"],
+            ),
+        ],
         risk_level=RiskLevel.L1,
+        graph_node="support",
+        timeout_seconds=90,
     ),
     AgentDeclaration(
         agent_id="analytics_agent",
         display_name="Analytics Agent",
         category=AgentCategory.ANALYTICS,
-        description="GMV/ROI reporting and strategy iteration.",
-        status="planned",
+        description="GMV/ROI reporting, daily/weekly business review, and strategy iteration.",
+        capabilities=[
+            AgentCapability(
+                name="analytics.daily_report",
+                description="Generate daily business performance report.",
+                tools=["metrics.snapshot", "llm.chat"],
+            ),
+            AgentCapability(
+                name="analytics.weekly_report",
+                description="Generate weekly trend and review report.",
+                tools=["metrics.snapshot", "llm.chat"],
+            ),
+            AgentCapability(
+                name="analytics.strategy",
+                description="Produce strategy suggestions and KPI targets.",
+                tools=["llm.chat"],
+            ),
+            AgentCapability(
+                name="analytics.create_tasks",
+                description="Auto-create follow-up tasks from strategy suggestions.",
+                tools=["scheduler.enqueue"],
+            ),
+            AgentCapability(
+                name="analytics.dashboard",
+                description="Aggregate GMV/ROI/automation-rate dashboard.",
+                tools=["metrics.snapshot"],
+            ),
+        ],
         risk_level=RiskLevel.L0,
+        graph_node="analytics",
+        timeout_seconds=120,
     ),
 )
 
 
 def build_default_registry() -> AgentRegistry:
     registry = AgentRegistry()
-    for declaration in (*_LISTING_AGENTS, *_MV_PLANNED_AGENTS):
+    for declaration in _LISTING_AGENTS:
         registry.register(declaration)
     return registry
 

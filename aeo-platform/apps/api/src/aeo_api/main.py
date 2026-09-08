@@ -17,14 +17,20 @@ from aeo_api.middleware.rate_limit import RateLimitMiddleware
 from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
 from aeo_api.routers import (
     agents,
+    analytics,
     audit,
+    business_metrics,
+    content_templates,
     health,
     intelligence,
     knowledge,
     metrics,
+    orders,
+    recommendations,
     risk,
     root,
     selection,
+    support,
     tasks,
 )
 
@@ -70,10 +76,16 @@ def create_app() -> FastAPI:
     app.include_router(metrics.router)
     app.include_router(audit.router)
     app.include_router(agents.router)
+    app.include_router(content_templates.router)
     app.include_router(risk.router)
     app.include_router(selection.router)
     app.include_router(intelligence.router)
     app.include_router(tasks.router)
+    app.include_router(recommendations.router)
+    app.include_router(orders.router)
+    app.include_router(support.router)
+    app.include_router(analytics.router)
+    app.include_router(business_metrics.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
