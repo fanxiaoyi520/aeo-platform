@@ -1,0 +1,100 @@
+{
+  "campaigns": [
+    {
+      "campaign_id": "FB-CAMP-001",
+      "name": "Summer Sale - Conversions",
+      "status": "ACTIVE",
+      "campaign_type": "CONVERSIONS",
+      "daily_budget": "50.00",
+      "currency": "USD",
+      "start_date": "2026-06-01",
+      "end_date": "2026-08-31",
+      "associated_skus": ["KETTLE-001", "VACUUM-001"]
+    },
+    {
+      "campaign_id": "FB-CAMP-002",
+      "name": "Brand Awareness - Q3",
+      "status": "ACTIVE",
+      "campaign_type": "BRAND_AWARENESS",
+      "daily_budget": "30.00",
+      "currency": "USD",
+      "start_date": "2026-07-01",
+      "end_date": null,
+      "associated_skus": []
+    },
+    {
+      "campaign_id": "FB-CAMP-003",
+      "name": "Retargeting - Cart Abandoners",
+      "status": "ACTIVE",
+      "campaign_type": "CONVERSIONS",
+      "daily_budget": "25.00",
+      "currency": "USD",
+      "start_date": "2026-08-01",
+      "end_date": null,
+      "associated_skus": ["DRIPPER-001", "INFUSER-001"]
+    },
+    {
+      "campaign_id": "FB-CAMP-004",
+      "name": "Holiday Promo - Paused",
+      "status": "PAUSED",
+      "campaign_type": "CONVERSIONS",
+      "daily_budget": "75.00",
+      "currency": "USD",
+      "start_date": "2025-12-01",
+      "end_date": "2025-12-31",
+      "associated_skus": ["KETTLE-001"]
+    }
+  ],
+  "spend_snapshots": [
+    {
+      "campaign_id": "FB-CAMP-001",
+      "snapshot_date": "2026-09-01",
+      "spend": "48.50",
+      "impressions": 12500,
+      "clicks": 375,
+      "conversions": 15,
+      "attributed_gmv": "750.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "FB-CAMP-001",
+      "snapshot_date": "2026-09-02",
+      "spend": "51.20",
+      "impressions": 13200,
+      "clicks": 396,
+      "conversions": 18,
+      "attributed_gmv": "900.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "FB-CAMP-002",
+      "snapshot_date": "2026-09-01",
+      "spend": "29.80",
+      "impressions": 25000,
+      "clicks": 250,
+      "conversions": 5,
+      "attributed_gmv": "200.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "FB-CAMP-003",
+      "snapshot_date": "2026-09-01",
+      "spend": "24.00",
+      "impressions": 8000,
+      "clicks": 320,
+      "conversions": 22,
+      "attributed_gmv": "660.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "FB-CAMP-003",
+      "snapshot_date": "2026-09-02",
+      "spend": "25.50",
+      "impressions": 8500,
+      "clicks": 340,
+      "conversions": 25,
+      "attributed_gmv": "750.00",
+      "currency": "USD"
+    }
+  ]
+}
