@@ -1,225 +1,249 @@
-﻿# AEO Platform — 生产部署指南
+# AEO Platform 生产部署指南
 
-> **模块：** M06 部署与安全 · **任务：** S6-05  
-> **适用环境：** 单机 Docker Compose（本地 / 内网服务器），数据不出域。
+> 本文档指导如何在生产环境部署 AEO Platform。
 
----
+## 前置条件
 
-## 1. 架构概览
+- Docker Engine 24.0+ 与 Docker Compose v2.20+
+- 至少 8GB RAM、4 CPU 核心
+- 已注册域名（用于 TLS 证书）
+- PostgreSQL 客户端工具（可选，用于手动备份/恢复）
 
-```
-┌─────────────┐     ┌─────────────┐
-│  Web :3000  │────▶│  API :8000  │
-│  Next.js    │     │  FastAPI    │
-└─────────────┘     └──────┬──────┘
-                           │
-              ┌────────────┼────────────┐
-              ▼            ▼            ▼
-        PostgreSQL      Redis       Chroma
-        (internal)   (internal)   (volume)
-```
+## 快速部署
 
-| 服务 | 端口（宿主机） | 说明 |
-|------|----------------|------|
-| **web** | 3000 | 运营工作台 |
-| **api** | 8000 | REST API + Swagger `/docs` |
-| **postgres** | 无（仅 internal） | 任务、审计、HITL 状态 |
-| **redis** | 无（仅 internal） | 限流、缓存 |
+### 1. 克隆仓库
 
-Compose 文件：`aeo-platform/infra/compose/docker-compose.prod.yml`
-
----
-
-## 2. 前置条件
-
-| 项 | 要求 |
-|----|------|
-| Docker | CLI + Compose v2（Windows 推荐 WSL Ubuntu，见 `scripts/install-docker-admin.cmd`） |
-| 磁盘 | ≥ 10 GB（镜像 + 数据卷） |
-| 内存 | ≥ 4 GB 可用（API 限制 2G） |
-| LLM | OpenAI 兼容网关或内网推理服务（`LLM_BASE_URL` / `LLM_API_KEY`） |
-
----
-
-## 3. 首次部署
-
-### 3.1 配置密钥
-
-```powershell
+```bash
+git clone https://github.com/fanxiaoyi520/aeo-platform.git
 cd aeo-platform
-copy .env.prod.example .env.prod
-# 编辑 .env.prod — 至少修改以下项：
-#   POSTGRES_PASSWORD
-#   AUTH_API_KEY
-#   LLM_API_KEY / EMBED_API_KEY（若不用 hash embeddings）
-#   CORS_ORIGINS（生产 Web 域名，如 https://aeo.example.com）
 ```
 
-**安全提示：** `.env.prod` 已在 `.gitignore` 中，切勿提交仓库。生产环境 `AUTH_API_KEY` 不得使用 `dev-api-key` 等默认值（API 启动时会拒绝）。
+### 2. 配置环境变量
 
-### 3.2 启动
-
-```powershell
-cd aeo-platform
-.\scripts\prod-up.ps1
+```bash
+cp .env.prod.example .env.prod
 ```
 
-`prod-up.ps1` 会依次：
+编辑 `.env.prod`，**必须修改**以下配置：
 
-1. 校验 compose 配置  
-2. `docker compose up -d --build`  
-3. 执行 Alembic 迁移  
-4. 入库知识库（默认 hash embeddings，无需外网 Embedding API）
+| 变量 | 说明 | 示例 |
+|------|------|------|
+| `POSTGRES_PASSWORD` | 数据库密码 | `your-strong-password-here` |
+| `LLM_API_KEY` | LLM API 密钥 | `sk-...` |
+| `EMBED_API_KEY` | Embedding API 密钥 | `sk-...` |
+| `AUTH_API_KEY` | API 认证密钥 | `your-auth-key` |
+| `GRAFANA_ADMIN_PASSWORD` | Grafana 管理员密码 | `your-grafana-password` |
+| `CORS_ORIGINS` | 前端域名 | `https://your-domain.com` |
 
-### 3.3 验证
+### 3. 启动基础服务
 
-```powershell
-.\scripts\demo.ps1
+```bash
+docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml up -d
 ```
 
-或手动检查：
+验证服务状态：
 
-| URL | 期望 |
-|-----|------|
-| `http://127.0.0.1:8000/health` | `200` |
-| `http://127.0.0.1:8000/ready` | `database` + `redis` 均为 `true` |
-| `http://127.0.0.1:3000` | 工作台首页 |
-| `http://127.0.0.1:8000/docs` | Swagger（公开，无需 Key） |
-
-带认证的 API 调用：
-
-```powershell
-$key = (Get-Content .env.prod | Where-Object { $_ -match '^AUTH_API_KEY=' }) -replace '^AUTH_API_KEY=',''
-curl -H "Authorization: Bearer $key" http://127.0.0.1:8000/api/v1/knowledge/stats
+```bash
+docker compose -f infra/compose/docker-compose.prod.yml ps
 ```
 
-### 3.4 停止
+应看到所有服务状态为 `running` 或 `healthy`。
 
-```powershell
-.\scripts\prod-down.ps1
+### 4. 启用 TLS（推荐）
+
+如果已配置域名和 DNS 指向服务器 IP：
+
+```bash
+docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml --profile tls up -d
 ```
 
-数据卷（PostgreSQL、Chroma、Redis）默认保留；`docker compose down -v` 会**删除**所有数据。
+首次部署需要手动获取证书：
 
----
+```bash
+# 停止 nginx
+docker compose -f infra/compose/docker-compose.prod.yml --profile tls stop nginx
 
-## 4. 备份与恢复
+# 获取证书（替换 your-domain.com）
+docker compose -f infra/compose/docker-compose.prod.yml --profile tls run --rm certbot \
+  certbot certonly --webroot -w /var/www/certbot -d your-domain.com --email your-email@example.com --agree-tos
 
-### 4.1 备份
+# 修改 nginx.conf 中的 server_name 为实际域名
+# 重启 nginx
+docker compose -f infra/compose/docker-compose.prod.yml --profile tls start nginx
+```
 
-```powershell
-# Windows（调用 WSL bash 或本机 bash）
-.\scripts\backup.ps1
+### 5. 验证部署
 
-# Linux / WSL 直接执行
+```bash
+# 健康检查
+curl http://localhost:8000/health
+curl http://localhost:8000/ready
+
+# Prometheus 指标
+curl http://localhost:8000/metrics
+
+# Grafana 看板（默认端口 3001）
+# 访问 http://your-server:3001
+# 用户名: admin（或 GRAFANA_ADMIN_USER）
+# 密码: 配置的 GRAFANA_ADMIN_PASSWORD
+```
+
+## 服务端口
+
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| API | 8000 | FastAPI 主服务 |
+| Web | 3000 | Next.js 前端 |
+| Grafana | 3001 | 监控看板 |
+| Nginx (TLS) | 80, 443 | 反向代理（需 tls profile） |
+
+**注意**：Prometheus (9090) 仅内部网络可访问，不暴露到主机。
+
+## 备份与恢复
+
+### 手动备份
+
+```bash
 ./scripts/backup.sh
 ```
 
-输出目录：`aeo-platform/backups/YYYYMMDD_HHMMSS/`
+备份文件保存在 `backups/{timestamp}/` 目录，包含：
+- `postgres.sql` — 数据库完整备份
+- `redis.rdb` — Redis 快照
+- `chroma_data.tar.gz` — 知识库向量数据
+- `manifest.txt` — 备份元数据
 
-| 文件 | 内容 |
-|------|------|
-| `postgres.sql` | `pg_dump` 全库（含 schema + 数据） |
-| `chroma_data.tar.gz` | Chroma 向量索引目录 |
+### 自动备份
 
-**建议：** 每日 cron / 计划任务备份；备份文件加密后异地存储。
-
-### 4.2 恢复 PostgreSQL
-
-```powershell
-# 确保 prod 栈已启动
-Get-Content backups\20260830_120000\postgres.sql | docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml exec -T postgres psql -U aeo -d aeo
-```
-
-或在 WSL：
+配置 cron 定时执行：
 
 ```bash
-./scripts/backup.sh  # 先确认 compose 服务名
-cat backups/20260830_120000/postgres.sql | docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml exec -T postgres psql -U aeo -d aeo
+# 每天凌晨 2 点备份
+0 2 * * * cd /path/to/aeo-platform && ./scripts/backup.sh >> /var/log/aeo-backup.log 2>&1
 ```
 
-### 4.3 恢复 Chroma
+备份保留策略：默认保留 7 天，可通过 `BACKUP_RETENTION_DAYS` 环境变量调整。
+
+### 恢复
 
 ```bash
-# 停止 API 后恢复更安全；或热恢复后重启 api 容器
-docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml exec -T api sh -c "rm -rf /app/data/chroma/*"
-cat backups/20260830_120000/chroma_data.tar.gz | docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml exec -T api tar xzf - -C /app/data/chroma
-docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml restart api
+# 恢复 PostgreSQL
+docker compose -f infra/compose/docker-compose.prod.yml exec -T postgres psql -U aeo -d aeo < backups/{timestamp}/postgres.sql
+
+# 恢复 Chroma
+docker compose -f infra/compose/docker-compose.prod.yml exec -T api tar xzf - -C /app/data/chroma < backups/{timestamp}/chroma_data.tar.gz
 ```
 
-恢复后可在工作台 `/knowledge` 核对文档数量，或调用 `GET /api/v1/knowledge/stats`。
+## 监控与告警
 
----
+### Grafana 看板
 
-## 5. 安全清单
+访问 `http://your-server:3001`，预配置看板包括：
 
-| 项 | 配置 | 说明 |
-|----|------|------|
-| API 认证 | `AUTH_API_KEY` | `Authorization: Bearer <key>` |
-| 限流 | `RATE_LIMIT_PER_MINUTE=100` | 超限返回 `429` / code `10003` |
-| CORS | `CORS_ORIGINS` | 生产必填，仅允许 Web 源 |
-| 数据库 | 无 host 端口 | compose internal network |
-| 日志脱敏 | 自动 | `api_key`、`password`、`supplier_price`、`cost_price` → `***` |
-| 审计 | `GET /api/v1/audit-logs` | 默认 HITL 操作，最多 100 条 |
+- HTTP 请求率与延迟（p95）
+- Agent 执行次数与延迟
+- LLM 调用与 Token 使用
+- 任务并发数
+- RAG 检索统计
+- 错误率（5xx）
 
-公开端点（无需 Key）：`/health`、`/ready`、`/metrics`、`/docs`。
+### Prometheus
 
----
+内部访问：`http://api:9090`（从容器内）
 
-## 6. 演示流程（10 分钟录制参考）
+Prometheus 自动抓取 API 指标，配置见 `infra/monitoring/prometheus.yml`。
 
-适用于 MS6 / MS7 验收视频脚本。
+## 日志
 
-1. **启动** — `.\scripts\prod-up.ps1`，等待 healthy  
-2. **自动化冒烟** — `.\scripts\demo.ps1`（健康检查 + 认证 + 知识库 + 审计）  
-3. **Web 端到端** — 浏览器打开 `http://127.0.0.1:3000`  
-   - `/tasks/new` 创建 SKU 任务（如 `DEMO-001`）  
-   - 详情页观察 SSE Trace  
-   - `/tasks/{id}/review` HITL 审核批准  
-   - `/tasks/{id}/result` 复制 Listing / 导出 JSON  
-4. **CLI（可选）** — `uv run aeo-orchestrate run --sku DEMO-001 --auto-approve`  
-5. **审计** — Swagger 或 curl 查询 `/api/v1/audit-logs`  
+查看服务日志：
 
----
-
-## 7. 运维命令速查
-
-```powershell
-cd aeo-platform
-
-# 查看容器状态
-docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml ps
-
+```bash
 # API 日志
-docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml logs -f api
+docker compose -f infra/compose/docker-compose.prod.yml logs -f api
 
-# 重新入库知识库
-docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml exec -T api uv run python /app/scripts/ingest_knowledge.py --reset --hash-embeddings
-
-# 本地开发（非 prod）
-.\scripts\dev-up.ps1
+# 所有服务
+docker compose -f infra/compose/docker-compose.prod.yml logs -f
 ```
 
----
+## 资源限制
 
-## 8. 故障排查
+生产 Compose 已配置资源限制：
 
-| 现象 | 可能原因 | 处理 |
-|------|----------|------|
-| API 启动失败「invalid production API key」 | `AUTH_API_KEY` 仍为 dev 默认值 | 修改 `.env.prod` 后重启 |
-| `/ready` database=false | Postgres 未就绪或密码不匹配 | 检查 `POSTGRES_PASSWORD` 与 compose 日志 |
-| 创建任务失败 | LLM 密钥无效或超时 | 检查 `LLM_*`；内网网关需可达 |
-| CORS 错误 | Web 域名未加入白名单 | 更新 `CORS_ORIGINS` 并重启 api |
-| 限流 429 | 单 Key 超过 100 req/min | 等待或调高 `RATE_LIMIT_PER_MINUTE`（仅内网调试） |
-| Knowledge 为空 | 未执行 ingest | 运行 `prod-up.ps1` 或手动 ingest |
+| 服务 | CPU | 内存 |
+|------|-----|------|
+| postgres | 1 核 | 1GB |
+| redis | 0.5 核 | 256MB |
+| api | 2 核 | 2GB |
+| web | 1 核 | 512MB |
+| prometheus | 0.5 核 | 512MB |
+| grafana | 0.5 核 | 256MB |
+| nginx | 0.5 核 | 128MB |
 
----
+根据实际负载调整 `docker-compose.prod.yml` 中的 `deploy.resources`。
 
-## 9. 不在本指南范围
+## 安全加固
 
-- Kubernetes / 云托管部署  
-- TLS 终止（需在反向代理层配置 Nginx / Caddy）  
-- 多租户 / SSO  
-- 等保 / SOC2 认证  
+### 已实施
 
-详见 [`docs/modules/M06-deployment-security.md`](modules/M06-deployment-security.md)。
+- ✅ TLS 1.2/1.3（Let's Encrypt）
+- ✅ HSTS、CSP、X-Frame-Options 等安全头
+- ✅ API 速率限制（30r/s，burst 50）
+- ✅ Prometheus 仅内部网络访问
+- ✅ Redis AOF 持久化
+- ✅ PostgreSQL 密码认证
+- ✅ Grafana 自定义管理员密码
+
+### 建议额外措施
+
+- 配置防火墙规则，仅开放 80/443 端口
+- 定期更新 Docker 镜像：`docker compose pull && docker compose up -d`
+- 监控磁盘空间，特别是 `pg_data` 和 `backups/`
+- 配置离线备份（如 S3、OSS）
+
+## 故障排查
+
+### API 无法连接数据库
+
+```bash
+# 检查 PostgreSQL 状态
+docker compose -f infra/compose/docker-compose.prod.yml ps postgres
+
+# 查看 PostgreSQL 日志
+docker compose -f infra/compose/docker-compose.prod.yml logs postgres
+```
+
+### Redis 连接失败
+
+```bash
+# 检查 Redis 状态
+docker compose -f infra/compose/docker-compose.prod.yml exec redis redis-cli ping
+```
+
+### 证书续期失败
+
+```bash
+# 手动续期
+docker compose -f infra/compose/docker-compose.prod.yml --profile tls run --rm certbot \
+  certbot renew --webroot -w /var/www/certbot
+
+# 重载 Nginx
+docker compose -f infra/compose/docker-compose.prod.yml --profile tls exec nginx nginx -s reload
+```
+
+## 升级
+
+```bash
+# 拉取最新代码
+git pull origin main
+
+# 重新构建镜像
+docker compose -f infra/compose/docker-compose.prod.yml build
+
+# 滚动更新
+docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml up -d
+```
+
+## 支持
+
+- GitHub Issues: https://github.com/fanxiaoyi520/aeo-platform/issues
+- 文档: `docs/` 目录
