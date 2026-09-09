@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import os
 from decimal import Decimal
+from typing import Any
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -443,5 +444,9 @@ async def test_p3_dtc_full_pipeline_content_then_ops() -> None:
             task_id="pipe-ops",
         )
 
-    assert content_result["dtc_content"]["landing_page"]["hero_headline"] == "Test"
-    assert ops_result["dtc_ops"]["report"] == "ok"
+    assert content_result is not None
+    content: Any = content_result
+    assert content["dtc_content"]["landing_page"]["hero_headline"] == "Test"
+    assert ops_result is not None
+    ops: Any = ops_result
+    assert ops["dtc_ops"]["report"] == "ok"
