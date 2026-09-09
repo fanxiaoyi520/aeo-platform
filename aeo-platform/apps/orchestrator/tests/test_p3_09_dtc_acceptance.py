@@ -147,7 +147,10 @@ async def test_p3_dtc_ops_e2e_health_metrics() -> None:
             {"sku": "DTC-ACCEPT-002", "level": "critical", "message": "Only 3 left"},
         ],
         "pricing_suggestions": [
-            {"sku": "DTC-ACCEPT-002", "current_price": 59.99, "suggested_price": 54.99, "reason": "Match competitor"},
+            {
+                "sku": "DTC-ACCEPT-002", "current_price": 59.99,
+                "suggested_price": 54.99, "reason": "Match competitor",
+            },
         ],
         "restock_recommendations": [
             {"sku": "DTC-ACCEPT-002", "recommended_quantity": 200, "urgency": "high"},
@@ -310,9 +313,8 @@ def test_p3_dtc_templates_have_constraints() -> None:
 @pytest.mark.asyncio
 async def test_p3_dtc_dashboard_api_full() -> None:
     """Dashboard API 返回完整店铺概览 + KPI。"""
-    from httpx import ASGITransport, AsyncClient
-
     from aeo_api.main import app
+    from httpx import ASGITransport, AsyncClient
 
     api_key = os.environ["AUTH_API_KEY"]
     headers = {"Authorization": f"Bearer {api_key}"}
@@ -367,9 +369,9 @@ def test_p3_dtc_store_mock_adapter_all_methods() -> None:
 
 def test_p3_dtc_runner_supports_shopify_platform() -> None:
     """Runner 的 PlatformChoice 包含 shopify。"""
-    from aeo_orchestrator.runner import PlatformChoice
-
     from typing import get_args
+
+    from aeo_orchestrator.runner import PlatformChoice
 
     platforms = get_args(PlatformChoice)
     assert "shopify" in platforms
@@ -381,7 +383,10 @@ async def test_p3_dtc_full_pipeline_content_then_ops() -> None:
     from aeo_orchestrator.runner import run_dtc_content_task, run_dtc_ops_task
 
     mock_llm_response = json.dumps({
-        "landing_page": {"hero_headline": "Test", "subheadline": "Sub", "cta_text": "Go", "body_paragraph": "Body"},
+        "landing_page": {
+            "hero_headline": "Test", "subheadline": "Sub",
+            "cta_text": "Go", "body_paragraph": "Body",
+        },
         "email_campaign": {"subject": "Hi", "preview_text": "Pre", "body": "B", "sequence": []},
         "social_posts": [],
         "report": "ok",
