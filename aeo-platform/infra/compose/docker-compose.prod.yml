@@ -31,7 +31,7 @@ services:
       redis-server
       --save 60 1
       --save 300 100
-      --appendonly no
+      --appendonly yes
     volumes:
       - redis_data:/data
     healthcheck:
@@ -132,8 +132,6 @@ services:
     volumes:
       - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
-    ports:
-      - "9090:9090"
     depends_on:
       api:
         condition: service_healthy

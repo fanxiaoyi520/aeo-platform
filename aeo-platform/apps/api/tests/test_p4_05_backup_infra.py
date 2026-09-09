@@ -61,6 +61,11 @@ class TestRedisPersistence:
         redis_cmd = compose["services"]["redis"].get("command", "")
         assert "--save" in redis_cmd
 
+    def test_redis_has_aof_enabled(self) -> None:
+        compose = _load_compose()
+        redis_cmd = compose["services"]["redis"].get("command", "")
+        assert "--appendonly yes" in redis_cmd
+
     def test_redis_has_data_volume(self) -> None:
         compose = _load_compose()
         volumes = compose["services"]["redis"].get("volumes", [])
@@ -79,6 +84,13 @@ class TestComposeVolumes:
         declared = set(compose.get("volumes", {}).keys())
         assert "certbot_certs" in declared
         assert "certbot_webroot" in declared
+
+
+class TestSecurityConfig:
+    def test_prometheus_not_exposed_to_host(self) -> None:
+        compose = _load_compose()
+        prometheus_ports = compose["services"]["prometheus"].get("ports", [])
+        assert len(prometheus_ports) == 0, "Prometheus should not be exposed to host network"
 
 
 class TestBackupManifestFormat:

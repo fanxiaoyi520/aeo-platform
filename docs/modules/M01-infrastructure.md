@@ -5,7 +5,7 @@
 | **模块 ID** | M01 |
 | **优先级** | P0 |
 | **里程碑** | MS1（W1–W2） |
-| **状态** | `blocked`（等待总计划批准） |
+| **状态** | `completed`（2026-08-29） |
 | **依赖** | 无 |
 | **规范依据** | `03_DEV_ENVIRONMENT.md`、`04_ARCHITECTURE_STANDARDS.md`、`05_PERFORMANCE_STANDARDS.md` |
 

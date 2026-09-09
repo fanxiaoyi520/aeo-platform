@@ -106,6 +106,10 @@ jobs:
         working-directory: aeo-platform
         run: pnpm typecheck
 
+      - name: Frontend tests
+        working-directory: aeo-platform
+        run: pnpm test
+
       - name: Next.js build
         working-directory: aeo-platform/apps/web
         env:

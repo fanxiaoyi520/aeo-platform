@@ -16,7 +16,9 @@
 | 总计划 v1.1.0 | **APPROVED** |
 | Phase 1（MS0–MS7） | **已完成** |
 | Phase 1 扩展 P1-01 | **已完成**（知识库上传，PR #14） |
-| Phase 2（MV1–MV5） | **blocked**（待 MV0-02 SP-API） |
+| Phase 2（MV1–MV5） | **已完成**（mock 路径，MV0-02 NO-GO） |
+| Phase 3（DTC 独立站） | **已完成**（P3-01~09，PR #52） |
+| Phase 4（生产部署加固） | **已完成**（PR #53） |
 | 代码目录 | `aeo-platform/` |
 
 ## 参与贡献
