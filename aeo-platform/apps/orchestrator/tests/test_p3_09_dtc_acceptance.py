@@ -84,25 +84,27 @@ async def test_p3_dtc_content_e2e_full_output() -> None:
         },
     )
 
-    mock_response = json.dumps({
-        "landing_page": {
-            "hero_headline": "Eco-Friendly Comfort",
-            "subheadline": "Bamboo fiber that breathes with you.",
-            "cta_text": "Shop Sustainable",
-            "body_paragraph": "Made from 100% bamboo fiber.",
-        },
-        "email_campaign": {
-            "subject": "Welcome to Sustainable Living",
-            "preview_text": "Your eco-journey starts here.",
-            "body": "Thank you for choosing sustainability.",
-            "sequence": ["welcome", "abandoned_cart", "post_purchase"],
-        },
-        "social_posts": [
-            {"platform": "instagram", "caption": "Go green 🌿", "hashtags": ["#eco"]},
-            {"platform": "facebook", "caption": "Shop bamboo collection."},
-        ],
-        "report": "DTC content strategy complete.",
-    })
+    mock_response = json.dumps(
+        {
+            "landing_page": {
+                "hero_headline": "Eco-Friendly Comfort",
+                "subheadline": "Bamboo fiber that breathes with you.",
+                "cta_text": "Shop Sustainable",
+                "body_paragraph": "Made from 100% bamboo fiber.",
+            },
+            "email_campaign": {
+                "subject": "Welcome to Sustainable Living",
+                "preview_text": "Your eco-journey starts here.",
+                "body": "Thank you for choosing sustainability.",
+                "sequence": ["welcome", "abandoned_cart", "post_purchase"],
+            },
+            "social_posts": [
+                {"platform": "instagram", "caption": "Go green 🌿", "hashtags": ["#eco"]},
+                {"platform": "facebook", "caption": "Shop bamboo collection."},
+            ],
+            "report": "DTC content strategy complete.",
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(content=mock_response, model="test")
@@ -142,25 +144,29 @@ async def test_p3_dtc_ops_e2e_health_metrics() -> None:
         product_info={"title": "Recycled Bag", "price": 59.99},
     )
 
-    mock_response = json.dumps({
-        "inventory_alerts": [
-            {"sku": "DTC-ACCEPT-002", "level": "critical", "message": "Only 3 left"},
-        ],
-        "pricing_suggestions": [
-            {
-                "sku": "DTC-ACCEPT-002", "current_price": 59.99,
-                "suggested_price": 54.99, "reason": "Match competitor",
+    mock_response = json.dumps(
+        {
+            "inventory_alerts": [
+                {"sku": "DTC-ACCEPT-002", "level": "critical", "message": "Only 3 left"},
+            ],
+            "pricing_suggestions": [
+                {
+                    "sku": "DTC-ACCEPT-002",
+                    "current_price": 59.99,
+                    "suggested_price": 54.99,
+                    "reason": "Match competitor",
+                },
+            ],
+            "restock_recommendations": [
+                {"sku": "DTC-ACCEPT-002", "recommended_quantity": 200, "urgency": "high"},
+            ],
+            "abandoned_cart_strategy": {
+                "recommendation": "Send 3-email sequence with 15% discount",
+                "expected_recovery": 0.20,
             },
-        ],
-        "restock_recommendations": [
-            {"sku": "DTC-ACCEPT-002", "recommended_quantity": 200, "urgency": "high"},
-        ],
-        "abandoned_cart_strategy": {
-            "recommendation": "Send 3-email sequence with 15% discount",
-            "expected_recovery": 0.20,
-        },
-        "report": "Store needs immediate restocking attention.",
-    })
+            "report": "Store needs immediate restocking attention.",
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.return_value = LLMResponse(content=mock_response, model="test")
@@ -382,22 +388,28 @@ async def test_p3_dtc_full_pipeline_content_then_ops() -> None:
     """DTC Content → DTC Ops 顺序执行无冲突。"""
     from aeo_orchestrator.runner import run_dtc_content_task, run_dtc_ops_task
 
-    mock_llm_response = json.dumps({
-        "landing_page": {
-            "hero_headline": "Test", "subheadline": "Sub",
-            "cta_text": "Go", "body_paragraph": "Body",
-        },
-        "email_campaign": {"subject": "Hi", "preview_text": "Pre", "body": "B", "sequence": []},
-        "social_posts": [],
-        "report": "ok",
-    })
-    mock_ops_response = json.dumps({
-        "inventory_alerts": [],
-        "pricing_suggestions": [],
-        "restock_recommendations": [],
-        "abandoned_cart_strategy": {"recommendation": "test", "expected_recovery": 0.1},
-        "report": "ok",
-    })
+    mock_llm_response = json.dumps(
+        {
+            "landing_page": {
+                "hero_headline": "Test",
+                "subheadline": "Sub",
+                "cta_text": "Go",
+                "body_paragraph": "Body",
+            },
+            "email_campaign": {"subject": "Hi", "preview_text": "Pre", "body": "B", "sequence": []},
+            "social_posts": [],
+            "report": "ok",
+        }
+    )
+    mock_ops_response = json.dumps(
+        {
+            "inventory_alerts": [],
+            "pricing_suggestions": [],
+            "restock_recommendations": [],
+            "abandoned_cart_strategy": {"recommendation": "test", "expected_recovery": 0.1},
+            "report": "ok",
+        }
+    )
 
     mock_provider = AsyncMock()
     mock_provider.chat.side_effect = [
@@ -419,12 +431,16 @@ async def test_p3_dtc_full_pipeline_content_then_ops() -> None:
         mock_client_o.list_discount_codes.return_value = []
 
         content_result = await run_dtc_content_task(
-            sku="DTC-PIPE-001", platform="shopify",
-            product_info={"title": "Test"}, task_id="pipe-content",
+            sku="DTC-PIPE-001",
+            platform="shopify",
+            product_info={"title": "Test"},
+            task_id="pipe-content",
         )
         ops_result = await run_dtc_ops_task(
-            sku="DTC-PIPE-001", platform="shopify",
-            product_info={"title": "Test"}, task_id="pipe-ops",
+            sku="DTC-PIPE-001",
+            platform="shopify",
+            product_info={"title": "Test"},
+            task_id="pipe-ops",
         )
 
     assert content_result["dtc_content"]["landing_page"]["hero_headline"] == "Test"
