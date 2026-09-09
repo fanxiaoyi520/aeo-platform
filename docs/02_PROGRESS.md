@@ -376,3 +376,5 @@
 | 2026-09-09 | **P4-04** Nginx 反向代理 + TLS + 安全头；`nginx.conf`（TLS 1.2/1.3 + HSTS/CSP/X-Frame-Options）+ certbot 自动续期 + prod compose tls profile |
 | 2026-09-09 | **P4-05** 备份调度 + Redis 持久化；`backup.sh` 新增 Redis BGSAVE + 7 天保留策略 + Redis `--save` 配置 + 12 项测试 |
 | 2026-09-09 | **P4-06** Phase 4 验收；test **884/884**，coverage **90%**；PR #53 merged to main |
+| 2026-09-09 | **基础设施加固** — Nginx SSE 代理修复 + 速率限制 + /metrics 内网限制；Redis AOF 启用；Prometheus 端口隐藏；Grafana 凭据外置；前端 Vitest 测试框架 |
+| 2026-09-09 | **文档完善** — 模块状态同步（M01/M02/M04/M05）；README 更新 Phase 2/3/4 状态；新增 `DEPLOYMENT.md` 生产部署指南 + `RUNBOOK.md` 运维手册 |
