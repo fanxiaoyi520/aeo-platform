@@ -5,10 +5,10 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-08
-**当前阶段：** **Phase 3 DTC 完成** → 待用户指定下一步
+**最后更新：** 2026-09-09
+**当前阶段：** **Phase 4 生产部署加固完成** → 待用户指定下一步
 **下一任务：** 用户指定
-**Git：** `main`（MV5-06 已合并 @ `9e5faff`）
+**Git：** `main`（Phase 4 PR #53 已合并）
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -369,3 +369,10 @@
 | 2026-09-09 | **P3-07** DTC 内容模板；4 个 Shopify 模板（listing/landing_page/email_campaign/social_post） |
 | 2026-09-09 | **P3-08** DTC 独立站看板；`GET /api/v1/dtc/dashboard` + 店铺概览 + KPI 仪表盘 |
 | 2026-09-09 | **P3-09** Phase 3 DTC 验收；15 项验收测试 + `batch_dtc_pilot.py`（5 SKU × 4 Agent = 20/20）+ `p3_09_acceptance_report.py`（23/23 检查项全通过）；test **861/861**，coverage **89.57%** |
+| 2026-09-09 | **Phase 4 启动** — 生产部署加固 |
+| 2026-09-09 | **P4-01** CI/CD 流水线增强；`packages/integrations/tests` 纳入 pytest；PR #53 |
+| 2026-09-09 | **P4-02** Prometheus + Grafana 监控栈；`prometheus.yml` + `grafana-dashboard.json`（12 面板）+ prod compose 新增 prometheus/grafana 服务 |
+| 2026-09-09 | **P4-03** 自定义 Prometheus 指标；`metrics.py`（HTTP/Agent/LLM/Task/RAG 指标）+ `PrometheusMiddleware` + 11 项测试 |
+| 2026-09-09 | **P4-04** Nginx 反向代理 + TLS + 安全头；`nginx.conf`（TLS 1.2/1.3 + HSTS/CSP/X-Frame-Options）+ certbot 自动续期 + prod compose tls profile |
+| 2026-09-09 | **P4-05** 备份调度 + Redis 持久化；`backup.sh` 新增 Redis BGSAVE + 7 天保留策略 + Redis `--save` 配置 + 12 项测试 |
+| 2026-09-09 | **P4-06** Phase 4 验收；test **884/884**，coverage **90%**；PR #53 merged to main |
