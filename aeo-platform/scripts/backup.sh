@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Backup PostgreSQL + Chroma volumes for production compose (M06 §5).
+# Backup PostgreSQL + Redis + Chroma volumes for production compose (M06 §5).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,6 +8,7 @@ COMPOSE_FILE="infra/compose/docker-compose.prod.yml"
 ENV_FILE=".env.prod"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 BACKUP_DIR="${ROOT}/backups/${TIMESTAMP}"
+RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-7}"
 
 cd "$ROOT"
 
@@ -20,7 +21,7 @@ compose() {
 }
 
 if ! compose ps --status running --services 2>/dev/null | grep -qx postgres; then
-  echo "Error: postgres service is not running. Start prod stack first: ./scripts/prod-up.ps1" >&2
+  echo "Error: postgres service is not running. Start prod stack first." >&2
   exit 1
 fi
 
@@ -29,15 +30,34 @@ mkdir -p "$BACKUP_DIR"
 echo "==> Backing up PostgreSQL to ${BACKUP_DIR}/postgres.sql"
 compose exec -T postgres pg_dump -U aeo -d aeo --clean --if-exists > "${BACKUP_DIR}/postgres.sql"
 
+echo "==> Backing up Redis to ${BACKUP_DIR}/redis.rdb"
+if compose ps --status running --services 2>/dev/null | grep -qx redis; then
+  compose exec -T redis redis-cli BGSAVE
+  sleep 2
+  compose exec -T redis cp /data/dump.rdb /dev/stdout > "${BACKUP_DIR}/redis.rdb" 2>/dev/null \
+    || compose exec -T redis cat /data/dump.rdb > "${BACKUP_DIR}/redis.rdb"
+  echo "  Redis backup complete"
+else
+  echo "  Redis not running, skipping"
+fi
+
 echo "==> Backing up Chroma data to ${BACKUP_DIR}/chroma_data.tar.gz"
 compose exec -T api tar czf - -C /app/data/chroma . > "${BACKUP_DIR}/chroma_data.tar.gz"
 
 cat > "${BACKUP_DIR}/manifest.txt" <<EOF
 timestamp=${TIMESTAMP}
 postgres=postgres.sql
+redis=redis.rdb
 chroma=chroma_data.tar.gz
 compose_file=${COMPOSE_FILE}
 EOF
 
 echo "==> Backup complete: ${BACKUP_DIR}"
 ls -lh "${BACKUP_DIR}"
+
+if [[ "$RETENTION_DAYS" -gt 0 ]] && [[ -d "${ROOT}/backups" ]]; then
+  echo "==> Cleaning backups older than ${RETENTION_DAYS} days"
+  find "${ROOT}/backups" -maxdepth 1 -mindepth 1 -type d -mtime +"$RETENTION_DAYS" -exec rm -rf {} +
+  echo "  Remaining backups:"
+  ls -1 "${ROOT}/backups"
+fi

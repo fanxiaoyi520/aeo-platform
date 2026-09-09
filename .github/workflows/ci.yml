@@ -57,6 +57,7 @@ jobs:
           packages/shared/tests
           packages/llm/tests
           packages/rag/tests
+          packages/integrations/tests
           --cov=apps
           --cov=packages
           --cov-report=term-missing:skip-covered
