@@ -8,7 +8,7 @@ import asyncio
 import json
 import sys
 import time
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -60,10 +60,10 @@ def _build_product_info(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _is_degraded(item: dict[str, Any], agent: str) -> bool:
-    if agent == "selection" and not item.get("competitor_asins"):
-        return True
-    if agent == "content" and not item.get("knowledge_doc"):
-        return True
+    if agent == "selection":
+        return not bool(item.get("competitor_asins"))
+    if agent == "content":
+        return not bool(item.get("knowledge_doc"))
     return False
 
 
@@ -74,6 +74,8 @@ async def _run_agent(
     from aeo_orchestrator.runner import (
         run_ads_task,
         run_analytics_task,
+        run_dtc_content_task,
+        run_dtc_ops_task,
         run_image_copy_task,
         run_ops_task,
         run_selection_task,
@@ -106,16 +108,27 @@ async def _run_agent(
                     sku=sku, platform=platform, market=market,
                     product_info=product_info, task_id=task_id,
                 )
+            elif platform == "shopify":
+                await run_dtc_content_task(
+                    sku=sku, platform=platform, market=market,
+                    product_info=product_info, task_id=task_id,
+                )
             else:
                 await run_image_copy_task(
                     sku=sku, platform=platform, market=market,
                     product_info=product_info, task_id=task_id,
                 )
         elif agent == "operations":
-            await run_ops_task(
-                sku=sku, platform=platform, market=market,
-                product_info=product_info, task_id=task_id,
-            )
+            if platform == "shopify":
+                await run_dtc_ops_task(
+                    sku=sku, platform=platform, market=market,
+                    product_info=product_info, task_id=task_id,
+                )
+            else:
+                await run_ops_task(
+                    sku=sku, platform=platform, market=market,
+                    product_info=product_info, task_id=task_id,
+                )
         elif agent == "support":
             scenarios = item.get("support_scenarios", ["inquiry"])
             support_info = {**product_info, "scenario": scenarios[0] if scenarios else "inquiry"}
@@ -170,7 +183,10 @@ async def run_batch(
     subset = items[:limit] if limit else items
     results: list[SkuBatchResult] = []
     for i, item in enumerate(subset, start=1):
-        print(f"[{i}/{len(subset)}] {item.get('id', '?')} — {item.get('sku', '?')} ({item.get('platform', '?')})")
+        sku_id = item.get("id", "?")
+        sku_val = item.get("sku", "?")
+        plat = item.get("platform", "?")
+        print(f"[{i}/{len(subset)}] {sku_id} — {sku_val} ({plat})")
         result = await run_single_sku(item, agents=agents)
         results.append(result)
     return results
@@ -238,7 +254,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         print(f"Dry run: {min(limit, len(items))} SKUs × {len(agents)} agents from {testset_path}")
         for i, item in enumerate(items[:limit], start=1):
-            print(f"  [{i}] {item.get('id', '?')} — {item.get('sku', '?')} ({item.get('platform', '?')})")
+            sku_id = item.get("id", "?")
+            sku_val = item.get("sku", "?")
+            plat = item.get("platform", "?")
+            print(f"  [{i}] {sku_id} — {sku_val} ({plat})")
         return 0
 
     print(f"Running {len(agents)} agents on {min(limit, len(items))} SKUs...")

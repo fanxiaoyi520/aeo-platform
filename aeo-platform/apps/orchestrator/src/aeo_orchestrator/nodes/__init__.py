@@ -3,6 +3,8 @@
 from aeo_orchestrator.nodes.ads import ads_node
 from aeo_orchestrator.nodes.analytics import analytics_node
 from aeo_orchestrator.nodes.compliance import compliance_node
+from aeo_orchestrator.nodes.dtc_content import dtc_content_node
+from aeo_orchestrator.nodes.dtc_operations import dtc_operations_node
 from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.image_copy import image_copy_node
 from aeo_orchestrator.nodes.operations import operations_node
@@ -17,6 +19,8 @@ __all__ = [
     "ads_node",
     "analytics_node",
     "compliance_node",
+    "dtc_content_node",
+    "dtc_operations_node",
     "generate_node",
     "image_copy_node",
     "operations_node",

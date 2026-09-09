@@ -9,10 +9,10 @@
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
 | **最后更新** | 2026-09-08 |
-| **当前阶段** | MV1 ✅ · MV2 ✅ · MV3 ✅（MV3-09 blocked）· MV4 ✅ · **MV5 ✅ 全部完成** |
+| **当前阶段** | Phase 3 **完成** — MV1 ✅ · MV2 ✅ · MV3 ✅ · MV4 ✅ · MV5 ✅ · Phase 3 DTC ✅ |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
-| **整体完成度** | **50%**（MV1~MV5 全部完成；Phase 2 收官） |
+| **整体完成度** | **100%**（Phase 2 MV1~MV5 + Phase 3 DTC 全部完成） |
 
 ---
 
@@ -33,16 +33,16 @@
 
 | 模块 | 名称 | 状态 | 完成度 | 阶段 |
 |------|------|------|--------|------|
-| MV-M01 | 多 Agent 平台与调度 | `in_progress` | 55% | MV1 |
-| MV-M02 | 风控与决策分级 | `in_progress` | 20% | MV1 |
-| MV-M03 | 选品与市场情报 | `blocked` | 0% | MV2 |
-| MV-M04 | 内容 AIGC（全媒介） | `blocked` | 0% | MV2 |
-| MV-M05 | 广告投放与 ROI | `blocked` | 0% | MV3 |
-| MV-M06 | 店铺运维自动化 | `blocked` | 0% | MV3 |
-| MV-M07 | 客服与履约 | `blocked` | 0% | MV4 |
-| MV-M08 | 独立站 / DTC | `blocked` | 0% | MV3–MV4 |
-| MV-M09 | 商业指标与复盘闭环 | `blocked` | 0% | MV1 基础 / MV4 完整 |
-| MV-M10 | 数据集成层 | `in_progress` | 25% | MV1 起并行（mock 已就绪） |
+| MV-M01 | 多 Agent 平台与调度 | `completed` | 100% | MV1 ✅ |
+| MV-M02 | 风控与决策分级 | `completed` | 100% | MV1 ✅ |
+| MV-M03 | 选品与市场情报 | `completed` | 100% | MV2 ✅ |
+| MV-M04 | 内容 AIGC（全媒介） | `completed` | 100% | MV2 ✅ |
+| MV-M05 | 广告投放与 ROI | `completed` | 100% | MV3 ✅ |
+| MV-M06 | 店铺运维自动化 | `completed` | 100% | MV3 ✅ |
+| MV-M07 | 客服与履约 | `completed` | 100% | MV4 ✅ |
+| MV-M08 | 独立站 / DTC | `completed` | 100% | Phase 3 ✅（P3-01~09 全部完成） |
+| MV-M09 | 商业指标与复盘闭环 | `completed` | 100% | MV4 ✅ + MV5 终验 |
+| MV-M10 | 数据集成层 | `completed` | 100% | MV1~MV5（mock 路径全链路） |
 
 ---
 
@@ -141,6 +141,20 @@
 | MV5-04 | 风控事故复盘与规则调优 | MV-M02 | `completed` | MV5-02 |
 | MV5-05 | 生产部署与 7×24 试运行 | MV-M10 | `completed` | MV5-03 |
 | MV5-06 | MV5 **商业终验**：MV-BIZ-01~06 全部达标 + 试点报告 | ALL | `completed` | MV5-01~05 |
+
+### Phase 3 — DTC 独立站扩展（MV-M08）
+
+| ID | 任务 | 模块 | 状态 | 依赖 |
+|----|------|------|------|------|
+| P3-01 | Shopify DTC 扩展（弃购/客户/折扣/指标模型） | MV-M08 | `completed` | MV3-06 |
+| P3-02 | DTC 内容 Agent（着陆页/邮件/社交） | MV-M08 | `completed` | P3-01 |
+| P3-03 | Facebook Ads + Google Ads DTC 集成 | MV-M08 | `completed` | P3-01 |
+| P3-04 | DTC 运维 Agent（店铺健康监控） | MV-M08 | `completed` | P3-01 |
+| P3-05 | DTC 客服集成（Shopify 路由 + 3 场景） | MV-M08 | `completed` | P3-01 |
+| P3-06 | DTC 复盘分析集成（Shopify KPI） | MV-M08 | `completed` | P3-01 |
+| P3-07 | DTC 内容模板（4 Shopify 模板） | MV-M08 | `completed` | P3-02 |
+| P3-08 | DTC 独立站看板（Dashboard API） | MV-M08 | `completed` | P3-01~07 |
+| P3-09 | Phase 3 **生产验收**：15 项测试 + 5 SKU 批跑 + 23 项检查 | ALL | `completed` | P3-01~08 |
 
 ---
 

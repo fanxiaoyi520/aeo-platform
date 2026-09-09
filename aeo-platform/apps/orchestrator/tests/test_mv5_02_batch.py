@@ -232,3 +232,98 @@ def test_platform_choice_includes_shopify() -> None:
 
     valid: PlatformChoice = "shopify"
     assert valid == "shopify"
+
+
+@pytest.mark.asyncio
+async def test_shopify_content_routes_to_dtc_content(
+    batch_mod: Any,
+) -> None:
+    from unittest.mock import AsyncMock, patch
+
+    item = {
+        "sku": "TEST-SF",
+        "platform": "shopify",
+        "market": "US",
+        "id": "T-SF",
+        "knowledge_doc": "doc.md",
+        "competitor_asins": [],
+    }
+
+    with patch(
+        "aeo_orchestrator.runner.run_dtc_content_task",
+        new_callable=AsyncMock,
+    ) as mock_dtc:
+        mock_dtc.return_value = {}
+        record = await batch_mod._run_agent("content", item)
+
+    mock_dtc.assert_awaited_once()
+    assert record.agent == "content"
+    assert record.status == "completed"
+    assert record.platform == "shopify"
+
+
+@pytest.mark.asyncio
+async def test_shopify_operations_routes_to_dtc_ops(
+    batch_mod: Any,
+) -> None:
+    from unittest.mock import AsyncMock, patch
+
+    item = {
+        "sku": "TEST-SF",
+        "platform": "shopify",
+        "market": "US",
+        "id": "T-SF",
+        "knowledge_doc": "doc.md",
+        "competitor_asins": [],
+    }
+
+    with patch(
+        "aeo_orchestrator.runner.run_dtc_ops_task",
+        new_callable=AsyncMock,
+    ) as mock_dtc_ops:
+        mock_dtc_ops.return_value = {}
+        record = await batch_mod._run_agent("operations", item)
+
+    mock_dtc_ops.assert_awaited_once()
+    assert record.agent == "operations"
+    assert record.status == "completed"
+    assert record.platform == "shopify"
+
+
+@pytest.mark.asyncio
+async def test_amazon_content_routes_to_image_copy(
+    batch_mod: Any,
+) -> None:
+    from unittest.mock import AsyncMock, patch
+
+    item = {
+        "sku": "TEST-AMZ",
+        "platform": "amazon",
+        "market": "US",
+        "id": "T-AMZ",
+        "knowledge_doc": "doc.md",
+        "competitor_asins": [],
+    }
+
+    with patch(
+        "aeo_orchestrator.runner.run_image_copy_task",
+        new_callable=AsyncMock,
+    ) as mock_img:
+        mock_img.return_value = {}
+        record = await batch_mod._run_agent("content", item)
+
+    mock_img.assert_awaited_once()
+    assert record.platform == "amazon"
+
+
+def test_dry_run_includes_shopify_skus(
+    batch_mod: Any,
+    sample_items: list[dict[str, Any]],
+    tmp_path: Path,
+) -> None:
+    testset = {"items": sample_items}
+    p = tmp_path / "test.json"
+    p.write_text(json.dumps(testset), encoding="utf-8")
+
+    rc = batch_mod.main(["--testset", str(p), "--dry-run"])
+    assert rc == 0

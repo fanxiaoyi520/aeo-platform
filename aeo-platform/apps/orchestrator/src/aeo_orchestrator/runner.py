@@ -11,6 +11,8 @@ from langgraph.graph.state import CompiledStateGraph
 from aeo_orchestrator.graph import (
     build_ads_graph,
     build_analytics_graph,
+    build_dtc_content_graph,
+    build_dtc_ops_graph,
     build_graph,
     build_image_copy_graph,
     build_ops_graph,
@@ -387,5 +389,75 @@ def serialize_analytics_result(state: TaskState) -> dict[str, Any]:
         "platform": state["platform"],
         "market": state.get("market", "US"),
         "analytics": analytics,
+        "trace": state.get("trace", []),
+    }
+
+
+async def run_dtc_content_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "shopify",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+    graph: CompiledStateGraph[TaskState, None, TaskState, TaskState] | None = None,
+) -> TaskState:
+    """Run the DTC content agent graph (single dtc_content_agent node)."""
+    resolved_id = task_id or str(uuid.uuid4())
+    compiled = graph or build_dtc_content_graph(checkpointer=MemorySaver())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
+
+
+def serialize_dtc_content_result(state: TaskState) -> dict[str, Any]:
+    dtc_content = state.get("dtc_content") or {}
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "dtc_content": dtc_content,
+        "trace": state.get("trace", []),
+    }
+
+
+async def run_dtc_ops_task(
+    *,
+    sku: str,
+    platform: PlatformChoice = "shopify",
+    market: str = "US",
+    product_info: dict[str, Any] | None = None,
+    task_id: str | None = None,
+    graph: CompiledStateGraph[TaskState, None, TaskState, TaskState] | None = None,
+) -> TaskState:
+    """Run the DTC operations agent graph (single dtc_operations_agent node)."""
+    resolved_id = task_id or str(uuid.uuid4())
+    compiled = graph or build_dtc_ops_graph(checkpointer=MemorySaver())
+    state = initial_state(
+        task_id=resolved_id,
+        platform=platform,
+        sku=sku,
+        market=market,
+        product_info=product_info,
+    )
+    result = await compiled.ainvoke(state, config={"configurable": {"thread_id": resolved_id}})
+    return result  # type: ignore[return-value]
+
+
+def serialize_dtc_ops_result(state: TaskState) -> dict[str, Any]:
+    dtc_ops = state.get("dtc_ops") or {}
+    return {
+        "task_id": state["task_id"],
+        "sku": state["sku"],
+        "platform": state["platform"],
+        "market": state.get("market", "US"),
+        "dtc_ops": dtc_ops,
         "trace": state.get("trace", []),
     }

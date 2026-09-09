@@ -1,0 +1,100 @@
+{
+  "campaigns": [
+    {
+      "campaign_id": "G-CAMP-001",
+      "name": "Search - Kitchen Products",
+      "status": "ENABLED",
+      "campaign_type": "SEARCH",
+      "daily_budget": "40.00",
+      "currency": "USD",
+      "start_date": "2026-07-01",
+      "end_date": null,
+      "associated_skus": ["KETTLE-001", "DRIPPER-001"]
+    },
+    {
+      "campaign_id": "G-CAMP-002",
+      "name": "Shopping - Best Sellers",
+      "status": "ENABLED",
+      "campaign_type": "SHOPPING",
+      "daily_budget": "60.00",
+      "currency": "USD",
+      "start_date": "2026-06-15",
+      "end_date": null,
+      "associated_skus": ["KETTLE-001", "VACUUM-001", "DRIPPER-001"]
+    },
+    {
+      "campaign_id": "G-CAMP-003",
+      "name": "Display - Remarketing",
+      "status": "ENABLED",
+      "campaign_type": "DISPLAY",
+      "daily_budget": "20.00",
+      "currency": "USD",
+      "start_date": "2026-08-01",
+      "end_date": null,
+      "associated_skus": []
+    },
+    {
+      "campaign_id": "G-CAMP-004",
+      "name": "Seasonal - Winter Collection",
+      "status": "PAUSED",
+      "campaign_type": "SEARCH",
+      "daily_budget": "35.00",
+      "currency": "USD",
+      "start_date": "2025-11-01",
+      "end_date": "2026-02-28",
+      "associated_skus": ["VACUUM-001"]
+    }
+  ],
+  "spend_snapshots": [
+    {
+      "campaign_id": "G-CAMP-001",
+      "snapshot_date": "2026-09-01",
+      "spend": "38.50",
+      "impressions": 5200,
+      "clicks": 312,
+      "conversions": 12,
+      "attributed_gmv": "480.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "G-CAMP-001",
+      "snapshot_date": "2026-09-02",
+      "spend": "41.00",
+      "impressions": 5500,
+      "clicks": 330,
+      "conversions": 14,
+      "attributed_gmv": "560.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "G-CAMP-002",
+      "snapshot_date": "2026-09-01",
+      "spend": "58.20",
+      "impressions": 18000,
+      "clicks": 540,
+      "conversions": 27,
+      "attributed_gmv": "1350.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "G-CAMP-002",
+      "snapshot_date": "2026-09-02",
+      "spend": "61.50",
+      "impressions": 19200,
+      "clicks": 576,
+      "conversions": 30,
+      "attributed_gmv": "1500.00",
+      "currency": "USD"
+    },
+    {
+      "campaign_id": "G-CAMP-003",
+      "snapshot_date": "2026-09-01",
+      "spend": "19.00",
+      "impressions": 15000,
+      "clicks": 150,
+      "conversions": 6,
+      "attributed_gmv": "240.00",
+      "currency": "USD"
+    }
+  ]
+}

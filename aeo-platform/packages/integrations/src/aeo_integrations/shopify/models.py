@@ -50,3 +50,54 @@ class ShopifyInventoryItem(BaseModel):
     reserved: int = 0
     committed: int = 0
     updated_at: str = ""
+
+
+class ShopifyAbandonedCart(BaseModel):
+    """Normalized Shopify abandoned cart."""
+
+    cart_id: str
+    customer_email: str
+    customer_id: str = ""
+    total_value: Decimal | None = None
+    line_count: int = 0
+    recovery_email_sent: bool = False
+    abandoned_at: str = ""
+
+
+class ShopifyCustomer(BaseModel):
+    """Normalized Shopify customer."""
+
+    customer_id: str
+    email: str
+    first_name: str = ""
+    last_name: str = ""
+    total_spent: Decimal | None = None
+    orders_count: int = 0
+    accepts_marketing: bool = False
+    state: str = "disabled"
+    created_at: str = ""
+
+
+class ShopifyDiscountCode(BaseModel):
+    """Normalized Shopify discount code."""
+
+    code_id: str
+    code: str
+    discount_type: str = "percentage"
+    discount_value: Decimal | None = None
+    usage_limit: int = 0
+    times_used: int = 0
+    is_active: bool = True
+    created_at: str = ""
+
+
+class ShopifyStoreMetrics(BaseModel):
+    """Normalized Shopify store daily metrics."""
+
+    date: str
+    sessions: int = 0
+    orders: int = 0
+    revenue: Decimal | None = None
+    conversion_rate: Decimal | None = None
+    cart_abandonment_rate: Decimal | None = None
+    avg_order_value: Decimal | None = None

@@ -12,6 +12,8 @@ from aeo_orchestrator.checkpoint import create_memory_checkpointer
 from aeo_orchestrator.nodes.ads import ads_node
 from aeo_orchestrator.nodes.analytics import analytics_node
 from aeo_orchestrator.nodes.compliance import compliance_node, route_after_compliance
+from aeo_orchestrator.nodes.dtc_content import dtc_content_node
+from aeo_orchestrator.nodes.dtc_operations import dtc_operations_node
 from aeo_orchestrator.nodes.generate import generate_node
 from aeo_orchestrator.nodes.image_copy import image_copy_node
 from aeo_orchestrator.nodes.operations import operations_node
@@ -148,6 +150,32 @@ def build_analytics_graph(
     builder.add_node("analytics", analytics_node)
     builder.set_entry_point("analytics")
     builder.add_edge("analytics", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
+
+
+def build_dtc_content_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the DTC content agent graph (single dtc_content_agent node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("dtc_content", dtc_content_node)
+    builder.set_entry_point("dtc_content")
+    builder.add_edge("dtc_content", END)
+
+    memory = checkpointer or create_memory_checkpointer()
+    return builder.compile(checkpointer=memory)
+
+
+def build_dtc_ops_graph(
+    *, checkpointer: BaseCheckpointSaver[Any] | None = None
+) -> CompiledStateGraph[TaskState, None, TaskState, TaskState]:
+    """Compile the DTC operations agent graph (single dtc_operations_agent node)."""
+    builder = StateGraph(TaskState)
+    builder.add_node("dtc_ops", dtc_operations_node)
+    builder.set_entry_point("dtc_ops")
+    builder.add_edge("dtc_ops", END)
 
     memory = checkpointer or create_memory_checkpointer()
     return builder.compile(checkpointer=memory)

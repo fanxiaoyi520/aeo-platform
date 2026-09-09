@@ -66,6 +66,27 @@ def _fetch_order_context(sku: str, limit: int = 5) -> list[dict[str, Any]]:
         return []
 
 
+def _fetch_shopify_order_context(sku: str) -> list[dict[str, Any]]:
+    try:
+        from aeo_integrations.shopify.store import get_store_client
+
+        store = get_store_client()
+        products = store.list_products()
+        matched = [p for p in products if p.sku == sku]
+        return [
+            {
+                "product_id": p.product_id,
+                "sku": p.sku,
+                "title": p.title,
+                "price": str(p.price) if p.price else "N/A",
+                "inventory_quantity": p.inventory_quantity,
+            }
+            for p in matched
+        ]
+    except Exception:
+        return []
+
+
 def _build_user_prompt(
     state: TaskState,
     order_context: list[dict[str, Any]],
@@ -120,6 +141,11 @@ def _detect_scenario(parsed: dict[str, Any], order_context: list[dict[str, Any]]
         ("defective", "complaint"),
         ("exchange", "exchange"),
         ("replace", "exchange"),
+        ("abandoned cart", "abandoned_cart"),
+        ("left in cart", "abandoned_cart"),
+        ("discount", "discount_issue"),
+        ("promo code", "discount_issue"),
+        ("coupon", "discount_issue"),
     ]:
         keyword, scenario = keyword_scenario
         if keyword in reply:
@@ -135,7 +161,10 @@ async def support_node(state: TaskState) -> dict[str, object]:
         sku = state.get("sku", "")
         platform = state.get("platform", "amazon")
 
-        order_context = _fetch_order_context(sku)
+        if platform == "shopify":
+            order_context = _fetch_shopify_order_context(sku)
+        else:
+            order_context = _fetch_order_context(sku)
         rag_query = f"customer service {sku} order status shipping return"
         rag_references = _search_rag(rag_query)
 

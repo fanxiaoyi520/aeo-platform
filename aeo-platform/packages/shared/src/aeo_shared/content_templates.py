@@ -169,12 +169,111 @@ Keep it trendy, short, and punchy. No markdown fences.""",
     },
 )
 
+_SHOPIFY_LISTING = ContentTemplate(
+    content_type="listing",
+    platform="shopify",
+    system_prompt="""You are a Shopify DTC store listing copywriter.
+Return ONLY valid JSON with keys:
+- title (string, max 100 chars — concise and brand-forward)
+- bullets (array of exactly 4 strings — benefit-focused)
+- search_terms (string)
+- description (string — brand storytelling paragraph)
+Focus on brand voice and direct consumer appeal. No markdown fences.""",
+    output_schema={
+        "title": "string ≤100 chars",
+        "bullets": "array[4]",
+        "search_terms": "string",
+        "description": "string",
+    },
+    constraints={"title_max_chars": 100, "bullet_count": 4, "style": "brand-forward"},
+)
+
+_SHOPIFY_LANDING_PAGE = ContentTemplate(
+    content_type="landing_page",
+    platform="shopify",
+    system_prompt="""You are a Shopify DTC landing page copywriter.
+Return ONLY valid JSON with keys:
+- hero_headline (string, max 60 chars — attention-grabbing headline)
+- subheadline (string, max 120 chars — supporting value proposition)
+- cta_text (string — call-to-action button text)
+- body_paragraph (string — 2-3 sentence product story)
+- social_proof (string — testimonial or trust signal)
+Keep it conversion-focused and brand-consistent. No markdown fences.""",
+    output_schema={
+        "hero_headline": "string ≤60 chars",
+        "subheadline": "string ≤120 chars",
+        "cta_text": "string",
+        "body_paragraph": "string",
+        "social_proof": "string",
+    },
+    constraints={
+        "headline_max_chars": 60,
+        "subheadline_max_chars": 120,
+        "style": "conversion-focused",
+    },
+)
+
+_SHOPIFY_EMAIL_CAMPAIGN = ContentTemplate(
+    content_type="email_campaign",
+    platform="shopify",
+    system_prompt="""You are a Shopify DTC email marketing copywriter.
+Return ONLY valid JSON with keys:
+- subject (string, max 60 chars — email subject line)
+- preview_text (string, max 100 chars — preview text shown in inbox)
+- body (string — email body copy, 3-5 sentences)
+- sequence (array of strings — email sequence stages,
+  e.g. ["welcome", "abandoned_cart", "post_purchase"])
+- cta_text (string — call-to-action text)
+Write compelling, personalized email copy. No markdown fences.""",
+    output_schema={
+        "subject": "string ≤60 chars",
+        "preview_text": "string ≤100 chars",
+        "body": "string",
+        "sequence": "array[string]",
+        "cta_text": "string",
+    },
+    constraints={
+        "subject_max_chars": 60,
+        "preview_max_chars": 100,
+        "style": "personalized and compelling",
+    },
+)
+
+_SHOPIFY_SOCIAL_POST = ContentTemplate(
+    content_type="social_post",
+    platform="shopify",
+    system_prompt="""You are a Shopify DTC social media copywriter.
+Return ONLY valid JSON with keys:
+- platform (string — "instagram", "facebook", or "twitter")
+- caption (string, max 2200 chars for Instagram, 63206 for Facebook, 280 for Twitter)
+- hashtags (array of strings — relevant hashtags, 5-15 for Instagram, 2-5 for others)
+- cta (string — call-to-action for the post)
+- image_suggestion (string — brief description of recommended image)
+Adapt tone to the platform. No markdown fences.""",
+    output_schema={
+        "platform": "string",
+        "caption": "string",
+        "hashtags": "array[string]",
+        "cta": "string",
+        "image_suggestion": "string",
+    },
+    constraints={
+        "style": "platform-adaptive",
+        "instagram_hashtag_range": [5, 15],
+        "other_hashtag_range": [2, 5],
+    },
+)
+
 _BUILTIN_TEMPLATES: list[ContentTemplate] = [
     _AMAZON_LISTING,
     _TIKTOK_LISTING,
     _AMAZON_IMAGE_COPY,
     _TIKTOK_IMAGE_COPY,
     _TIKTOK_VIDEO,
+    _SHOPIFY_LISTING,
+    _SHOPIFY_LANDING_PAGE,
+    _SHOPIFY_EMAIL_CAMPAIGN,
+    _SHOPIFY_SOCIAL_POST,
 ]
 
 

@@ -140,3 +140,41 @@ export type DashboardData = {
   trend: DashboardTrendEntry[];
   period_days: number;
 };
+
+export type DTCStorefront = {
+  total_products: number;
+  active_products: number;
+  total_orders: number;
+  paid_orders: number;
+  low_stock_items: number;
+  active_discounts: number;
+};
+
+export type DTCKpis = {
+  avg_conversion_rate: number | null;
+  avg_cart_abandonment_rate: number | null;
+  avg_order_value: number | null;
+  total_revenue: string;
+  total_sessions: number;
+  total_orders: number;
+  customer_lifetime_value: string | null;
+  repeat_purchase_rate: string | null;
+  email_marketing_opt_in_rate: string | null;
+  metric_days: number;
+  customer_count: number;
+  abandoned_cart_count: number;
+};
+
+export type DTCAbandonedCartsSummary = {
+  total: number;
+  recovery_email_sent: number;
+  total_value: string;
+};
+
+export type DTCDashboardData = {
+  storefront: DTCStorefront;
+  kpis: DTCKpis;
+  recent_orders: Record<string, unknown>[];
+  top_products: Record<string, unknown>[];
+  abandoned_carts_summary: DTCAbandonedCartsSummary;
+};

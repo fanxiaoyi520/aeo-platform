@@ -117,7 +117,29 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
         snapshots = _generate_mock_metrics(platform=platform, marketplace=market, days=7)
         metrics_summary = _build_metrics_summary(snapshots)
 
+        dtc_kpis: dict[str, Any] = {}
+        if platform == "shopify":
+            from aeo_shared.dtc_analytics import (
+                build_dtc_metrics_prompt_section,
+                calculate_dtc_kpis,
+            )
+
+            try:
+                from aeo_integrations.shopify.store import get_store_client
+
+                store = get_store_client()
+                store_metrics = [m.model_dump() for m in store.get_store_metrics(limit=7)]
+                customers = [c.model_dump() for c in store.list_customers()]
+                carts = [c.model_dump() for c in store.list_abandoned_carts()]
+                dtc_kpis = calculate_dtc_kpis(store_metrics, customers, carts)
+            except Exception:
+                dtc_kpis = {}
+
         prompt = _build_user_prompt(state, metrics_summary)
+        if dtc_kpis:
+            from aeo_shared.dtc_analytics import build_dtc_metrics_prompt_section
+
+            prompt += build_dtc_metrics_prompt_section(dtc_kpis)
         provider = get_llm_provider()
         response = await provider.chat(
             [
@@ -191,6 +213,7 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
             "strategy_suggestions": strategy_suggestions,
             "kpi_targets": kpi_targets,
             "metrics_summary": metrics_summary,
+            "dtc_kpis": dtc_kpis,
             "report": report,
             "created_tasks": created_tasks,
         }
@@ -215,6 +238,7 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
             "strategy_suggestions": [],
             "kpi_targets": {},
             "metrics_summary": {},
+            "dtc_kpis": {},
             "report": f"Analytics report generation failed: {exc}",
             "error": str(exc),
             "created_tasks": [],

@@ -84,15 +84,15 @@ class TestContentTemplateLibrary:
 
     def test_get_unknown_platform_raises(self) -> None:
         lib = ContentTemplateLibrary()
-        with pytest.raises(KeyError, match="shopify"):
-            lib.get("listing", "shopify")
+        with pytest.raises(KeyError, match="ebay"):
+            lib.get("listing", "ebay")
 
     def test_filter_by_content_type(self) -> None:
         lib = ContentTemplateLibrary()
         results = lib.filter_by(content_type="listing")
-        assert len(results) == 2
+        assert len(results) == 3
         platforms = {t.platform for t in results}
-        assert platforms == {"amazon", "tiktok"}
+        assert platforms == {"amazon", "tiktok", "shopify"}
 
     def test_filter_by_platform(self) -> None:
         lib = ContentTemplateLibrary()
@@ -116,7 +116,7 @@ class TestContentTemplateLibrary:
     def test_list_all(self) -> None:
         lib = ContentTemplateLibrary()
         all_templates = lib.list_all()
-        assert len(all_templates) == 5
+        assert len(all_templates) == 9
         types = {t.content_type for t in all_templates}
         assert "listing" in types
         assert "image_copy" in types
@@ -144,4 +144,4 @@ class TestGetContentTemplateLibrary:
 
     def test_singleton_has_all_templates(self) -> None:
         lib = get_content_template_library()
-        assert len(lib.list_all()) == 5
+        assert len(lib.list_all()) == 9

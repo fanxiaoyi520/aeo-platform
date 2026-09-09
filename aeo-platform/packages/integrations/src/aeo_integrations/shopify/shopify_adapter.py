@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from aeo_integrations.shopify.models import (
+    ShopifyAbandonedCart,
+    ShopifyCustomer,
+    ShopifyDiscountCode,
     ShopifyInventoryItem,
     ShopifyOrder,
     ShopifyProduct,
+    ShopifyStoreMetrics,
 )
 
 
@@ -27,4 +31,18 @@ class ShopifyApiAdapter:
     def list_inventory(
         self, *, sku: str | None = None, limit: int = 100
     ) -> list[ShopifyInventoryItem]:
+        raise NotImplementedError("Shopify Admin API integration pending")
+
+    def list_abandoned_carts(self, *, limit: int = 50) -> list[ShopifyAbandonedCart]:
+        raise NotImplementedError("Shopify Admin API integration pending")
+
+    def list_customers(self, *, limit: int = 50) -> list[ShopifyCustomer]:
+        raise NotImplementedError("Shopify Admin API integration pending")
+
+    def list_discount_codes(
+        self, *, is_active: bool | None = None, limit: int = 50
+    ) -> list[ShopifyDiscountCode]:
+        raise NotImplementedError("Shopify Admin API integration pending")
+
+    def get_store_metrics(self, *, limit: int = 30) -> list[ShopifyStoreMetrics]:
         raise NotImplementedError("Shopify Admin API integration pending")
