@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-08
-**当前阶段：** **Phase 2 收官 → Phase 3 规划中**
-**下一任务：** Phase 3 独立站 DTC（MV-M08）/ 用户指定
+**当前阶段：** **Phase 3 DTC 完成** → 待用户指定下一步
+**下一任务：** 用户指定
 **Git：** `main`（MV5-06 已合并 @ `9e5faff`）
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
@@ -362,3 +362,10 @@
 | 2026-09-08 | **Phase 3 启动** — DTC 独立站扩展（MV-M08） |
 | 2026-09-08 | **P3-01** Shopify DTC 扩展；4 新模型（弃购/客户/折扣/指标）+ Protocol 扩展 + 4 fixture；test **761/761**；PR #50 |
 | 2026-09-08 | **P3-03** Facebook Ads + Google Ads DTC 集成；2 个集成模块（Protocol + Mock + Factory + fixture）；30 项测试；PR #51 |
+| 2026-09-09 | **P3-02** DTC 内容 Agent；`dtc_content_node` + `build_dtc_content_graph` + `run_dtc_content_task`；着陆页/邮件/社交内容生成 |
+| 2026-09-09 | **P3-04** DTC 运维 Agent；`dtc_operations_node` + `calculate_dtc_health` + `build_dtc_ops_graph`；店铺健康监控 + 库存/定价/弃购建议 |
+| 2026-09-09 | **P3-05** DTC 客服集成；Shopify 平台路由 + 3 售后场景（abandoned_cart/shipping/discount_issue） |
+| 2026-09-09 | **P3-06** DTC 复盘分析集成；`calculate_dtc_kpis` + `build_dtc_metrics_prompt_section`；Shopify KPI 扩展 |
+| 2026-09-09 | **P3-07** DTC 内容模板；4 个 Shopify 模板（listing/landing_page/email_campaign/social_post） |
+| 2026-09-09 | **P3-08** DTC 独立站看板；`GET /api/v1/dtc/dashboard` + 店铺概览 + KPI 仪表盘 |
+| 2026-09-09 | **P3-09** Phase 3 DTC 验收；15 项验收测试 + `batch_dtc_pilot.py`（5 SKU × 4 Agent = 20/20）+ `p3_09_acceptance_report.py`（23/23 检查项全通过）；test **861/861**，coverage **89.57%** |
