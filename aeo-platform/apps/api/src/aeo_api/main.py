@@ -13,6 +13,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from aeo_api.config import get_settings, validate_production_settings
 from aeo_api.db.redis import close_redis
 from aeo_api.logging_setup import setup_logging
+from aeo_api.middleware.prometheus import PrometheusMiddleware
 from aeo_api.middleware.rate_limit import RateLimitMiddleware
 from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
 from aeo_api.routers import (
@@ -43,10 +44,16 @@ settings = get_settings()
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     validate_production_settings(settings)
     setup_logging(debug=settings.app_debug)
+    import sys
+
     from aeo_llm.config import get_llm_settings
+
+    from aeo_api.metrics import SYSTEM_INFO
 
     llm = get_llm_settings()
     logger.info("starting", app=settings.app_name, env=settings.app_env, llm_model=llm.llm_model)
+    py_ver = f"{sys.version_info.major}.{sys.version_info.minor}"
+    SYSTEM_INFO.labels(version=app.version, python_version=py_ver).set(1)
     yield
     await close_redis()
     logger.info("shutdown complete")
@@ -61,6 +68,7 @@ def create_app() -> FastAPI:
     )
 
     app.add_middleware(RateLimitMiddleware, limit_per_minute=settings.rate_limit_per_minute)
+    app.add_middleware(PrometheusMiddleware)
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(ApiKeyMiddleware, api_key=settings.auth_api_key)
     app.add_middleware(

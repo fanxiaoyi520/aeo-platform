@@ -1,0 +1,158 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "aeo-platform-overview",
+    "title": "AEO Platform Overview",
+    "tags": ["aeo", "production"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {"from": "now-1h", "to": "now"},
+    "panels": [
+      {
+        "id": 1,
+        "title": "HTTP Request Rate",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(aeo_http_requests_total[5m])",
+            "legendFormat": "{{method}} {{endpoint}} {{status}}"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "HTTP Request Duration (p95)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(aeo_http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95 {{method}} {{endpoint}}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Agent Executions",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(aeo_agent_executions_total[5m])",
+            "legendFormat": "{{agent}} {{status}}"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Agent Execution Duration (p95)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(aeo_agent_execution_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95 {{agent}}"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "LLM Calls Rate",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "rate(aeo_llm_calls_total[5m])",
+            "legendFormat": "{{provider}} {{status}}"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "LLM Token Usage",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "rate(aeo_llm_tokens_total[5m])",
+            "legendFormat": "{{provider}} {{type}}"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Tasks In Progress",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 24},
+        "targets": [
+          {
+            "expr": "aeo_tasks_in_progress",
+            "legendFormat": "Tasks"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "HTTP Requests In Progress",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 24},
+        "targets": [
+          {
+            "expr": "aeo_http_requests_in_progress",
+            "legendFormat": "Requests"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "RAG Documents Loaded",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 24},
+        "targets": [
+          {
+            "expr": "aeo_rag_documents_loaded",
+            "legendFormat": "Docs"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "RAG Chunks Total",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 24},
+        "targets": [
+          {
+            "expr": "aeo_rag_chunks_total",
+            "legendFormat": "Chunks"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "RAG Query Rate",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28},
+        "targets": [
+          {
+            "expr": "rate(aeo_rag_queries_total[5m])",
+            "legendFormat": "{{status}}"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Error Rate (5xx)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28},
+        "targets": [
+          {
+            "expr": "rate(aeo_http_requests_total{status=~\"5..\"}[5m])",
+            "legendFormat": "{{method}} {{endpoint}}"
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}
