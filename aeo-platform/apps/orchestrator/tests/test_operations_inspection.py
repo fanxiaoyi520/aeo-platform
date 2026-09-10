@@ -6,12 +6,12 @@ import json
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-
 from aeo_orchestrator.nodes.operations import (
     _build_inspection_context,
     _try_inspect_seller_central,
     operations_node,
 )
+from aeo_orchestrator.state import TaskState
 
 
 def test_build_inspection_context_degraded() -> None:
@@ -37,7 +37,12 @@ def test_build_inspection_context_with_data() -> None:
 
 
 def test_build_inspection_context_empty() -> None:
-    inspection = {"degraded": False, "account_health": {}, "listing_status": {}, "notifications": []}
+    inspection = {
+        "degraded": False,
+        "account_health": {},
+        "listing_status": {},
+        "notifications": [],
+    }
     ctx = _build_inspection_context(inspection)
     assert "no data extracted" in ctx
 
@@ -50,9 +55,13 @@ def test_try_inspect_browser_disabled() -> None:
 
 
 def test_try_inspect_browser_enabled_no_storage() -> None:
-    with patch("aeo_browser.config.is_browser_enabled", return_value=True):
-        with patch("aeo_browser.seller_central.seller_central_storage_state", return_value=None):
-            result = _try_inspect_seller_central()
+    browser_enabled_patch = patch("aeo_browser.config.is_browser_enabled", return_value=True)
+    storage_patch = patch(
+        "aeo_browser.seller_central.seller_central_storage_state",
+        return_value=None,
+    )
+    with browser_enabled_patch, storage_patch:
+        result = _try_inspect_seller_central()
     assert result["degraded"] is True
 
 
@@ -72,12 +81,14 @@ async def test_operations_node_includes_inspection_in_result() -> None:
     mock_inv_client.list_inventory.return_value = [mock_inv_item]
 
     mock_llm_response = MagicMock()
-    mock_llm_response.content = json.dumps({
-        "inventory_alerts": [],
-        "pricing_suggestions": [],
-        "restock_recommendations": [],
-        "report": "All good.",
-    })
+    mock_llm_response.content = json.dumps(
+        {
+            "inventory_alerts": [],
+            "pricing_suggestions": [],
+            "restock_recommendations": [],
+            "report": "All good.",
+        }
+    )
 
     mock_provider = MagicMock()
     mock_provider.chat = AsyncMock(return_value=mock_llm_response)
@@ -92,21 +103,34 @@ async def test_operations_node_includes_inspection_in_result() -> None:
         "inspected_at": "2026-09-10T12:00:00",
     }
 
-    state = {
+    state: TaskState = {
         "sku": "TEST-001",
         "product_info": {"title": "Test Product", "price": "$29.99"},
         "task_id": "test-123",
         "platform": "amazon",
     }
 
-    with patch("aeo_orchestrator.nodes.operations.get_inventory_client", return_value=mock_inv_client):
-        with patch("aeo_orchestrator.nodes.operations.get_llm_provider", return_value=mock_provider):
-            with patch("aeo_orchestrator.nodes.operations._try_inspect_seller_central", return_value=degraded_inspection):
-                result = await operations_node(state)
+    inv_patch = patch(
+        "aeo_orchestrator.nodes.operations.get_inventory_client",
+        return_value=mock_inv_client,
+    )
+    llm_patch = patch(
+        "aeo_orchestrator.nodes.operations.get_llm_provider",
+        return_value=mock_provider,
+    )
+    inspect_patch = patch(
+        "aeo_orchestrator.nodes.operations._try_inspect_seller_central",
+        return_value=degraded_inspection,
+    )
+    with inv_patch, llm_patch, inspect_patch:
+        result = await operations_node(state)
 
     ops = result["ops"]
+    assert isinstance(ops, dict)
     assert "seller_central_inspection" in ops
-    assert ops["seller_central_inspection"]["degraded"] is True
+    inspection_result = ops["seller_central_inspection"]
+    assert isinstance(inspection_result, dict)
+    assert inspection_result["degraded"] is True
     assert ops["report"] == "All good."
 
     call_args = mock_provider.chat.call_args
@@ -130,12 +154,14 @@ async def test_operations_node_with_successful_inspection() -> None:
     mock_inv_client.list_inventory.return_value = [mock_inv_item]
 
     mock_llm_response = MagicMock()
-    mock_llm_response.content = json.dumps({
-        "inventory_alerts": [{"sku": "TEST-002", "level": "warning", "message": "Low stock"}],
-        "pricing_suggestions": [],
-        "restock_recommendations": [],
-        "report": "Restock needed.",
-    })
+    mock_llm_response.content = json.dumps(
+        {
+            "inventory_alerts": [{"sku": "TEST-002", "level": "warning", "message": "Low stock"}],
+            "pricing_suggestions": [],
+            "restock_recommendations": [],
+            "report": "Restock needed.",
+        }
+    )
 
     mock_provider = MagicMock()
     mock_provider.chat = AsyncMock(return_value=mock_llm_response)
@@ -150,21 +176,34 @@ async def test_operations_node_with_successful_inspection() -> None:
         "inspected_at": "2026-09-10T12:00:00",
     }
 
-    state = {
+    state: TaskState = {
         "sku": "TEST-002",
         "product_info": {"title": "Widget", "price": "$19.99"},
         "task_id": "test-456",
         "platform": "amazon",
     }
 
-    with patch("aeo_orchestrator.nodes.operations.get_inventory_client", return_value=mock_inv_client):
-        with patch("aeo_orchestrator.nodes.operations.get_llm_provider", return_value=mock_provider):
-            with patch("aeo_orchestrator.nodes.operations._try_inspect_seller_central", return_value=successful_inspection):
-                result = await operations_node(state)
+    inv_patch = patch(
+        "aeo_orchestrator.nodes.operations.get_inventory_client",
+        return_value=mock_inv_client,
+    )
+    llm_patch = patch(
+        "aeo_orchestrator.nodes.operations.get_llm_provider",
+        return_value=mock_provider,
+    )
+    inspect_patch = patch(
+        "aeo_orchestrator.nodes.operations._try_inspect_seller_central",
+        return_value=successful_inspection,
+    )
+    with inv_patch, llm_patch, inspect_patch:
+        result = await operations_node(state)
 
     ops = result["ops"]
-    assert ops["seller_central_inspection"]["degraded"] is False
-    assert "policy violation" in str(ops["seller_central_inspection"]["account_health"])
+    assert isinstance(ops, dict)
+    inspection_result = ops["seller_central_inspection"]
+    assert isinstance(inspection_result, dict)
+    assert inspection_result["degraded"] is False
+    assert "policy violation" in str(inspection_result["account_health"])
 
     call_args = mock_provider.chat.call_args
     user_msg = call_args[0][0][1].content

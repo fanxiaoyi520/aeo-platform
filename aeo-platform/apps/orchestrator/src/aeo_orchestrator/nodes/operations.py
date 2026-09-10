@@ -17,7 +17,7 @@ LOW_STOCK_THRESHOLD = 25
 
 def _try_inspect_seller_central() -> dict[str, Any]:
     """Attempt Seller Central read-only inspection; return degraded result on failure."""
-    from aeo_browser import inspect_seller_central, build_degraded_inspection
+    from aeo_browser import build_degraded_inspection, inspect_seller_central
     from aeo_browser.config import is_browser_enabled
 
     if not is_browser_enabled():
@@ -25,12 +25,14 @@ def _try_inspect_seller_central() -> dict[str, Any]:
 
     try:
         import asyncio
+
         loop = asyncio.get_event_loop()
         if loop.is_running():
             return build_degraded_inspection("async loop already running")
-        return loop.run_until_complete(inspect_seller_central())  # type: ignore[return-value]
+        return loop.run_until_complete(inspect_seller_central())
     except Exception as exc:
         from aeo_browser import build_degraded_inspection
+
         return build_degraded_inspection(str(exc))
 
 
@@ -80,15 +82,18 @@ def _build_inventory_summary(
 
 def _build_inspection_context(inspection: dict[str, Any]) -> str:
     if inspection.get("degraded"):
-        return f"Seller Central inspection unavailable: {inspection.get('degraded_reason', 'unknown')}"
+        reason = inspection.get("degraded_reason", "unknown")
+        return f"Seller Central inspection unavailable: {reason}"
 
     parts: list[str] = []
     health = inspection.get("account_health", {})
     if health:
-        parts.append(f"Account health indicators: {json.dumps(health.get('detected_indicators', []))}")
+        indicators = json.dumps(health.get("detected_indicators", []))
+        parts.append(f"Account health indicators: {indicators}")
     listing = inspection.get("listing_status", {})
     if listing:
-        parts.append(f"Listing statuses: {json.dumps(listing.get('detected_statuses', []))}")
+        statuses = json.dumps(listing.get("detected_statuses", []))
+        parts.append(f"Listing statuses: {statuses}")
     notifications = inspection.get("notifications", [])
     if notifications:
         texts = [n.get("text", "") for n in notifications[:5]]
@@ -211,7 +216,10 @@ async def operations_node(state: TaskState) -> dict[str, object]:
         result = {
             "inventory": [],
             "health_metrics": {},
-            "seller_central_inspection": {"degraded": True, "degraded_reason": "operations_node error"},
+            "seller_central_inspection": {
+                "degraded": True,
+                "degraded_reason": "operations_node error",
+            },
             "inventory_alerts": [],
             "pricing_suggestions": [],
             "restock_recommendations": [],

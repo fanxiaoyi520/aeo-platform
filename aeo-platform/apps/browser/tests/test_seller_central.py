@@ -5,7 +5,6 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-
 from aeo_browser.models import SellerCentralInspection
 from aeo_browser.seller_central import build_degraded_inspection
 
@@ -28,9 +27,11 @@ def test_seller_central_inspection_roundtrip() -> None:
 
 
 def test_seller_central_inspection_from_dict_defaults() -> None:
-    restored = SellerCentralInspection.from_dict({
-        "inspected_at": "2026-09-10T12:00:00",
-    })
+    restored = SellerCentralInspection.from_dict(
+        {
+            "inspected_at": "2026-09-10T12:00:00",
+        }
+    )
     assert restored.account_health == {}
     assert restored.listing_status == {}
     assert restored.notifications == []
@@ -53,9 +54,12 @@ def test_build_degraded_inspection() -> None:
 async def test_inspect_seller_central_raises_without_storage_state() -> None:
     from aeo_browser.seller_central import inspect_seller_central
 
-    with patch("aeo_browser.seller_central.seller_central_storage_state", return_value=None):
-        with pytest.raises(RuntimeError, match="SELLER_CENTRAL_STORAGE_STATE"):
-            await inspect_seller_central()
+    storage_patch = patch(
+        "aeo_browser.seller_central.seller_central_storage_state",
+        return_value=None,
+    )
+    with storage_patch, pytest.raises(RuntimeError, match="SELLER_CENTRAL_STORAGE_STATE"):
+        await inspect_seller_central()
 
 
 @pytest.mark.asyncio
@@ -85,10 +89,13 @@ async def test_inspect_seller_central_captcha_raises() -> None:
     mock_pw_instance.__aenter__ = AsyncMock(return_value=mock_playwright)
     mock_pw_instance.__aexit__ = AsyncMock(return_value=False)
 
-    with patch("aeo_browser.seller_central.seller_central_storage_state", return_value="/tmp/fake_state.json"):
-        with patch("playwright.async_api.async_playwright", return_value=mock_pw_instance):
-            with pytest.raises(RuntimeError, match="captcha"):
-                await inspect_seller_central()
+    storage_patch = patch(
+        "aeo_browser.seller_central.seller_central_storage_state",
+        return_value="/tmp/fake_state.json",
+    )
+    pw_patch = patch("playwright.async_api.async_playwright", return_value=mock_pw_instance)
+    with storage_patch, pw_patch, pytest.raises(RuntimeError, match="captcha"):
+        await inspect_seller_central()
 
 
 @pytest.mark.asyncio
@@ -102,7 +109,10 @@ async def test_inspect_seller_central_success() -> None:
     page_texts = [
         "Account Health Rating: Good. Voice of the Customer: satisfactory.",
         "Your listings are active and ready. 3 inactive listings need attention.",
-        "Action Required: Update your shipping settings. Performance Notification: late shipment rate increased.",
+        (
+            "Action Required: Update your shipping settings. "
+            "Performance Notification: late shipment rate increased."
+        ),
     ]
     call_idx = 0
 
@@ -135,17 +145,23 @@ async def test_inspect_seller_central_success() -> None:
     mock_pw_instance.__aenter__ = AsyncMock(return_value=mock_playwright)
     mock_pw_instance.__aexit__ = AsyncMock(return_value=False)
 
-    with patch("aeo_browser.seller_central.seller_central_storage_state", return_value="/tmp/fake_state.json"):
-        with patch("playwright.async_api.async_playwright", return_value=mock_pw_instance):
-            with patch("aeo_browser.seller_central._throttle", new_callable=AsyncMock):
-                result = await inspect_seller_central()
+    storage_patch = patch(
+        "aeo_browser.seller_central.seller_central_storage_state",
+        return_value="/tmp/fake_state.json",
+    )
+    pw_patch = patch("playwright.async_api.async_playwright", return_value=mock_pw_instance)
+    throttle_patch = patch("aeo_browser.seller_central._throttle", new_callable=AsyncMock)
+    with storage_patch, pw_patch, throttle_patch:
+        result = await inspect_seller_central()
 
     assert result["degraded"] is False
     assert "account_health" in result
     assert "listing_status" in result
     assert "notifications" in result
     assert "screenshots" in result
-    assert len(result["screenshots"]) == 3
+    screenshots = result["screenshots"]
+    assert isinstance(screenshots, dict)
+    assert len(screenshots) == 3
     assert "inspected_at" in result
 
 

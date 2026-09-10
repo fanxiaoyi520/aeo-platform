@@ -66,12 +66,22 @@ class SellerCentralInspection:
     @classmethod
     def from_dict(cls, data: dict[str, object]) -> SellerCentralInspection:
         screenshots_raw = data.get("screenshots", {})
-        screenshots = {str(k): str(v) for k, v in screenshots_raw.items()} if isinstance(screenshots_raw, dict) else {}
+        if isinstance(screenshots_raw, dict):
+            screenshots = {str(k): str(v) for k, v in screenshots_raw.items()}
+        else:
+            screenshots = {}
         notifications_raw = data.get("notifications", [])
-        notifications = [dict(n) for n in notifications_raw if isinstance(n, dict)] if isinstance(notifications_raw, list) else []
+        if isinstance(notifications_raw, list):
+            notifications = [dict(n) for n in notifications_raw if isinstance(n, dict)]
+        else:
+            notifications = []
+        account_health_raw = data.get("account_health", {})
+        account_health = dict(account_health_raw) if isinstance(account_health_raw, dict) else {}
+        listing_status_raw = data.get("listing_status", {})
+        listing_status = dict(listing_status_raw) if isinstance(listing_status_raw, dict) else {}
         return cls(
-            account_health=dict(data.get("account_health", {})) if isinstance(data.get("account_health"), dict) else {},
-            listing_status=dict(data.get("listing_status", {})) if isinstance(data.get("listing_status"), dict) else {},
+            account_health=account_health,
+            listing_status=listing_status,
             notifications=notifications,
             screenshots=screenshots,
             inspected_at=str(data.get("inspected_at", datetime.now(UTC).isoformat())),

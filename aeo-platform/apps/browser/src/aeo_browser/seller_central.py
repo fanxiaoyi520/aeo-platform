@@ -78,7 +78,8 @@ async def _extract_notifications(page: Any) -> list[dict[str, object]]:
         line = line.strip()
         if len(line) > 10 and len(line) < 300:
             lower = line.lower()
-            if any(kw in lower for kw in ["alert", "warning", "action required", "notification", "performance"]):
+            keywords = ["alert", "warning", "action required", "notification", "performance"]
+            if any(kw in lower for kw in keywords):
                 notifications.append({"text": line, "type": "notification"})
                 if len(notifications) >= 10:
                     break
@@ -151,8 +152,8 @@ async def inspect_seller_central() -> dict[str, object]:
                 await browser.close()
 
             inspection = SellerCentralInspection(
-                account_health=results.get("account_health", {}),  # type: ignore[arg-type]
-                listing_status=results.get("listing_status", {}),  # type: ignore[arg-type]
+                account_health=results.get("account_health", {}),
+                listing_status=results.get("listing_status", {}),
                 notifications=results.get("notifications", []),  # type: ignore[arg-type]
                 screenshots=screenshots,
                 inspected_at=datetime.now(UTC).isoformat(),
