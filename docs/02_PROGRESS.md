@@ -379,3 +379,4 @@
 | 2026-09-09 | **基础设施加固** — Nginx SSE 代理修复 + 速率限制 + /metrics 内网限制；Redis AOF 启用；Prometheus 端口隐藏；Grafana 凭据外置；前端 Vitest 测试框架 |
 | 2026-09-09 | **文档完善** — 模块状态同步（M01/M02/M04/M05）；README 更新 Phase 2/3/4 状态；新增 `DEPLOYMENT.md` 生产部署指南 + `RUNBOOK.md` 运维手册 |
 | 2026-09-10 | **用户批准 MS4**：里程碑 `completed`；M04 关闭；MV3-05 解除阻塞 |
+| 2026-09-10 | **MV3-05** Seller Central 只读巡检；`inspect_seller_central()` + `build_degraded_inspection()` + operations_node 集成；lint/type 修复；test **901/901** |

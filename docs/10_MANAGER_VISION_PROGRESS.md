@@ -112,7 +112,7 @@
 | MV3-02 | A02 投放 Agent：结构建议 + 出价模拟 | MV-M05 | `completed` | MV3-01 |
 | MV3-03 | 预算分配与 ROI 预估引擎 | MV-M05 | `completed` | MV3-02 |
 | MV3-04 | A04 运维 Agent：调价/库存建议（L1 人审） | MV-M06 | `completed` | MV3-01 |
-| MV3-05 | 浏览器辅助：Seller Central 只读巡检 | MV-M06 | `blocked` | MS4 |
+| MV3-05 | 浏览器辅助：Seller Central 只读巡检 | MV-M06 | `completed` | MS4 |
 | MV3-06 | Shopify Store API 只读（独立站） | MV-M08 | `completed` | MV1 |
 | MV3-07 | 投放 ↔ 库存联动策略（文档 + 原型） | MV-M05 | `completed` | MV3-02, MV3-04 |
 | MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `completed` | MV3-02 |
