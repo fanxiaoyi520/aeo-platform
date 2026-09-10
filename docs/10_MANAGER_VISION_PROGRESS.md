@@ -8,7 +8,7 @@
 |------|-----|
 | **计划状态** | `APPROVED` — 2026-08-30 用户批准 |
 | **需求来源** | `docs/internal/` 管理岗 JD |
-| **最后更新** | 2026-09-09 |
+| **最后更新** | 2026-09-10 |
 | **当前阶段** | Phase 4 **完成** — MV1 ✅ · MV2 ✅ · MV3 ✅ · MV4 ✅ · MV5 ✅ · Phase 3 DTC ✅ · Phase 4 生产部署 ✅ |
 | **前置条件** | MS7 ✅；MV0-02 **NO-GO**（mock 路径已批准） |
 | **终验硬指标** | 人工替代率 ≥ 40%、ROI ≥ 人工 p50、风控事故 0 |
@@ -23,7 +23,7 @@
 | MV0 计划批准 | `completed` | — | 2026-08-30 |
 | MV1 平台与风控底座 | `completed` | W1–W8 | 2026-09-03 | mock 路径 |
 | MV2 选品 + 内容扩展 | `completed` | W9–W18 | 2026-09-07 | MV1 |
-| MV3 投放与运维 | `completed`（MV3-09 blocked） | W19–W30 | 2026-09-07 | MV2 |
+| MV3 投放与运维 | `completed` | W19–W30 | 2026-09-10 | MV2 |
 | MV4 客服 + 复盘 | `completed` | W31–W40 | 2026-09-07 | MV3 |
 | MV5 全链路试点 | `completed` | W41–W48 | 2026-09-08 | MV4 |
 
@@ -116,7 +116,7 @@
 | MV3-06 | Shopify Store API 只读（独立站） | MV-M08 | `completed` | MV1 |
 | MV3-07 | 投放 ↔ 库存联动策略（文档 + 原型） | MV-M05 | `completed` | MV3-02, MV3-04 |
 | MV3-08 | 前端：广告建议 + 审批执行页 | MV-M05 | `completed` | MV3-02 |
-| MV3-09 | MV3 **生产验收**：真实广告账户 建议→人审→执行→ROI 回写 | ALL | `blocked` | MV3-01~08 |
+| MV3-09 | MV3 **生产验收**：真实广告账户 建议→人审→执行→ROI 回写 | ALL | `completed` | MV3-01~08 |
 
 ### MV4 — 客服 + 复盘（+10 周）
 
@@ -215,3 +215,4 @@
 | 2026-09-08 | **MV5-04** 风控事故复盘与规则调优；`mv5_04_risk_review.py` + `risk_review.py`；PR #47 merged |
 | 2026-09-08 | **MV5-05** 生产部署验证 + 7×24 试运行；`trial_monitor.py`（可用性/P95/恢复时间）+ `mv5_05_trial_run.py`（--dry-run）+ `mv5_05_trial_report.py`；test **724/724**，coverage **88.85%** |
 | 2026-09-08 | **MV5-06** 商业终验；`final_acceptance.py`（六项 KPI）+ `mv5_06_final_report.py`；12 项测试；**MV5 里程碑全部完成** |
+| 2026-09-10 | **MV3-09** MV3 生产验收；7 项验收测试（ads/ops/budget/linkage/registry）+ `batch_mv3_pilot.py` 批跑 + `mv3_acceptance_report.py`（4 套件 overall_accepted: true）；test **908/908**，coverage **89.64%**；**MV3 里程碑全部完成** |
