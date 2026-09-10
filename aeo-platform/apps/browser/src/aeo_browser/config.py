@@ -25,6 +25,13 @@ USER_AGENTS: tuple[str, ...] = (
     ),
 )
 
+SELLER_CENTRAL_BASE_URL = "https://sellercentral.amazon.com"
+SELLER_CENTRAL_PAGES: dict[str, str] = {
+    "account_health": "/dashboard/account-health",
+    "listing_status": "/inventory/listing-status",
+    "notifications": "/performance/notifications",
+}
+
 
 def is_browser_enabled() -> bool:
     return os.getenv("BROWSER_ENABLED", "false").lower() in ("1", "true", "yes")
@@ -37,6 +44,17 @@ def is_headless() -> bool:
 def screenshot_dir() -> Path:
     raw = os.getenv("BROWSER_SCREENSHOT_DIR", "data/screenshots")
     return Path(raw)
+
+
+def seller_central_screenshot_dir() -> Path:
+    return screenshot_dir() / "seller-central"
+
+
+def seller_central_storage_state() -> str | None:
+    path = os.getenv("SELLER_CENTRAL_STORAGE_STATE")
+    if path and Path(path).is_file():
+        return path
+    return None
 
 
 def amazon_base_url(market: str = "US") -> str:

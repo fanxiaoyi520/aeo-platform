@@ -37,6 +37,14 @@ cp .env.prod.example .env.prod
 
 ### 3. 启动基础服务
 
+Windows 快捷方式：
+
+```powershell
+.\scripts\prod-up.ps1
+```
+
+或手动 Docker Compose：
+
 ```bash
 docker compose --env-file .env.prod -f infra/compose/docker-compose.prod.yml up -d
 ```
@@ -87,6 +95,8 @@ curl http://localhost:8000/metrics
 # 用户名: admin（或 GRAFANA_ADMIN_USER）
 # 密码: 配置的 GRAFANA_ADMIN_PASSWORD
 ```
+
+Windows 用户可运行 `.\scripts\demo.ps1` 自动验证健康检查、API 端点和审计日志。
 
 ## 服务端口
 

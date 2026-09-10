@@ -46,3 +46,45 @@ class ListingSnapshot:
             fetched_at=str(data.get("fetched_at", datetime.now(UTC).isoformat())),
             source=str(data.get("source", "browser")),
         )
+
+
+@dataclass(frozen=True)
+class SellerCentralInspection:
+    """Read-only Seller Central dashboard snapshot — MV3-05."""
+
+    account_health: dict[str, object]
+    listing_status: dict[str, object]
+    notifications: list[dict[str, object]]
+    screenshots: dict[str, str]
+    inspected_at: str
+    degraded: bool = False
+    degraded_reason: str = ""
+
+    def to_dict(self) -> dict[str, object]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -> SellerCentralInspection:
+        screenshots_raw = data.get("screenshots", {})
+        if isinstance(screenshots_raw, dict):
+            screenshots = {str(k): str(v) for k, v in screenshots_raw.items()}
+        else:
+            screenshots = {}
+        notifications_raw = data.get("notifications", [])
+        if isinstance(notifications_raw, list):
+            notifications = [dict(n) for n in notifications_raw if isinstance(n, dict)]
+        else:
+            notifications = []
+        account_health_raw = data.get("account_health", {})
+        account_health = dict(account_health_raw) if isinstance(account_health_raw, dict) else {}
+        listing_status_raw = data.get("listing_status", {})
+        listing_status = dict(listing_status_raw) if isinstance(listing_status_raw, dict) else {}
+        return cls(
+            account_health=account_health,
+            listing_status=listing_status,
+            notifications=notifications,
+            screenshots=screenshots,
+            inspected_at=str(data.get("inspected_at", datetime.now(UTC).isoformat())),
+            degraded=bool(data.get("degraded", False)),
+            degraded_reason=str(data.get("degraded_reason", "")),
+        )

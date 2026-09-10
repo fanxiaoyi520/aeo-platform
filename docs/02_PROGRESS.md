@@ -5,8 +5,8 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-09
-**当前阶段：** **Phase 4 生产部署加固完成** → 待用户指定下一步
+**最后更新：** 2026-09-10
+**当前阶段：** **MS4 已批准** → 待用户指定下一步（MV3-05 解除阻塞）
 **下一任务：** 用户指定
 **Git：** `main`（Phase 4 PR #53 已合并）
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
@@ -47,7 +47,7 @@
 | MS1 工程底座 | `completed` | W1–W2 | 2026-08-29 |
 | MS2 RAG 可用 | `completed` | W3 | 2026-08-30 |
 | MS3 Agent 核心 | `completed` | W4–W6 | 2026-08-30 |
-| MS4 浏览器调研 | `pending` | W7 | — | S4-01~04 技术验收通过，待用户批准 |
+| MS4 浏览器调研 | `completed` | W7 | 2026-09-10 | S4-01~04 技术验收通过，用户批准 |
 | MS5 运营工作台 | `completed` | W8–W9 | 2026-08-30 |
 | MS6 生产加固 | `completed` | W10 | 2026-08-30 |
 | MS7 试点验收 | `completed` | W11–W12 | 2026-08-30 | live 批跑 20/20，三项指标达标 |
@@ -63,7 +63,7 @@
 | M03 | Agent 编排引擎 | `completed` | 100% | MS3 已批准（2026-08-30） |
 | M05 | 运营工作台 | `completed` | 100% | MS5 已批准（2026-08-30） |
 | M06 | 部署与安全 | `completed` | 100% | MS6 已批准（2026-08-30） |
-| M04 | 浏览器自动化 | `pending` | 100% | S4-04 技术验收通过，待批准 MS4 |
+| M04 | 浏览器自动化 | `completed` | 100% | MS4 已批准（2026-09-10） |
 | M07 | 可观测与商业指标 | `completed` | 100% | MS7 已批准（2026-08-30） |
 
 ---
@@ -378,3 +378,5 @@
 | 2026-09-09 | **P4-06** Phase 4 验收；test **884/884**，coverage **90%**；PR #53 merged to main |
 | 2026-09-09 | **基础设施加固** — Nginx SSE 代理修复 + 速率限制 + /metrics 内网限制；Redis AOF 启用；Prometheus 端口隐藏；Grafana 凭据外置；前端 Vitest 测试框架 |
 | 2026-09-09 | **文档完善** — 模块状态同步（M01/M02/M04/M05）；README 更新 Phase 2/3/4 状态；新增 `DEPLOYMENT.md` 生产部署指南 + `RUNBOOK.md` 运维手册 |
+| 2026-09-10 | **用户批准 MS4**：里程碑 `completed`；M04 关闭；MV3-05 解除阻塞 |
+| 2026-09-10 | **MV3-05** Seller Central 只读巡检；`inspect_seller_central()` + `build_degraded_inspection()` + operations_node 集成；lint/type 修复；test **901/901** |
