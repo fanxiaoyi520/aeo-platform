@@ -380,3 +380,4 @@
 | 2026-09-09 | **文档完善** — 模块状态同步（M01/M02/M04/M05）；README 更新 Phase 2/3/4 状态；新增 `DEPLOYMENT.md` 生产部署指南 + `RUNBOOK.md` 运维手册 |
 | 2026-09-10 | **用户批准 MS4**：里程碑 `completed`；M04 关闭；MV3-05 解除阻塞 |
 | 2026-09-10 | **MV3-05** Seller Central 只读巡检；`inspect_seller_central()` + `build_degraded_inspection()` + operations_node 集成；lint/type 修复；test **901/901** |
+| 2026-09-10 | **MV3-09** MV3 生产验收；7 项验收测试 + `batch_mv3_pilot.py` + `mv3_acceptance_report.py`（overall_accepted: true）；test **908/908**，coverage **89.64%**；**MV3 里程碑全部完成** |
