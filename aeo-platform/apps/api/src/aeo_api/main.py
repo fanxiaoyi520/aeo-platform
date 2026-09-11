@@ -13,13 +13,15 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from aeo_api.config import get_settings, validate_production_settings
 from aeo_api.db.redis import close_redis
 from aeo_api.logging_setup import setup_logging
+from aeo_api.middleware.auth import AuthMiddleware
 from aeo_api.middleware.prometheus import PrometheusMiddleware
 from aeo_api.middleware.rate_limit import RateLimitMiddleware
-from aeo_api.middleware.request_id import ApiKeyMiddleware, RequestIdMiddleware
+from aeo_api.middleware.request_id import RequestIdMiddleware
 from aeo_api.routers import (
     agents,
     analytics,
     audit,
+    auth,
     business_metrics,
     content_templates,
     dtc,
@@ -70,7 +72,7 @@ def create_app() -> FastAPI:
     app.add_middleware(RateLimitMiddleware, limit_per_minute=settings.rate_limit_per_minute)
     app.add_middleware(PrometheusMiddleware)
     app.add_middleware(RequestIdMiddleware)
-    app.add_middleware(ApiKeyMiddleware, api_key=settings.auth_api_key)
+    app.add_middleware(AuthMiddleware, api_key=settings.auth_api_key)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.get_cors_origins(),
@@ -81,6 +83,7 @@ def create_app() -> FastAPI:
 
     app.include_router(root.router)
     app.include_router(health.router)
+    app.include_router(auth.router)
     app.include_router(knowledge.router)
     app.include_router(metrics.router)
     app.include_router(audit.router)

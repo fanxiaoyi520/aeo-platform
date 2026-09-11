@@ -10,6 +10,9 @@ PUBLIC_PATHS: frozenset[str] = frozenset(
         "/openapi.json",
         "/redoc",
         "/docs/oauth2-redirect",
+        "/api/v1/auth/login",
+        "/api/v1/auth/signup",
+        "/api/v1/auth/refresh",
     }
 )
 
