@@ -1,6 +1,8 @@
 """P5-04: Auth middleware tests — JWT + API key dual-mode."""
 
 import os
+from collections.abc import AsyncGenerator
+from typing import Any
 from uuid import uuid4
 
 import pytest
@@ -28,7 +30,7 @@ def _build_test_app() -> FastAPI:
     app.add_middleware(AuthMiddleware, api_key=API_KEY)
 
     @app.get("/api/v1/test-auth")
-    async def test_endpoint(request: Request) -> dict:
+    async def test_endpoint(request: Request) -> dict[str, Any]:
         return {
             "tenant_id": getattr(request.state, "tenant_id", None),
             "user_id": getattr(request.state, "user_id", None),
@@ -39,7 +41,7 @@ def _build_test_app() -> FastAPI:
         }
 
     @app.get("/health")
-    async def health() -> dict:
+    async def health() -> dict[str, Any]:
         return {"status": "ok"}
 
     return app
@@ -70,7 +72,7 @@ def refresh_token(tenant_id: str, user_id: str) -> str:
 
 
 @pytest.fixture
-async def client() -> AsyncClient:
+async def client() -> AsyncGenerator[AsyncClient, None]:
     app = _build_test_app()
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:

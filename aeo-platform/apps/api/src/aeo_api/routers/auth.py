@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from aeo_api.auth.auth_service import AuthError, login, refresh_tokens, signup
 from aeo_api.auth.rbac import CurrentRole, CurrentTenant, CurrentUser
 from aeo_api.db.models import get_db_session
+from aeo_api.db.tenant_models import User
 from aeo_api.schemas.auth import (
     LoginRequest,
     RefreshRequest,
@@ -27,7 +28,7 @@ def _ok(request: Request, data: dict[str, Any]) -> dict[str, Any]:
     return success_response(data, request.state.request_id).model_dump()
 
 
-def _user_response(user: object) -> UserResponse:
+def _user_response(user: User) -> UserResponse:
     return UserResponse(
         id=str(user.id),
         email=user.email,
@@ -37,10 +38,8 @@ def _user_response(user: object) -> UserResponse:
     )
 
 
-@router.post("/signup")
-async def signup_endpoint(
-    request: Request, body: SignupRequest, session: DbSession
-) -> dict[str, Any]:
+@router.post("/signup", response_model=None)
+async def signup_endpoint(request: Request, body: SignupRequest, session: DbSession) -> Any:
     try:
         user, _tenant = await signup(
             session,
@@ -66,10 +65,8 @@ async def signup_endpoint(
     return _ok(request, token_data.model_dump())
 
 
-@router.post("/login")
-async def login_endpoint(
-    request: Request, body: LoginRequest, session: DbSession
-) -> dict[str, Any]:
+@router.post("/login", response_model=None)
+async def login_endpoint(request: Request, body: LoginRequest, session: DbSession) -> Any:
     try:
         user, access_token, refresh_token = await login(session, body.email, body.password)
     except AuthError:
@@ -84,10 +81,8 @@ async def login_endpoint(
     return _ok(request, token_data.model_dump())
 
 
-@router.post("/refresh")
-async def refresh_endpoint(
-    request: Request, body: RefreshRequest, session: DbSession
-) -> dict[str, Any]:
+@router.post("/refresh", response_model=None)
+async def refresh_endpoint(request: Request, body: RefreshRequest, session: DbSession) -> Any:
     try:
         new_access, new_refresh = await refresh_tokens(session, body.refresh_token)
     except AuthError:

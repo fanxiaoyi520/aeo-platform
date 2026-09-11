@@ -12,7 +12,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.types import ASGIApp
 
 from aeo_api.auth.context import current_tenant_id, current_user_id, current_user_role
-from aeo_api.auth.jwt_service import decode_token
+from aeo_api.auth.jwt_service import TokenPayload, decode_token
 from aeo_api.db.tenant_models import SYSTEM_TENANT_ID
 from aeo_api.middleware.paths import is_public_path
 
@@ -69,7 +69,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             current_user_role.reset(ctx_role)
 
     @staticmethod
-    def _try_jwt(token: str):
+    def _try_jwt(token: str) -> TokenPayload | None:
         try:
             payload = decode_token(token)
             if payload.type != "access":

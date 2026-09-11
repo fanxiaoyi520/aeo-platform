@@ -11,14 +11,14 @@ def get_current_user_id(request: Request) -> str:
     user_id = getattr(request.state, "user_id", None)
     if user_id is None:
         raise HTTPException(status_code=401, detail="Authentication required")
-    return user_id
+    return str(user_id)
 
 
 def get_current_tenant_id(request: Request) -> str:
     tenant_id = getattr(request.state, "tenant_id", None)
     if tenant_id is None:
         raise HTTPException(status_code=401, detail="Authentication required")
-    return tenant_id
+    return str(tenant_id)
 
 
 def get_current_role(request: Request) -> str:
