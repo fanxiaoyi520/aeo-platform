@@ -15,8 +15,14 @@ from aeo_api.middleware.paths import is_public_path
 logger = structlog.get_logger(__name__)
 
 
-def _rate_limit_key(api_token: str) -> str:
-    digest = hashlib.sha256(api_token.encode()).hexdigest()[:16]
+def _rate_limit_key(request: Request) -> str:
+    tenant_id = getattr(request.state, "tenant_id", None)
+    user_id = getattr(request.state, "user_id", None)
+    if tenant_id and user_id:
+        raw = f"{tenant_id}:{user_id}"
+    else:
+        raw = request.client.host if request.client else "unknown"
+    digest = hashlib.sha256(raw.encode()).hexdigest()[:16]
     minute_bucket = int(time.time()) // 60
     return f"ratelimit:{digest}:{minute_bucket}"
 
@@ -32,12 +38,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if is_public_path(request.url.path):
             return await call_next(request)
 
-        auth = request.headers.get("Authorization", "")
-        token = auth.removeprefix("Bearer ").strip()
-        if not token:
-            return await call_next(request)
-
-        redis_key = _rate_limit_key(token)
+        redis_key = _rate_limit_key(request)
         try:
             redis = await get_redis()
             count = await redis.incr(redis_key)

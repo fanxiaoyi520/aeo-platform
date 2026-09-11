@@ -48,7 +48,7 @@ packages = [
 ]
 
 [[tool.mypy.overrides]]
-module = ["alembic.*", "prometheus_client.*", "chromadb.*"]
+module = ["alembic.*", "prometheus_client.*", "chromadb.*", "jwt.*", "bcrypt.*", "passlib.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

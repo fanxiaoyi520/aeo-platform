@@ -10,11 +10,17 @@ class ErrorCode(IntEnum):
     VALIDATION_ERROR = 10001
     UNAUTHORIZED = 10002
     RATE_LIMITED = 10003
+    AUTH_INVALID_CREDENTIALS = 10004
+    AUTH_TOKEN_EXPIRED = 10005
+    AUTH_FORBIDDEN = 10006
 
     # Business errors 20001-29999
     TASK_NOT_FOUND = 20001
     TASK_INVALID_STATE = 20002
     TASK_QUEUE_FULL = 20030
+    TENANT_NOT_FOUND = 20031
+    USER_NOT_FOUND = 20032
+    TENANT_ALREADY_EXISTS = 20033
 
     # Agent errors 20010-20019
     AGENT_TIMEOUT = 20010
@@ -35,9 +41,15 @@ ERROR_MESSAGES: dict[ErrorCode, str] = {
     ErrorCode.VALIDATION_ERROR: "validation error",
     ErrorCode.UNAUTHORIZED: "unauthorized",
     ErrorCode.RATE_LIMITED: "rate limit exceeded",
+    ErrorCode.AUTH_INVALID_CREDENTIALS: "invalid credentials",
+    ErrorCode.AUTH_TOKEN_EXPIRED: "token expired",
+    ErrorCode.AUTH_FORBIDDEN: "forbidden",
     ErrorCode.TASK_NOT_FOUND: "task not found",
     ErrorCode.TASK_INVALID_STATE: "task invalid state",
     ErrorCode.TASK_QUEUE_FULL: "task queue is full",
+    ErrorCode.TENANT_NOT_FOUND: "tenant not found",
+    ErrorCode.USER_NOT_FOUND: "user not found",
+    ErrorCode.TENANT_ALREADY_EXISTS: "tenant already exists",
     ErrorCode.AGENT_TIMEOUT: "agent execution timeout",
     ErrorCode.AGENT_FAILED: "agent execution failed",
     ErrorCode.TOKEN_LIMIT_EXCEEDED: "token limit exceeded",
