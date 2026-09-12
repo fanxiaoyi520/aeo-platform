@@ -7,7 +7,7 @@ from sqlalchemy import engine_from_config, pool
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from aeo_api.db.models import Base  # noqa: E402
+from aeo_api.db.base import Base  # noqa: E402
 
 config = context.config
 

@@ -8,15 +8,13 @@ import structlog
 from sqlalchemy import JSON, DateTime, Index, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 
 from aeo_api.config import get_settings
+from aeo_api.db.base import Base
+from aeo_api.db.tenant_models import TenantMixin
 
 logger = structlog.get_logger(__name__)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 class TaskStatus(StrEnum):
@@ -27,7 +25,7 @@ class TaskStatus(StrEnum):
     FAILED = "failed"
 
 
-class Task(Base):
+class Task(TenantMixin, Base):
     __tablename__ = "tasks"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -83,7 +81,7 @@ class AuditLog(Base):
     __table_args__ = (Index("idx_audit_logs_task_id", "task_id"),)
 
 
-class KnowledgeDocument(Base):
+class KnowledgeDocument(TenantMixin, Base):
     __tablename__ = "knowledge_documents"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
