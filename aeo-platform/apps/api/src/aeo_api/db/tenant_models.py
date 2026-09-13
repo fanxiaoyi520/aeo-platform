@@ -8,7 +8,7 @@ from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, func
 from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
-from aeo_api.db.models import Base
+from aeo_api.db.base import Base
 
 SYSTEM_TENANT_ID = "00000000-0000-0000-0000-000000000000"
 
@@ -50,8 +50,18 @@ class User(Base):
 
 
 class TenantMixin:
-    """Declarative mixin that adds tenant_id column to business models."""
+    """Declarative mixin that adds tenant_id column to business models.
+
+    The default reads from the current_tenant_id context var (set by AuthMiddleware),
+    so INSERT automatically fills tenant_id without explicit code.
+    """
 
     tenant_id: Mapped[str] = mapped_column(
-        String(64), nullable=False, index=True, default=SYSTEM_TENANT_ID
+        String(64), nullable=False, index=True, default=lambda: _get_tenant_id()
     )
+
+
+def _get_tenant_id() -> str:
+    from aeo_api.auth.context import current_tenant_id
+
+    return current_tenant_id.get() or SYSTEM_TENANT_ID

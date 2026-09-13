@@ -8,15 +8,13 @@ import structlog
 from sqlalchemy import JSON, DateTime, Index, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 
 from aeo_api.config import get_settings
+from aeo_api.db.base import Base
+from aeo_api.db.tenant_models import TenantMixin
 
 logger = structlog.get_logger(__name__)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 class TaskStatus(StrEnum):
@@ -27,7 +25,7 @@ class TaskStatus(StrEnum):
     FAILED = "failed"
 
 
-class Task(Base):
+class Task(TenantMixin, Base):
     __tablename__ = "tasks"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -70,7 +68,7 @@ class ListingVersion(Base):
     __table_args__ = (Index("idx_listing_versions_task_id", "task_id"),)
 
 
-class AuditLog(Base):
+class AuditLog(TenantMixin, Base):
     __tablename__ = "audit_logs"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -83,7 +81,7 @@ class AuditLog(Base):
     __table_args__ = (Index("idx_audit_logs_task_id", "task_id"),)
 
 
-class KnowledgeDocument(Base):
+class KnowledgeDocument(TenantMixin, Base):
     __tablename__ = "knowledge_documents"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -156,7 +154,7 @@ class AdSpendSnapshot(Base):
     __table_args__ = (Index("idx_ad_spend_campaign_date", "campaign_id", "snapshot_date"),)
 
 
-class CompetitorListing(Base):
+class CompetitorListing(TenantMixin, Base):
     """MV2-01 — competitor product listing in the selection pool."""
 
     __tablename__ = "competitor_listings"
@@ -186,7 +184,7 @@ class CompetitorListing(Base):
     )
 
 
-class SelectionScore(Base):
+class SelectionScore(TenantMixin, Base):
     """MV2-01 — product selection scoring record."""
 
     __tablename__ = "selection_scores"
@@ -211,7 +209,7 @@ class SelectionScore(Base):
     )
 
 
-class IntelligenceSchedule(Base):
+class IntelligenceSchedule(TenantMixin, Base):
     """MV2-03 — cron schedule for periodic market intelligence scans."""
 
     __tablename__ = "intelligence_schedules"

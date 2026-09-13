@@ -11,6 +11,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.db.models import IntelligenceSchedule, get_db_session
+from aeo_api.db.tenant_scoping import apply_tenant_filter, get_current_tenant
 from aeo_api.schemas.intelligence import (
     CreateScheduleRequest,
     ScanRequest,
@@ -70,7 +71,7 @@ async def list_schedules(
     query = (
         select(IntelligenceSchedule).order_by(IntelligenceSchedule.created_at.desc()).limit(limit)
     )
-    result = await session.execute(query)
+    result = await session.execute(apply_tenant_filter(query))
     rows = result.scalars().all()
     items = [
         ScheduleResponse(
@@ -148,7 +149,7 @@ async def delete_schedule(
         select(IntelligenceSchedule).where(IntelligenceSchedule.job_id == job_id)
     )
     row = result.scalar_one_or_none()
-    if not row:
+    if not row or row.tenant_id != get_current_tenant():
         raise HTTPException(status_code=404, detail=f"Schedule not found: {job_id}")
     await session.delete(row)
     await session.commit()

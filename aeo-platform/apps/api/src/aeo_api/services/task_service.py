@@ -21,6 +21,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.db.models import AuditLog, ListingVersion, Task, TaskStatus
+from aeo_api.db.tenant_scoping import apply_tenant_filter, get_current_tenant
 
 logger = structlog.get_logger(__name__)
 
@@ -90,6 +91,8 @@ class TaskService:
         task_uuid = uuid.UUID(task_id)
         task = await session.get(Task, task_uuid)
         if task is None:
+            raise TaskNotFoundError(task_id)
+        if task.tenant_id != get_current_tenant():
             raise TaskNotFoundError(task_id)
         return task
 
@@ -189,12 +192,13 @@ class TaskService:
         page_size = min(max(page_size, 1), 100)
         offset = (page - 1) * page_size
 
-        total_result = await session.execute(select(func.count()).select_from(Task))
+        total_result = await session.execute(
+            select(func.count()).select_from(apply_tenant_filter(select(Task)).subquery())
+        )
         total = int(total_result.scalar_one())
 
-        result = await session.execute(
-            select(Task).order_by(Task.created_at.desc()).offset(offset).limit(page_size)
-        )
+        stmt = select(Task).order_by(Task.created_at.desc()).offset(offset).limit(page_size)
+        result = await session.execute(apply_tenant_filter(stmt))
         items = [_serialize_task(task) for task in result.scalars().all()]
         return {"items": items, "total": total, "page": page, "page_size": page_size}
 
