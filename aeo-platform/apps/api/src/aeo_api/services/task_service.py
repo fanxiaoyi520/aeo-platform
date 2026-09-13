@@ -20,6 +20,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from aeo_api.auth.quota_service import check_task_quota, increment_task_usage
 from aeo_api.db.models import AuditLog, ListingVersion, Task, TaskStatus
 from aeo_api.db.tenant_scoping import apply_tenant_filter, get_current_tenant
 
@@ -32,6 +33,13 @@ class TaskNotFoundError(Exception):
 
 class TaskStateError(Exception):
     pass
+
+
+class QuotaExceededError(Exception):
+    def __init__(self, used: int, limit: int | None) -> None:
+        self.used = used
+        self.limit = limit
+        super().__init__(f"Task quota exceeded: {used}/{limit}")
 
 
 def _serialize_task(
@@ -121,9 +129,18 @@ class TaskService:
     async def create_task(
         self, session: AsyncSession, *, payload: dict[str, Any]
     ) -> dict[str, Any]:
+        from uuid import UUID
+
+        from aeo_api.auth.tenant_service import get_tenant
         from aeo_api.db.models import async_session_factory
 
         self._ensure_listing_saver(async_session_factory)
+
+        tenant_id = get_current_tenant()
+        tenant = await get_tenant(session, UUID(tenant_id))
+        allowed, used, limit = await check_task_quota(tenant_id, tenant.plan)
+        if not allowed:
+            raise QuotaExceededError(used, limit)
 
         task_id = uuid.uuid4()
         task = Task(
@@ -138,6 +155,7 @@ class TaskService:
         session.add(task)
         await session.commit()
         await session.refresh(task)
+        await increment_task_usage(tenant_id)
 
         state = initial_state(
             task_id=str(task.id),
