@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from aeo_api.auth.quota_service import check_task_quota, get_plan_quota
 from aeo_api.auth.rbac import CurrentRole, CurrentTenant, CurrentUser
 from aeo_api.auth.tenant_service import (
     TenantServiceError,
@@ -163,3 +164,30 @@ async def deactivate_member_endpoint(
         err = error_response(ErrorCode.VALIDATION_ERROR, request.state.request_id, exc.message)
         return JSONResponse(status_code=exc.status_code, content=err.model_dump())
     return _ok(request, {"deactivated": user_id})
+
+
+@router.get("/me/quota")
+async def get_quota_usage(
+    request: Request,
+    tenant_id: CurrentTenant,
+    session: DbSession,
+) -> dict[str, Any]:
+    tenant = await get_tenant(session, UUID(tenant_id))
+    quota = get_plan_quota(tenant.plan)
+    allowed, used, limit = await check_task_quota(tenant_id, tenant.plan)
+    return _ok(
+        request,
+        {
+            "plan": tenant.plan,
+            "description": quota.description,
+            "tasks": {
+                "used": used,
+                "limit": limit,
+                "remaining": (limit - used) if limit is not None else None,
+                "exceeded": not allowed,
+            },
+            "users": {
+                "limit": quota.max_users,
+            },
+        },
+    )

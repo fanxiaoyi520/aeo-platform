@@ -16,7 +16,12 @@ from aeo_api.schemas.tasks import (
     TaskResponse,
 )
 from aeo_api.services.task_events import stream_task_events
-from aeo_api.services.task_service import TaskNotFoundError, TaskService, TaskStateError
+from aeo_api.services.task_service import (
+    QuotaExceededError,
+    TaskNotFoundError,
+    TaskService,
+    TaskStateError,
+)
 from aeo_api.sse import format_sse
 
 router = APIRouter(prefix="/api/v1/tasks", tags=["tasks"])
@@ -33,13 +38,25 @@ def _ok(request: Request, data: dict[str, Any]) -> dict[str, Any]:
     return success_response(data, request.state.request_id).model_dump()
 
 
-@router.post("")
+@router.post("", response_model=None)
 async def create_task(
     request: Request,
     body: CreateTaskRequest,
     session: DbSession,
-) -> dict[str, Any]:
-    data = await _service.create_task(session, payload=body.model_dump())
+) -> dict[str, Any] | JSONResponse:
+    try:
+        data = await _service.create_task(session, payload=body.model_dump())
+    except QuotaExceededError as exc:
+        body_resp = error_response(
+            ErrorCode.RATE_LIMITED,
+            request.state.request_id,
+            f"Task quota exceeded: {exc.used}/{exc.limit}",
+        )
+        return JSONResponse(
+            status_code=429,
+            content=body_resp.model_dump(),
+            headers={"Retry-After": "2592000"},
+        )
     return _ok(request, TaskResponse(**data).model_dump())
 
 
