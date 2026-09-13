@@ -36,6 +36,7 @@ from aeo_api.routers import (
     selection,
     support,
     tasks,
+    tenants,
 )
 
 logger = structlog.get_logger(__name__)
@@ -99,6 +100,7 @@ def create_app() -> FastAPI:
     app.include_router(analytics.router)
     app.include_router(business_metrics.router)
     app.include_router(dtc.router)
+    app.include_router(tenants.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
