@@ -105,7 +105,7 @@ async def list_tenant_members(
     return _ok(request, {"items": items, "total": len(items)})
 
 
-@router.post("/me/users")
+@router.post("/me/users", response_model=None)
 async def invite_tenant_member(
     request: Request,
     tenant_id: CurrentTenant,
@@ -128,7 +128,7 @@ async def invite_tenant_member(
     return _ok(request, _member_response(user).model_dump())
 
 
-@router.patch("/me/users/{user_id}")
+@router.patch("/me/users/{user_id}", response_model=None)
 async def update_member(
     request: Request,
     user_id: str,
@@ -146,7 +146,7 @@ async def update_member(
     return _ok(request, _member_response(user).model_dump())
 
 
-@router.delete("/me/users/{user_id}")
+@router.delete("/me/users/{user_id}", response_model=None)
 async def deactivate_member_endpoint(
     request: Request,
     user_id: str,
