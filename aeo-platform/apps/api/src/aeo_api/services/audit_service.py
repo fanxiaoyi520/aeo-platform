@@ -8,6 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.db.models import AuditLog
+from aeo_api.db.tenant_scoping import apply_tenant_filter
 
 HITL_ACTIONS: tuple[str, ...] = ("hitl_approve", "hitl_reject")
 
@@ -34,7 +35,7 @@ class AuditService:
         query = select(AuditLog).order_by(AuditLog.created_at.desc()).limit(min(limit, 100))
         if actions:
             query = query.where(AuditLog.action.in_(actions))
-        result = await session.execute(query)
+        result = await session.execute(apply_tenant_filter(query))
         return [_serialize_audit_log(entry) for entry in result.scalars().all()]
 
     async def record(
@@ -69,7 +70,7 @@ class AuditService:
             .order_by(AuditLog.created_at.desc())
             .limit(min(limit, 100))
         )
-        result = await session.execute(query)
+        result = await session.execute(apply_tenant_filter(query))
         entries = result.scalars().all()
 
         if evaluated_action:

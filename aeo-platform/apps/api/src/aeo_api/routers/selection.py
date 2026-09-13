@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.db.models import CompetitorListing, SelectionScore, get_db_session
+from aeo_api.db.tenant_scoping import apply_tenant_filter
 from aeo_api.schemas.selection import (
     AddCompetitorRequest,
     CompetitorListingResponse,
@@ -33,7 +34,7 @@ async def list_competitors(
     query = select(CompetitorListing).order_by(CompetitorListing.created_at.desc()).limit(limit)
     if sku:
         query = query.where(CompetitorListing.sku == sku)
-    result = await session.execute(query)
+    result = await session.execute(apply_tenant_filter(query))
     rows = result.scalars().all()
     items = [
         CompetitorListingResponse(
@@ -177,7 +178,7 @@ async def list_scores(
     query = select(SelectionScore).order_by(SelectionScore.scored_at.desc()).limit(limit)
     if sku:
         query = query.where(SelectionScore.sku == sku)
-    result = await session.execute(query)
+    result = await session.execute(apply_tenant_filter(query))
     rows = result.scalars().all()
     items = [
         SelectionScoreResponse(

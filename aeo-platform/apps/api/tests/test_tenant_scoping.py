@@ -120,6 +120,50 @@ def test_apply_tenant_filter_adds_where_for_tenant() -> None:
 
 
 def test_has_tenant_column_false_for_plain_model() -> None:
+    from aeo_api.db.models import TaskCheckpoint
+
+    assert has_tenant_column(TaskCheckpoint) is False
+
+
+def test_audit_log_has_tenant_column() -> None:
     from aeo_api.db.models import AuditLog
 
-    assert has_tenant_column(AuditLog) is False
+    assert has_tenant_column(AuditLog)
+    assert issubclass(AuditLog, TenantMixin)
+
+
+def test_competitor_listing_has_tenant_column() -> None:
+    from aeo_api.db.models import CompetitorListing
+
+    assert has_tenant_column(CompetitorListing)
+    assert issubclass(CompetitorListing, TenantMixin)
+
+
+def test_selection_score_has_tenant_column() -> None:
+    from aeo_api.db.models import SelectionScore
+
+    assert has_tenant_column(SelectionScore)
+    assert issubclass(SelectionScore, TenantMixin)
+
+
+def test_intelligence_schedule_has_tenant_column() -> None:
+    from aeo_api.db.models import IntelligenceSchedule
+
+    assert has_tenant_column(IntelligenceSchedule)
+    assert issubclass(IntelligenceSchedule, TenantMixin)
+
+
+def test_apply_tenant_filter_on_audit_log() -> None:
+    from aeo_api.db.models import AuditLog
+    from sqlalchemy import select
+
+    tid = str(uuid4())
+    token = current_tenant_id.set(tid)
+    try:
+        stmt = select(AuditLog)
+        filtered = apply_tenant_filter(stmt)
+        compiled = str(filtered.compile(compile_kwargs={"literal_binds": True}))
+        assert "tenant_id" in compiled
+        assert tid in compiled
+    finally:
+        current_tenant_id.reset(token)

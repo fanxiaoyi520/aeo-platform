@@ -68,7 +68,7 @@ class ListingVersion(Base):
     __table_args__ = (Index("idx_listing_versions_task_id", "task_id"),)
 
 
-class AuditLog(Base):
+class AuditLog(TenantMixin, Base):
     __tablename__ = "audit_logs"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -154,7 +154,7 @@ class AdSpendSnapshot(Base):
     __table_args__ = (Index("idx_ad_spend_campaign_date", "campaign_id", "snapshot_date"),)
 
 
-class CompetitorListing(Base):
+class CompetitorListing(TenantMixin, Base):
     """MV2-01 — competitor product listing in the selection pool."""
 
     __tablename__ = "competitor_listings"
@@ -184,7 +184,7 @@ class CompetitorListing(Base):
     )
 
 
-class SelectionScore(Base):
+class SelectionScore(TenantMixin, Base):
     """MV2-01 — product selection scoring record."""
 
     __tablename__ = "selection_scores"
@@ -209,7 +209,7 @@ class SelectionScore(Base):
     )
 
 
-class IntelligenceSchedule(Base):
+class IntelligenceSchedule(TenantMixin, Base):
     """MV2-03 — cron schedule for periodic market intelligence scans."""
 
     __tablename__ = "intelligence_schedules"
