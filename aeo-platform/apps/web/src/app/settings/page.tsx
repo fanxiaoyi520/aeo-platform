@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { useAuth } from "@/contexts/auth-context";
 import type { TenantInfo, TenantQuota } from "@/lib/types";
 
 type TenantMember = {
@@ -14,14 +15,8 @@ type TenantMember = {
   created_at: string;
 };
 
-const ROLE_LABELS: Record<string, string> = {
-  owner: "拥有者",
-  admin: "管理员",
-  member: "成员",
-  viewer: "观察者",
-};
-
 export default function SettingsPage() {
+  const { user } = useAuth();
   const [tenant, setTenant] = useState<TenantInfo | null>(null);
   const [quota, setQuota] = useState<TenantQuota | null>(null);
   const [members, setMembers] = useState<TenantMember[]>([]);
@@ -107,6 +102,105 @@ export default function SettingsPage() {
       setSaveError("网络错误，请重试");
     } finally {
       setSaving(false);
+    }
+  }
+
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("member");
+  const [inviting, setInviting] = useState(false);
+  const [memberError, setMemberError] = useState("");
+  const [memberSuccess, setMemberSuccess] = useState("");
+  const [actingId, setActingId] = useState("");
+
+  async function loadMembers() {
+    try {
+      const res = await fetch("/api/tenant/members");
+      if (res.ok) {
+        const json = await res.json();
+        setMembers(json.data.items);
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function handleInvite(e: React.FormEvent) {
+    e.preventDefault();
+    const email = inviteEmail.trim();
+    if (!email) {
+      setMemberError("邮箱不能为空");
+      return;
+    }
+    setInviting(true);
+    setMemberError("");
+    try {
+      const res = await fetch("/api/tenant/members", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role: inviteRole }),
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        setMemberError(json.error || "邀请失败");
+        return;
+      }
+      setShowInvite(false);
+      setInviteEmail("");
+      setInviteRole("member");
+      setMemberSuccess("邀请成功");
+      setTimeout(() => setMemberSuccess(""), 3000);
+      await loadMembers();
+    } catch {
+      setMemberError("网络错误，请重试");
+    } finally {
+      setInviting(false);
+    }
+  }
+
+  async function handleRoleChange(memberId: string, newRole: string) {
+    setActingId(memberId);
+    setMemberError("");
+    try {
+      const res = await fetch(`/api/tenant/members/${encodeURIComponent(memberId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: newRole }),
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        setMemberError(json.error || "修改角色失败");
+        return;
+      }
+      setMemberSuccess("角色已更新");
+      setTimeout(() => setMemberSuccess(""), 3000);
+      await loadMembers();
+    } catch {
+      setMemberError("网络错误，请重试");
+    } finally {
+      setActingId("");
+    }
+  }
+
+  async function handleDeactivate(memberId: string) {
+    setActingId(memberId);
+    setMemberError("");
+    try {
+      const res = await fetch(`/api/tenant/members/${encodeURIComponent(memberId)}`, {
+        method: "DELETE",
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        setMemberError(json.error || "停用失败");
+        return;
+      }
+      setMemberSuccess("成员已停用");
+      setTimeout(() => setMemberSuccess(""), 3000);
+      await loadMembers();
+    } catch {
+      setMemberError("网络错误，请重试");
+    } finally {
+      setActingId("");
     }
   }
 
@@ -244,26 +338,128 @@ export default function SettingsPage() {
           </section>
         )}
 
-        {members.length > 0 && (
-          <section className="card space-y-3">
+        <section className="card space-y-3">
+          <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">团队成员</h3>
+            {!showInvite && (
+              <button
+                type="button"
+                onClick={() => { setShowInvite(true); setMemberError(""); }}
+                className="rounded-md px-3 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-900/20 transition"
+              >
+                邀请成员
+              </button>
+            )}
+          </div>
+
+          {memberSuccess && (
+            <p className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-xs text-green-700 dark:text-green-400">
+              {memberSuccess}
+            </p>
+          )}
+          {memberError && (
+            <p className="rounded-md bg-red-50 dark:bg-red-900/20 px-3 py-2 text-xs text-red-700 dark:text-red-400">
+              {memberError}
+            </p>
+          )}
+
+          {showInvite && (
+            <form onSubmit={handleInvite} className="space-y-3 rounded-md border border-slate-200 dark:border-slate-700 p-3">
+              <div>
+                <label htmlFor="invite-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  邮箱
+                </label>
+                <input
+                  id="invite-email"
+                  type="email"
+                  required
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  autoFocus
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  placeholder="colleague@example.com"
+                />
+              </div>
+              <div>
+                <label htmlFor="invite-role" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  角色
+                </label>
+                <select
+                  id="invite-role"
+                  value={inviteRole}
+                  onChange={(e) => setInviteRole(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                >
+                  <option value="admin">管理员</option>
+                  <option value="member">成员</option>
+                  <option value="viewer">观察者</option>
+                </select>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={inviting}
+                  className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700 disabled:opacity-50 transition"
+                >
+                  {inviting ? "发送中..." : "发送邀请"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowInvite(false); setMemberError(""); }}
+                  disabled={inviting}
+                  className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 transition"
+                >
+                  取消
+                </button>
+              </div>
+            </form>
+          )}
+
+          {members.length > 0 ? (
             <div className="divide-y">
-              {members.map((m) => (
-                <div key={m.id} className="flex items-center justify-between py-2 text-sm">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">
-                      {m.display_name || m.email}
-                    </p>
-                    <p className="truncate text-xs text-[var(--muted)]">{m.email}</p>
+              {members.map((m) => {
+                const isSelf = user?.id === m.id;
+                return (
+                  <div key={m.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">
+                        {m.display_name || m.email}
+                        {isSelf && <span className="ml-1 text-xs text-[var(--muted)]">(我)</span>}
+                      </p>
+                      <p className="truncate text-xs text-[var(--muted)]">{m.email}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={m.role}
+                        onChange={(e) => void handleRoleChange(m.id, e.target.value)}
+                        disabled={actingId === m.id}
+                        className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-800 px-2 py-1 text-xs focus:border-brand-500 focus:outline-none disabled:opacity-50"
+                      >
+                        <option value="owner">拥有者</option>
+                        <option value="admin">管理员</option>
+                        <option value="member">成员</option>
+                        <option value="viewer">观察者</option>
+                      </select>
+                      {!isSelf && (
+                        <button
+                          type="button"
+                          onClick={() => void handleDeactivate(m.id)}
+                          disabled={actingId === m.id}
+                          className="rounded-md px-2 py-1 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50 transition"
+                          title="停用成员"
+                        >
+                          停用
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <span className="ml-4 rounded bg-slate-100 px-2 py-0.5 text-xs dark:bg-slate-800">
-                    {ROLE_LABELS[m.role] ?? m.role}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
-          </section>
-        )}
+          ) : (
+            <p className="text-sm text-[var(--muted)]">暂无成员</p>
+          )}
+        </section>
 
         <section className="card space-y-3">
           <h3 className="text-lg font-semibold">系统信息</h3>

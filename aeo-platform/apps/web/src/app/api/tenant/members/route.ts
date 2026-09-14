@@ -32,3 +32,23 @@ export async function GET() {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const token = getAccessToken();
+    const body = (await request.json()) as {
+      email: string;
+      display_name?: string;
+      role?: string;
+    };
+    const data = await backendFetch<TenantMember>("/api/v1/tenants/me/users", {
+      method: "POST",
+      body,
+      accessToken: token,
+    });
+    return NextResponse.json({ data });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to invite member";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

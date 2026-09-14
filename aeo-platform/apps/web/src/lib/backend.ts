@@ -3,7 +3,7 @@ const AUTH_API_KEY = process.env.AUTH_API_KEY ?? "dev-api-key-change-in-producti
 const API_TIMEOUT_MS = Number(process.env.API_TIMEOUT_MS ?? "15000");
 
 type FetchOptions = {
-  method?: "GET" | "POST" | "PATCH";
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   timeoutMs?: number;
   accessToken?: string;
