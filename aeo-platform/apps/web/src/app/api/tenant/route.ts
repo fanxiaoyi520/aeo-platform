@@ -18,3 +18,19 @@ export async function GET() {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const token = getAccessToken();
+    const body = (await request.json()) as { name?: string; settings?: Record<string, unknown> };
+    const data = await backendFetch<TenantInfo>("/api/v1/tenants/me", {
+      method: "PATCH",
+      body,
+      accessToken: token,
+    });
+    return NextResponse.json({ data });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to update tenant";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
