@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-14
-**当前阶段：** **Phase 6 计费与数据迁移** → 已批准，P6-MS1 计费基础开工
-**下一任务：** P6-01 Stripe SDK 集成
-**Git：** `main`
+**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅
+**下一任务：** P6-MS3 Amazon 真实数据（待用户提供卖家号凭据）
+**Git：** `feat/p6-01-stripe-integration`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
@@ -381,3 +381,16 @@
 | 2026-09-10 | **用户批准 MS4**：里程碑 `completed`；M04 关闭；MV3-05 解除阻塞 |
 | 2026-09-10 | **MV3-05** Seller Central 只读巡检；`inspect_seller_central()` + `build_degraded_inspection()` + operations_node 集成；lint/type 修复；test **901/901** |
 | 2026-09-10 | **MV3-09** MV3 生产验收；7 项验收测试 + `batch_mv3_pilot.py` + `mv3_acceptance_report.py`（overall_accepted: true）；test **908/908**，coverage **89.64%**；**MV3 里程碑全部完成** |
+| 2026-09-13 | **Phase 5 启动** — 多租户 SaaS 化 |
+| 2026-09-13 | **P5-01~06** 多租户核心；Tenant/User 模型 + JWT 认证 + RBAC + 租户隔离 + 邀请成员 API |
+| 2026-09-13 | **P5-07~08** 租户管理 + 配额；`TenantService` + `quota_service`（free/pro/enterprise）+ 成员管理 API |
+| 2026-09-13 | **P5-09~10** 多租户验收 + 前端登录；test **950+/950+**；登录/注册/租户切换 UI |
+| 2026-09-14 | **P5-11** 成员管理页；设置页团队成员列表 + 角色管理 + 停用功能 |
+| 2026-09-14 | **Phase 5 完成** — 多租户 SaaS 化里程碑全部完成 |
+| 2026-09-14 | **Phase 6 启动** — 计费集成与真实数据迁移 |
+| 2026-09-14 | **P6-01** Stripe SDK 集成；`stripe` 依赖 + `BillingSettings` + `init_stripe()` + 连通性验证 |
+| 2026-09-14 | **P6-02~06** 计费后端完整实现；Subscription/Invoice/BillingEvent 模型 + 迁移 0008/0009 + Webhook 端点 + 计费 API 路由 |
+| 2026-09-14 | **P6-07** Plan 定义表；`plans` 表 + 迁移 0010 + `quota_service` DB-first 重写 |
+| 2026-09-14 | **P6-08** max_users 配额执行；`invite_member` 检查成员上限 + 403 返回 + 6 项测试 |
+| 2026-09-14 | **P6-09** P6-MS1 验收；16 项集成测试 + webhook 模拟 + plan 同步验证；test **439/439**，coverage **79%**；**P6-MS1 ✅** |
+| 2026-09-14 | **P6-10~13** 计费前端完整实现；定价页 + 订阅管理 + 发票历史 + 配额超限 UX；**P6-MS2 ✅** |
