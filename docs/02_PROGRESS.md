@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-14
-**当前阶段：** **Phase 5 多租户 SaaS** → P5-09 PR #60 已提交，待 CI + merge
-**下一任务：** P5-09 merge 后用户指定
-**Git：** `feat/p5-09-frontend-tenant`（PR #60 → main）
+**当前阶段：** **Phase 5 多租户 SaaS** → P5-10 租户设置编辑开发中
+**下一任务：** P5-11 成员管理
+**Git：** `feat/p5-10-tenant-settings-edit`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---

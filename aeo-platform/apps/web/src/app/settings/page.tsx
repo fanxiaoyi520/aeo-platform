@@ -28,6 +28,12 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
   useEffect(() => {
     async function load() {
       try {
@@ -58,6 +64,52 @@ export default function SettingsPage() {
     void load();
   }, []);
 
+  function startEdit() {
+    if (!tenant) return;
+    setEditName(tenant.name);
+    setSaveError("");
+    setSaveSuccess(false);
+    setEditing(true);
+  }
+
+  function cancelEdit() {
+    setEditing(false);
+    setSaveError("");
+    setSaveSuccess(false);
+  }
+
+  async function saveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!tenant) return;
+    const trimmed = editName.trim();
+    if (!trimmed) {
+      setSaveError("团队名称不能为空");
+      return;
+    }
+    setSaving(true);
+    setSaveError("");
+    try {
+      const res = await fetch("/api/tenant", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmed }),
+      });
+      const json = (await res.json()) as { data?: TenantInfo; error?: string };
+      if (!res.ok) {
+        setSaveError(json.error || "保存失败");
+        return;
+      }
+      setTenant(json.data ?? { ...tenant, name: trimmed });
+      setEditing(false);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch {
+      setSaveError("网络错误，请重试");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (loading) {
     return (
       <AppShell title="设置" description="租户信息与系统配置">
@@ -79,33 +131,89 @@ export default function SettingsPage() {
       <div className="space-y-8">
         {tenant && (
           <section className="card space-y-3">
-            <h3 className="text-lg font-semibold">租户信息</h3>
-            <div className="grid gap-3 text-sm">
-              <div className="flex justify-between gap-4">
-                <span className="text-[var(--muted)]">团队名称</span>
-                <span>{tenant.name}</span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-[var(--muted)]">标识</span>
-                <span className="font-mono text-xs">{tenant.slug}</span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-[var(--muted)]">套餐</span>
-                <span className="rounded bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-900/20 dark:text-brand-300">
-                  {tenant.plan}
-                </span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-[var(--muted)]">状态</span>
-                <span className={tenant.is_active ? "text-green-600" : "text-red-600"}>
-                  {tenant.is_active ? "活跃" : "停用"}
-                </span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-[var(--muted)]">创建时间</span>
-                <span>{new Date(tenant.created_at).toLocaleDateString("zh-CN")}</span>
-              </div>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">租户信息</h3>
+              {!editing && (
+                <button
+                  type="button"
+                  onClick={startEdit}
+                  className="rounded-md px-3 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-900/20 transition"
+                >
+                  编辑
+                </button>
+              )}
             </div>
+
+            {saveSuccess && !editing && (
+              <p className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-xs text-green-700 dark:text-green-400">
+                保存成功
+              </p>
+            )}
+
+            {editing ? (
+              <form onSubmit={saveEdit} className="space-y-3">
+                <div>
+                  <label htmlFor="tenant-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    团队名称
+                  </label>
+                  <input
+                    id="tenant-name"
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    autoFocus
+                    className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  />
+                </div>
+                {saveError && (
+                  <p className="text-xs text-red-600">{saveError}</p>
+                )}
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700 disabled:opacity-50 transition"
+                  >
+                    {saving ? "保存中..." : "保存"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    disabled={saving}
+                    className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 transition"
+                  >
+                    取消
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="grid gap-3 text-sm">
+                <div className="flex justify-between gap-4">
+                  <span className="text-[var(--muted)]">团队名称</span>
+                  <span>{tenant.name}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-[var(--muted)]">标识</span>
+                  <span className="font-mono text-xs">{tenant.slug}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-[var(--muted)]">套餐</span>
+                  <span className="rounded bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-900/20 dark:text-brand-300">
+                    {tenant.plan}
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-[var(--muted)]">状态</span>
+                  <span className={tenant.is_active ? "text-green-600" : "text-red-600"}>
+                    {tenant.is_active ? "活跃" : "停用"}
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-[var(--muted)]">创建时间</span>
+                  <span>{new Date(tenant.created_at).toLocaleDateString("zh-CN")}</span>
+                </div>
+              </div>
+            )}
           </section>
         )}
 
