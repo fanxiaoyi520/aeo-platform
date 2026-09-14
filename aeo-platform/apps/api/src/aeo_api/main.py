@@ -57,6 +57,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("starting", app=settings.app_name, env=settings.app_env, llm_model=llm.llm_model)
     py_ver = f"{sys.version_info.major}.{sys.version_info.minor}"
     SYSTEM_INFO.labels(version=app.version, python_version=py_ver).set(1)
+
+    from aeo_api.billing.client import init_stripe
+
+    init_stripe()
+
     yield
     await close_redis()
     logger.info("shutdown complete")
