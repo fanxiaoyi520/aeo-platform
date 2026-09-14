@@ -6,6 +6,7 @@ type FetchOptions = {
   method?: "GET" | "POST";
   body?: unknown;
   timeoutMs?: number;
+  accessToken?: string;
 };
 
 async function fetchWithTimeout(
@@ -41,6 +42,10 @@ async function parseApiResponse<T>(response: Response): Promise<T> {
   return payload.data;
 }
 
+function authHeader(accessToken?: string): string {
+  return `Bearer ${accessToken ?? AUTH_API_KEY}`;
+}
+
 export async function backendFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
   const timeoutMs = options.timeoutMs ?? API_TIMEOUT_MS;
   const response = await fetchWithTimeout(
@@ -49,7 +54,7 @@ export async function backendFetch<T>(path: string, options: FetchOptions = {}):
       method: options.method ?? "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${AUTH_API_KEY}`,
+        Authorization: authHeader(options.accessToken),
       },
       body: options.body ? JSON.stringify(options.body) : undefined,
       cache: "no-store",
@@ -60,13 +65,17 @@ export async function backendFetch<T>(path: string, options: FetchOptions = {}):
   return parseApiResponse<T>(response);
 }
 
-export async function backendUpload<T>(path: string, formData: FormData): Promise<T> {
+export async function backendUpload<T>(
+  path: string,
+  formData: FormData,
+  accessToken?: string,
+): Promise<T> {
   const response = await fetchWithTimeout(
     `${API_BASE_URL}${path}`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${AUTH_API_KEY}`,
+        Authorization: authHeader(accessToken),
       },
       body: formData,
       cache: "no-store",

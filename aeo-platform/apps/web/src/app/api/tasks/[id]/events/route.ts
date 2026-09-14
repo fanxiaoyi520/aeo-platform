@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { getAccessToken } from "@/lib/auth";
+
 const API_BASE_URL = process.env.API_BASE_URL ?? "http://127.0.0.1:8000";
 const AUTH_API_KEY = process.env.AUTH_API_KEY ?? "dev-api-key-change-in-production";
 
@@ -9,11 +11,12 @@ type RouteContext = {
 
 export async function GET(_request: Request, context: RouteContext) {
   const { id } = await context.params;
+  const token = getAccessToken();
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/v1/tasks/${encodeURIComponent(id)}/events`, {
       headers: {
-        Authorization: `Bearer ${AUTH_API_KEY}`,
+        Authorization: `Bearer ${token ?? AUTH_API_KEY}`,
         Accept: "text/event-stream",
       },
       cache: "no-store",

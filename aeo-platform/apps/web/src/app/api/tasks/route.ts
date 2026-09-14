@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getAccessToken } from "@/lib/auth";
 import { backendFetch } from "@/lib/backend";
 import type { CreateTaskPayload, Task, TaskList } from "@/lib/types";
 
@@ -7,11 +8,13 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
+    const token = getAccessToken();
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page") ?? "1";
     const pageSize = searchParams.get("page_size") ?? "20";
     const data = await backendFetch<TaskList>(
       `/api/v1/tasks?page=${encodeURIComponent(page)}&page_size=${encodeURIComponent(pageSize)}`,
+      { accessToken: token },
     );
     return NextResponse.json({ data });
   } catch (error) {
@@ -22,10 +25,12 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const token = getAccessToken();
     const body = (await request.json()) as CreateTaskPayload;
     const data = await backendFetch<Task>("/api/v1/tasks", {
       method: "POST",
       body,
+      accessToken: token,
     });
     return NextResponse.json({ data });
   } catch (error) {

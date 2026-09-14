@@ -178,3 +178,40 @@ export type DTCDashboardData = {
   top_products: Record<string, unknown>[];
   abandoned_carts_summary: DTCAbandonedCartsSummary;
 };
+
+export type AuthUser = {
+  id: string;
+  email: string;
+  display_name: string | null;
+  role: string;
+  tenant_id: string;
+};
+
+export type AuthSession = {
+  access_token: string;
+  refresh_token: string;
+  user: AuthUser;
+};
+
+export type TenantInfo = {
+  id: string;
+  name: string;
+  slug: string;
+  plan: string;
+  is_active: boolean;
+  created_at: string;
+};
+
+export type TenantQuota = {
+  plan: string;
+  description: string;
+  tasks: {
+    used: number;
+    limit: number | null;
+    remaining: number | null;
+    exceeded: boolean;
+  };
+  users: {
+    limit: number;
+  };
+};
