@@ -23,11 +23,13 @@ export default function NewTaskPage() {
   const [keywords, setKeywords] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    setQuotaExceeded(false);
 
     const competitorAsins = parseListInput(competitors);
     const keywordList = parseListInput(keywords);
@@ -52,10 +54,16 @@ export default function NewTaskPage() {
       });
       const body = await response.json();
       if (!response.ok) {
-        throw new Error(body.error ?? "创建任务失败");
+        if (response.status === 429) {
+          setQuotaExceeded(true);
+          setError("任务配额已用完");
+        } else {
+          throw new Error(body.error ?? "创建任务失败");
+        }
+      } else {
+        const task = body.data as Task;
+        router.push(`/tasks/${task.id}`);
       }
-      const task = body.data as Task;
-      router.push(`/tasks/${task.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "创建任务失败");
     } finally {
@@ -140,6 +148,17 @@ export default function NewTaskPage() {
         {error ? (
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
             {error}
+            {quotaExceeded && (
+              <div className="mt-2 pt-2 border-t border-red-200 dark:border-red-800">
+                <p className="text-xs">升级方案以获得更多任务配额。</p>
+                <Link
+                  href="/pricing"
+                  className="mt-1 inline-block text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+                >
+                  查看升级方案 →
+                </Link>
+              </div>
+            )}
           </div>
         ) : null}
 

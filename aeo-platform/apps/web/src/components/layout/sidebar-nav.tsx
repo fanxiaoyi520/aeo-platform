@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/tasks", label: "任务" },
   { href: "/dtc", label: "独立站" },
   { href: "/knowledge", label: "知识库" },
+  { href: "/billing/invoices", label: "发票" },
   { href: "/settings", label: "设置" },
 ];
 

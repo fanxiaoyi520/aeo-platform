@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
 import { useAuth } from "@/contexts/auth-context";
 import type { TenantInfo, TenantQuota } from "@/lib/types";
+import type { Subscription } from "@/lib/billing-types";
 
 type TenantMember = {
   id: string;
@@ -20,8 +22,10 @@ export default function SettingsPage() {
   const [tenant, setTenant] = useState<TenantInfo | null>(null);
   const [quota, setQuota] = useState<TenantQuota | null>(null);
   const [members, setMembers] = useState<TenantMember[]>([]);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [portalLoading, setPortalLoading] = useState(false);
 
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
@@ -32,10 +36,11 @@ export default function SettingsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [tenantRes, quotaRes, membersRes] = await Promise.all([
+        const [tenantRes, quotaRes, membersRes, subRes] = await Promise.all([
           fetch("/api/tenant"),
           fetch("/api/tenant/quota"),
           fetch("/api/tenant/members"),
+          fetch("/api/billing/subscription"),
         ]);
 
         if (tenantRes.ok) {
@@ -49,6 +54,13 @@ export default function SettingsPage() {
         if (membersRes.ok) {
           const json = await membersRes.json();
           setMembers(json.data.items);
+        }
+        if (subRes.ok) {
+          const json = await subRes.json();
+          const data = json.data ?? json;
+          if (data.has_subscription && data.subscription) {
+            setSubscription(data.subscription);
+          }
         }
       } catch {
         setError("加载设置失败");
@@ -71,6 +83,27 @@ export default function SettingsPage() {
     setEditing(false);
     setSaveError("");
     setSaveSuccess(false);
+  }
+
+  async function handlePortal() {
+    setPortalLoading(true);
+    try {
+      const res = await fetch("/api/billing/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        const url = json.data?.portal_url ?? json.portal_url;
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+    } finally {
+      setPortalLoading(false);
+    }
   }
 
   async function saveEdit(e: React.FormEvent) {
@@ -142,7 +175,11 @@ export default function SettingsPage() {
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) {
-        setMemberError(json.error || "邀请失败");
+        if (res.status === 403) {
+          setMemberError("MEMBER_LIMIT");
+        } else {
+          setMemberError(json.error || "邀请失败");
+        }
         return;
       }
       setShowInvite(false);
@@ -340,6 +377,82 @@ export default function SettingsPage() {
 
         <section className="card space-y-3">
           <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">订阅管理</h3>
+            <Link
+              href="/pricing"
+              className="rounded-md px-3 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-900/20 transition"
+            >
+              查看方案
+            </Link>
+          </div>
+
+          {subscription ? (
+            <div className="grid gap-3 text-sm">
+              <div className="flex justify-between gap-4">
+                <span className="text-[var(--muted)]">当前方案</span>
+                <span className="rounded bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-900/20 dark:text-brand-300">
+                  {subscription.plan}
+                </span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-[var(--muted)]">订阅状态</span>
+                <span className={
+                  subscription.status === "active"
+                    ? "text-green-600"
+                    : subscription.status === "trialing"
+                    ? "text-blue-600"
+                    : "text-yellow-600"
+                }>
+                  {subscription.status === "active" ? "活跃" :
+                   subscription.status === "trialing" ? "试用中" :
+                   subscription.status}
+                </span>
+              </div>
+              {subscription.current_period_end && (
+                <div className="flex justify-between gap-4">
+                  <span className="text-[var(--muted)]">下次续费</span>
+                  <span>{new Date(subscription.current_period_end).toLocaleDateString("zh-CN")}</span>
+                </div>
+              )}
+              {subscription.cancel_at_period_end && (
+                <p className="text-xs text-yellow-600">
+                  订阅将于当前周期结束后取消
+                </p>
+              )}
+              <div className="pt-2 flex gap-2">
+                <button
+                  type="button"
+                  onClick={handlePortal}
+                  disabled={portalLoading}
+                  className="rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700 disabled:opacity-50 transition"
+                >
+                  {portalLoading ? "跳转中..." : "管理订阅"}
+                </button>
+                <Link
+                  href="/billing/invoices"
+                  className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  查看发票
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-[var(--muted)]">
+                {tenant?.plan === "free" ? "当前使用免费版" : "暂无活跃订阅"}
+              </p>
+              <Link
+                href="/pricing"
+                className="inline-block rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition"
+              >
+                升级方案
+              </Link>
+            </div>
+          )}
+        </section>
+
+        <section className="card space-y-3">
+          <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">团队成员</h3>
             {!showInvite && (
               <button
@@ -357,10 +470,23 @@ export default function SettingsPage() {
               {memberSuccess}
             </p>
           )}
-          {memberError && (
+          {memberError && memberError !== "MEMBER_LIMIT" && (
             <p className="rounded-md bg-red-50 dark:bg-red-900/20 px-3 py-2 text-xs text-red-700 dark:text-red-400">
               {memberError}
             </p>
+          )}
+          {memberError === "MEMBER_LIMIT" && (
+            <div className="rounded-md bg-yellow-50 dark:bg-yellow-900/20 px-3 py-3">
+              <p className="text-xs text-yellow-700 dark:text-yellow-400">
+                已达到当前方案的成员上限，请升级以添加更多成员。
+              </p>
+              <Link
+                href="/pricing"
+                className="mt-2 inline-block text-xs font-medium text-brand-600 hover:underline dark:text-brand-400"
+              >
+                查看升级方案 →
+              </Link>
+            </div>
           )}
 
           {showInvite && (
