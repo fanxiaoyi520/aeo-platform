@@ -173,8 +173,8 @@ async def get_quota_usage(
     session: DbSession,
 ) -> dict[str, Any]:
     tenant = await get_tenant(session, UUID(tenant_id))
-    quota = get_plan_quota(tenant.plan)
-    allowed, used, limit = await check_task_quota(tenant_id, tenant.plan)
+    quota = await get_plan_quota(session, tenant.plan)
+    allowed, used, limit = await check_task_quota(tenant_id, tenant.plan, session)
     return _ok(
         request,
         {

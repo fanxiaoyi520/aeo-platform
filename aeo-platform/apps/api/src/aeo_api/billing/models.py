@@ -99,3 +99,32 @@ class BillingEvent(Base):
     __table_args__ = (
         Index("idx_billing_events_type", "event_type"),
     )
+
+
+class Plan(Base):
+    """Plan definition with quotas and Stripe price mapping."""
+
+    __tablename__ = "plans"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(String(32), nullable=False, unique=True)
+    display_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str] = mapped_column(String(512), nullable=False)
+    stripe_price_monthly: Mapped[str | None] = mapped_column(String(128), nullable=True, unique=True)
+    stripe_price_yearly: Mapped[str | None] = mapped_column(String(128), nullable=True, unique=True)
+    monthly_tasks: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    max_users: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    features: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    __table_args__ = (
+        Index("idx_plans_name", "name"),
+        Index("idx_plans_active", "is_active"),
+    )

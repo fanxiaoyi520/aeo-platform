@@ -1,12 +1,13 @@
-"""P5-07: Tenant admin service — manage tenant and members."""
+"""P5-07/P6-08: Tenant admin service — manage tenant and members."""
 
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from aeo_api.auth.passwords import hash_password
+from aeo_api.auth.quota_service import get_plan_quota
 from aeo_api.db.tenant_models import Tenant, User
 
 
@@ -63,6 +64,21 @@ async def invite_member(
     )
     if existing.scalar_one_or_none():
         raise TenantServiceError(f"Email '{email}' already exists in this tenant")
+
+    tenant = await get_tenant(session, tenant_id)
+    quota = await get_plan_quota(session, tenant.plan)
+    count_result = await session.execute(
+        select(func.count()).select_from(User).where(
+            User.tenant_id == tenant_id, User.is_active.is_(True)
+        )
+    )
+    active_members = count_result.scalar_one()
+    if active_members >= quota.max_users:
+        raise TenantServiceError(
+            f"Member limit reached ({active_members}/{quota.max_users}). "
+            "Upgrade your plan to add more members.",
+            status_code=403,
+        )
 
     user = User(
         tenant_id=tenant_id,
