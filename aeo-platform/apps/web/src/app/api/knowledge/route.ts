@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getAccessToken } from "@/lib/auth";
 import { backendFetch } from "@/lib/backend";
 import type { KnowledgeDocumentsResponse, KnowledgeStats } from "@/lib/types";
 
@@ -7,18 +8,22 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
+    const token = getAccessToken();
     const { searchParams } = new URL(request.url);
     if (searchParams.get("view") === "documents") {
       try {
-        const data = await backendFetch<KnowledgeDocumentsResponse>("/api/v1/knowledge/documents");
+        const data = await backendFetch<KnowledgeDocumentsResponse>("/api/v1/knowledge/documents", {
+          accessToken: token,
+        });
         return NextResponse.json({ data });
       } catch {
-        // Older API builds lack GET /documents — keep the page usable.
         return NextResponse.json({ data: { items: [], total: 0 } });
       }
     }
 
-    const data = await backendFetch<KnowledgeStats>("/api/v1/knowledge/stats");
+    const data = await backendFetch<KnowledgeStats>("/api/v1/knowledge/stats", {
+      accessToken: token,
+    });
     return NextResponse.json({ data });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to load knowledge data";
@@ -28,10 +33,12 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const token = getAccessToken();
     const body = (await request.json()) as { action?: string; query?: string; platform?: string };
     if (body.action === "reindex") {
       const data = await backendFetch("/api/v1/knowledge/reindex", {
         method: "POST",
+        accessToken: token,
       });
       return NextResponse.json({ data });
     }
@@ -44,6 +51,7 @@ export async function POST(request: Request) {
           platform: body.platform || undefined,
           top_k: 5,
         },
+        accessToken: token,
       });
       return NextResponse.json({ data });
     }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getAccessToken } from "@/lib/auth";
 import { backendFetch } from "@/lib/backend";
 import type { Task } from "@/lib/types";
 
@@ -9,6 +10,7 @@ type RouteContext = {
 
 export async function POST(request: Request, context: RouteContext) {
   const { id } = await context.params;
+  const token = getAccessToken();
   let listing: Record<string, unknown> | undefined;
   try {
     const body = (await request.json()) as { listing?: Record<string, unknown> };
@@ -21,6 +23,7 @@ export async function POST(request: Request, context: RouteContext) {
     const data = await backendFetch<Task>(`/api/v1/tasks/${encodeURIComponent(id)}/approve`, {
       method: "POST",
       body: listing ? { listing } : {},
+      accessToken: token,
     });
     return NextResponse.json({ data });
   } catch (error) {

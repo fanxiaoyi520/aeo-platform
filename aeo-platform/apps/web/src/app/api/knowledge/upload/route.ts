@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getAccessToken } from "@/lib/auth";
 import { backendUpload } from "@/lib/backend";
 import type { KnowledgeUploadResponse } from "@/lib/types";
 
@@ -7,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
+    const token = getAccessToken();
     const incoming = await request.formData();
     const file = incoming.get("file");
     if (!(file instanceof File)) {
@@ -18,7 +20,11 @@ export async function POST(request: Request) {
     formData.append("file", file);
     formData.append("category", typeof category === "string" && category ? category : "uploads");
 
-    const data = await backendUpload<KnowledgeUploadResponse>("/api/v1/knowledge/upload", formData);
+    const data = await backendUpload<KnowledgeUploadResponse>(
+      "/api/v1/knowledge/upload",
+      formData,
+      token,
+    );
     return NextResponse.json({ data });
   } catch (error) {
     const message = error instanceof Error ? error.message : "上传失败";
