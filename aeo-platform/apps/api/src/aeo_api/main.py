@@ -22,6 +22,7 @@ from aeo_api.routers import (
     analytics,
     audit,
     auth,
+    billing,
     business_metrics,
     content_templates,
     dtc,
@@ -106,6 +107,7 @@ def create_app() -> FastAPI:
     app.include_router(business_metrics.router)
     app.include_router(dtc.router)
     app.include_router(tenants.router)
+    app.include_router(billing.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
