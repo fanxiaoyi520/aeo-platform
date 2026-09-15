@@ -1,7 +1,7 @@
 """P6-05: Stripe Webhook endpoint tests."""
 
 import os
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 os.environ.setdefault("DB_URL", "postgresql+asyncpg://aeo:aeo@localhost:5432/aeo")
 os.environ.setdefault("DB_URL_SYNC", "postgresql+psycopg://aeo:aeo@localhost:5432/aeo")
@@ -14,15 +14,13 @@ os.environ.setdefault("AUTH_API_KEY", "dev-api-key-change-in-production")
 
 import pytest
 import stripe
-from fastapi import HTTPException
-from fastapi.testclient import TestClient
-
 from aeo_api.main import create_app
 from aeo_api.routers.billing import HANDLED_EVENTS, _extract_event_data
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture
-def client():
+def client() -> TestClient:
     app = create_app()
     return TestClient(app)
 
@@ -75,7 +73,7 @@ def test_webhook_invalid_signature(client: TestClient) -> None:
 def test_webhook_stripe_signature_error(client: TestClient) -> None:
     with patch(
         "aeo_api.routers.billing.verify_webhook_signature",
-        side_effect=stripe.SignatureVerificationError("Bad sig", "sig"),
+        side_effect=stripe.SignatureVerificationError("Bad sig", "sig"),  # type: ignore[no-untyped-call]
     ):
         response = client.post(
             "/api/v1/billing/webhook",

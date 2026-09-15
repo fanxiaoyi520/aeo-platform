@@ -1,6 +1,6 @@
 """P6-05/06: Stripe Webhook endpoint and billing API routes."""
 
-from typing import Any
+from typing import Annotated, Any
 from uuid import UUID
 
 import stripe
@@ -28,6 +28,8 @@ logger = structlog.get_logger(__name__)
 
 router = APIRouter(prefix="/api/v1/billing", tags=["billing"])
 
+DbSession = Annotated[AsyncSession, Depends(get_db_session)]
+
 HANDLED_EVENTS = {
     "checkout.session.completed",
     "customer.subscription.updated",
@@ -40,8 +42,8 @@ HANDLED_EVENTS = {
 @router.post("/webhook")
 async def stripe_webhook(
     request: Request,
+    session: DbSession,
     stripe_signature: str = Header(alias="Stripe-Signature"),
-    session: AsyncSession = Depends(get_db_session),
 ) -> dict[str, Any]:
     payload = await request.body()
 
@@ -49,13 +51,16 @@ async def stripe_webhook(
         event = verify_webhook_signature(payload, stripe_signature)
     except ValueError as exc:
         logger.warning("webhook.signature_invalid", error=str(exc))
-        raise HTTPException(status_code=400, detail="Invalid signature")
+        raise HTTPException(status_code=400, detail="Invalid signature") from exc
     except stripe.SignatureVerificationError as exc:
         logger.warning("webhook.signature_invalid", error=str(exc))
-        raise HTTPException(status_code=400, detail="Invalid signature")
+        raise HTTPException(status_code=400, detail="Invalid signature") from exc
     except stripe.StripeError as exc:
         logger.error("webhook.stripe_error", error=str(exc))
-        raise HTTPException(status_code=400, detail="Webhook verification failed")
+        raise HTTPException(
+            status_code=400,
+            detail="Webhook verification failed",
+        ) from exc
 
     event_id = event.id
     event_type = event.type
@@ -96,7 +101,7 @@ async def stripe_webhook(
             event_type=event_type,
             error=exc.message,
         )
-        raise HTTPException(status_code=400, detail=exc.message)
+        raise HTTPException(status_code=400, detail=exc.message) from exc
 
     await session.commit()
 
@@ -106,11 +111,13 @@ async def stripe_webhook(
 
 def _extract_event_data(event: Any) -> dict[str, Any]:
     if hasattr(event, "to_dict"):
-        return event.to_dict()
+        result: dict[str, Any] = event.to_dict()
+        return result
     if hasattr(event, "data") and hasattr(event.data, "object"):
         obj = event.data.object
         if hasattr(obj, "to_dict"):
-            return obj.to_dict()
+            result = obj.to_dict()
+            return result
         if isinstance(obj, dict):
             return obj
     return {}
@@ -152,7 +159,6 @@ async def _handle_checkout_completed(session: AsyncSession, checkout_session: An
         subscription = await sync_subscription(session, stripe_sub)
 
         if client_ref and not subscription.tenant_id:
-            from uuid import UUID
             result = await session.execute(
                 select(Tenant).where(Tenant.stripe_customer_id == customer_id)
             )
@@ -167,7 +173,9 @@ async def _handle_checkout_completed(session: AsyncSession, checkout_session: An
 
     except Exception as exc:
         logger.error("webhook.checkout_sync_failed", error=str(exc))
-        raise BillingServiceError(f"Failed to sync subscription: {exc}")
+        raise BillingServiceError(
+            f"Failed to sync subscription: {exc}",
+        ) from exc
 
 
 async def _handle_subscription_updated(session: AsyncSession, subscription_obj: Any) -> None:
@@ -181,7 +189,9 @@ async def _handle_subscription_updated(session: AsyncSession, subscription_obj: 
 
     except Exception as exc:
         logger.error("webhook.subscription_sync_failed", error=str(exc))
-        raise BillingServiceError(f"Failed to sync subscription: {exc}")
+        raise BillingServiceError(
+            f"Failed to sync subscription: {exc}",
+        ) from exc
 
 
 async def _handle_subscription_deleted(session: AsyncSession, subscription_obj: Any) -> None:
@@ -195,27 +205,41 @@ async def _handle_subscription_deleted(session: AsyncSession, subscription_obj: 
 
     except Exception as exc:
         logger.error("webhook.subscription_delete_failed", error=str(exc))
-        raise BillingServiceError(f"Failed to handle subscription deletion: {exc}")
+        raise BillingServiceError(
+            f"Failed to handle subscription deletion: {exc}",
+        ) from exc
 
 
-async def _handle_invoice_payment_succeeded(session: AsyncSession, invoice_obj: Any) -> None:
+async def _handle_invoice_payment_succeeded(
+    session: AsyncSession,
+    invoice_obj: Any,
+) -> None:
     try:
         await sync_invoice(session, invoice_obj)
     except Exception as exc:
         logger.error("webhook.invoice_sync_failed", error=str(exc))
-        raise BillingServiceError(f"Failed to sync invoice: {exc}")
+        raise BillingServiceError(
+            f"Failed to sync invoice: {exc}",
+        ) from exc
 
 
-async def _handle_invoice_payment_failed(session: AsyncSession, invoice_obj: Any) -> None:
+async def _handle_invoice_payment_failed(
+    session: AsyncSession,
+    invoice_obj: Any,
+) -> None:
     try:
         await sync_invoice(session, invoice_obj)
-        logger.warning(
-            "webhook.invoice_payment_failed",
-            invoice_id=invoice_obj.get("id") if hasattr(invoice_obj, "get") else getattr(invoice_obj, "id", None),
+        inv_id = (
+            invoice_obj.get("id")
+            if hasattr(invoice_obj, "get")
+            else getattr(invoice_obj, "id", None)
         )
+        logger.warning("webhook.invoice_payment_failed", invoice_id=inv_id)
     except Exception as exc:
         logger.error("webhook.invoice_sync_failed", error=str(exc))
-        raise BillingServiceError(f"Failed to sync invoice: {exc}")
+        raise BillingServiceError(
+            f"Failed to sync invoice: {exc}",
+        ) from exc
 
 
 class CheckoutRequest(BaseModel):
@@ -236,24 +260,25 @@ async def checkout(
     tenant_id: CurrentTenant,
     role: CurrentRole,
     body: CheckoutRequest,
-    session: AsyncSession = Depends(get_db_session),
+    session: DbSession,
 ) -> dict[str, Any]:
     _require_owner_or_admin(role)
     try:
-        result = await create_checkout_session(
-            session, UUID(tenant_id), price_id=body.price_id
-        )
+        result = await create_checkout_session(session, UUID(tenant_id), price_id=body.price_id)
         return result
     except BillingServiceError as exc:
-        raise HTTPException(status_code=exc.status_code, detail=exc.message)
+        raise HTTPException(
+            status_code=exc.status_code,
+            detail=exc.message,
+        ) from exc
 
 
 @router.post("/portal")
 async def portal(
     tenant_id: CurrentTenant,
     role: CurrentRole,
+    session: DbSession,
     body: PortalRequest | None = None,
-    session: AsyncSession = Depends(get_db_session),
 ) -> dict[str, Any]:
     _require_owner_or_admin(role)
     try:
@@ -262,14 +287,17 @@ async def portal(
         )
         return result
     except BillingServiceError as exc:
-        raise HTTPException(status_code=exc.status_code, detail=exc.message)
+        raise HTTPException(
+            status_code=exc.status_code,
+            detail=exc.message,
+        ) from exc
 
 
 @router.get("/subscription")
 async def get_subscription(
     tenant_id: CurrentTenant,
     role: CurrentRole,
-    session: AsyncSession = Depends(get_db_session),
+    session: DbSession,
 ) -> dict[str, Any]:
     _require_owner_or_admin(role)
     result = await session.execute(
@@ -280,6 +308,13 @@ async def get_subscription(
     if subscription is None:
         return {"has_subscription": False, "subscription": None}
 
+    period_start = (
+        subscription.current_period_start.isoformat() if subscription.current_period_start else None
+    )
+    period_end = (
+        subscription.current_period_end.isoformat() if subscription.current_period_end else None
+    )
+
     return {
         "has_subscription": True,
         "subscription": {
@@ -287,8 +322,8 @@ async def get_subscription(
             "stripe_subscription_id": subscription.stripe_subscription_id,
             "status": subscription.status,
             "plan": subscription.plan,
-            "current_period_start": subscription.current_period_start.isoformat() if subscription.current_period_start else None,
-            "current_period_end": subscription.current_period_end.isoformat() if subscription.current_period_end else None,
+            "current_period_start": period_start,
+            "current_period_end": period_end,
             "cancel_at_period_end": subscription.cancel_at_period_end,
         },
     }
@@ -298,7 +333,7 @@ async def get_subscription(
 async def list_invoices(
     tenant_id: CurrentTenant,
     role: CurrentRole,
-    session: AsyncSession = Depends(get_db_session),
+    session: DbSession,
 ) -> dict[str, Any]:
     _require_owner_or_admin(role)
     result = await session.execute(

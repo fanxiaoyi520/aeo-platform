@@ -1,8 +1,7 @@
 """P6-07: Plan model and quota service tests."""
 
 import os
-import uuid
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 os.environ.setdefault("DB_URL", "postgresql+asyncpg://aeo:aeo@localhost:5432/aeo")
 os.environ.setdefault("DB_URL_SYNC", "postgresql+psycopg://aeo:aeo@localhost:5432/aeo")
@@ -14,7 +13,6 @@ os.environ.setdefault("EMBED_API_KEY", "test-key")
 os.environ.setdefault("AUTH_API_KEY", "dev-api-key-change-in-production")
 
 import pytest
-
 from aeo_api.auth.quota_service import (
     FALLBACK_QUOTAS,
     PlanQuota,

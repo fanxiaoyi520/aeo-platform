@@ -1,6 +1,6 @@
 """P6-04: Billing service layer — Stripe Checkout, Portal, subscription sync."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
@@ -26,7 +26,7 @@ class BillingServiceError(Exception):
 def _ts_from_stripe(stripe_ts: int | None) -> datetime | None:
     if stripe_ts is None:
         return None
-    return datetime.fromtimestamp(stripe_ts, tz=timezone.utc)
+    return datetime.fromtimestamp(stripe_ts, tz=UTC)
 
 
 async def create_checkout_session(
@@ -125,9 +125,7 @@ async def sync_subscription(
         raise BillingServiceError("Missing subscription id")
 
     result = await session.execute(
-        select(Subscription).where(
-            Subscription.stripe_subscription_id == stripe_sub_id
-        )
+        select(Subscription).where(Subscription.stripe_subscription_id == stripe_sub_id)
     )
     subscription = result.scalar_one_or_none()
 
@@ -136,10 +134,7 @@ async def sync_subscription(
         customer_id = customer_id.get("id", "")
 
     items = sub_data.get("items", {})
-    if isinstance(items, dict):
-        data_list = items.get("data", [])
-    else:
-        data_list = []
+    data_list = items.get("data", []) if isinstance(items, dict) else []
     price_id = ""
     if data_list:
         price_obj = data_list[0].get("price", {})

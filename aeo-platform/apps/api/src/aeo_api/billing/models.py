@@ -2,6 +2,7 @@
 
 import uuid
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, func
 from sqlalchemy.dialects.postgresql import JSON, UUID
@@ -20,9 +21,7 @@ class Subscription(Base):
         UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False, index=True
     )
     stripe_customer_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
-    stripe_subscription_id: Mapped[str] = mapped_column(
-        String(128), nullable=False, unique=True
-    )
+    stripe_subscription_id: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="incomplete")
     plan: Mapped[str] = mapped_column(String(32), nullable=False, default="free")
     stripe_price_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
@@ -36,17 +35,13 @@ class Subscription(Base):
     trial_end: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     cancel_at_period_end: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     canceled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    metadata_: Mapped[dict | None] = mapped_column("metadata", JSON, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    metadata_: Mapped[dict[str, Any] | None] = mapped_column("metadata", JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    __table_args__ = (
-        Index("idx_subscriptions_tenant_status", "tenant_id", "status"),
-    )
+    __table_args__ = (Index("idx_subscriptions_tenant_status", "tenant_id", "status"),)
 
 
 class Invoice(Base):
@@ -69,16 +64,12 @@ class Invoice(Base):
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     invoice_pdf: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     hosted_invoice_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    __table_args__ = (
-        Index("idx_invoices_tenant_status", "tenant_id", "status"),
-    )
+    __table_args__ = (Index("idx_invoices_tenant_status", "tenant_id", "status"),)
 
 
 class BillingEvent(Base):
@@ -90,15 +81,11 @@ class BillingEvent(Base):
     stripe_event_id: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     event_type: Mapped[str] = mapped_column(String(128), nullable=False)
     stripe_customer_id: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
-    data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    data: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     processed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (
-        Index("idx_billing_events_type", "event_type"),
-    )
+    __table_args__ = (Index("idx_billing_events_type", "event_type"),)
 
 
 class Plan(Base):
@@ -110,16 +97,22 @@ class Plan(Base):
     name: Mapped[str] = mapped_column(String(32), nullable=False, unique=True)
     display_name: Mapped[str] = mapped_column(String(128), nullable=False)
     description: Mapped[str] = mapped_column(String(512), nullable=False)
-    stripe_price_monthly: Mapped[str | None] = mapped_column(String(128), nullable=True, unique=True)
-    stripe_price_yearly: Mapped[str | None] = mapped_column(String(128), nullable=True, unique=True)
+    stripe_price_monthly: Mapped[str | None] = mapped_column(
+        String(128),
+        nullable=True,
+        unique=True,
+    )
+    stripe_price_yearly: Mapped[str | None] = mapped_column(
+        String(128),
+        nullable=True,
+        unique=True,
+    )
     monthly_tasks: Mapped[int | None] = mapped_column(Integer, nullable=True)
     max_users: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
-    features: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    features: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )

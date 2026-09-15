@@ -2,7 +2,7 @@
 
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 os.environ.setdefault("DB_URL", "postgresql+asyncpg://aeo:aeo@localhost:5432/aeo")
 os.environ.setdefault("DB_URL_SYNC", "postgresql+psycopg://aeo:aeo@localhost:5432/aeo")
@@ -47,7 +47,7 @@ def test_subscription_model_optional_fields() -> None:
 
 
 def test_subscription_model_period_dates() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     sub = Subscription(
         tenant_id=uuid.uuid4(),
         stripe_customer_id="cus_test",
@@ -60,7 +60,7 @@ def test_subscription_model_period_dates() -> None:
 
 
 def test_subscription_model_trial_dates() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     sub = Subscription(
         tenant_id=uuid.uuid4(),
         stripe_customer_id="cus_test",
@@ -73,7 +73,7 @@ def test_subscription_model_trial_dates() -> None:
 
 
 def test_subscription_model_cancellation() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     sub = Subscription(
         tenant_id=uuid.uuid4(),
         stripe_customer_id="cus_test",
@@ -146,7 +146,7 @@ def test_invoice_model_subscription_link() -> None:
 
 
 def test_invoice_model_period_dates() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     inv = Invoice(
         tenant_id=uuid.uuid4(),
         stripe_invoice_id="in_test",
@@ -159,7 +159,7 @@ def test_invoice_model_period_dates() -> None:
 
 
 def test_invoice_model_payment() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     inv = Invoice(
         tenant_id=uuid.uuid4(),
         stripe_invoice_id="in_test",
@@ -256,7 +256,7 @@ def test_tenant_model_billing_fields() -> None:
 
 
 def test_tenant_model_trial_ends() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     tenant = Tenant(
         name="Test Tenant",
         slug="test-tenant",
@@ -284,7 +284,7 @@ def test_tenant_model_plan_still_exists() -> None:
 
 
 def test_tenant_model_all_billing_fields_together() -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     tenant = Tenant(
         name="Full Billing Tenant",
         slug="full-billing",

@@ -14,7 +14,6 @@ os.environ.setdefault("EMBED_API_KEY", "test-key")
 os.environ.setdefault("AUTH_API_KEY", "dev-api-key-change-in-production")
 
 import pytest
-
 from aeo_api.routers.billing import CheckoutRequest, PortalRequest, _require_owner_or_admin
 
 
@@ -43,6 +42,7 @@ def test_require_owner_or_admin_admin() -> None:
 
 def test_require_owner_or_admin_member_raises() -> None:
     from fastapi import HTTPException
+
     with pytest.raises(HTTPException) as exc_info:
         _require_owner_or_admin("member")
     assert exc_info.value.status_code == 403
@@ -50,6 +50,7 @@ def test_require_owner_or_admin_member_raises() -> None:
 
 def test_require_owner_or_admin_viewer_raises() -> None:
     from fastapi import HTTPException
+
     with pytest.raises(HTTPException) as exc_info:
         _require_owner_or_admin("viewer")
     assert exc_info.value.status_code == 403
@@ -57,6 +58,7 @@ def test_require_owner_or_admin_viewer_raises() -> None:
 
 def test_require_owner_or_admin_empty_raises() -> None:
     from fastapi import HTTPException
+
     with pytest.raises(HTTPException) as exc_info:
         _require_owner_or_admin("")
     assert exc_info.value.status_code == 403
@@ -252,4 +254,4 @@ async def test_checkout_service_error() -> None:
             session=mock_session,
         )
 
-    assert exc_info.value.status_code == 503
+    assert exc_info.value.status_code == 503  # type: ignore[attr-defined]

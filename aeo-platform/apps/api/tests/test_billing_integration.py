@@ -1,6 +1,7 @@
 """P6-09: P6-MS1 验收 — 计费服务集成测试 + webhook 模拟 + plan 同步验证."""
 
 import os
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
@@ -23,7 +24,7 @@ from aeo_api.db.tenant_models import Tenant
 
 
 @pytest.fixture(autouse=True)
-def mock_billing_settings():
+def mock_billing_settings() -> Any:
     with patch("aeo_api.billing.service.get_billing_settings") as mock:
         settings = MagicMock()
         settings.price_pro_monthly = "price_pro_monthly"
@@ -68,11 +69,7 @@ def _make_stripe_subscription(
         "canceled_at": None,
         "trial_start": None,
         "trial_end": None,
-        "items": {
-            "data": [
-                {"price": {"id": price_id}}
-            ]
-        },
+        "items": {"data": [{"price": {"id": price_id}}]},
     }
     sub.to_dict.return_value = sub_dict
     sub.get = lambda key, default=None: sub_dict.get(key, default)
@@ -111,7 +108,7 @@ def _make_stripe_invoice(
 def _make_mock_session(
     tenant: MagicMock | None = None,
     existing_sub: Subscription | None = None,
-    existing_invoices: list | None = None,
+    existing_invoices: list[Any] | None = None,
 ) -> AsyncMock:
     session = AsyncMock()
 

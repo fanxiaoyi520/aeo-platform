@@ -2,7 +2,7 @@
 
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 os.environ.setdefault("DB_URL", "postgresql+asyncpg://aeo:aeo@localhost:5432/aeo")
@@ -15,7 +15,6 @@ os.environ.setdefault("EMBED_API_KEY", "test-key")
 os.environ.setdefault("AUTH_API_KEY", "dev-api-key-change-in-production")
 
 import pytest
-
 from aeo_api.billing.config import BillingSettings
 from aeo_api.billing.service import (
     BillingServiceError,
@@ -36,7 +35,7 @@ def test_ts_from_stripe_none() -> None:
 def test_ts_from_stripe_valid() -> None:
     result = _ts_from_stripe(1700000000)
     assert isinstance(result, datetime)
-    assert result.tzinfo == timezone.utc
+    assert result.tzinfo == UTC
 
 
 def test_extract_plan_from_price_id_pro() -> None:
@@ -62,7 +61,12 @@ async def test_create_checkout_session_billing_disabled() -> None:
     session = AsyncMock()
     settings = BillingSettings(api_key="")
     with pytest.raises(BillingServiceError, match="Billing not configured"):
-        await create_checkout_session(session, uuid.uuid4(), price_id="price_test", settings=settings)
+        await create_checkout_session(
+            session,
+            uuid.uuid4(),
+            price_id="price_test",
+            settings=settings,
+        )
 
 
 @pytest.mark.asyncio
@@ -74,7 +78,12 @@ async def test_create_checkout_session_tenant_not_found() -> None:
 
     settings = BillingSettings(api_key="sk_test_123")
     with pytest.raises(BillingServiceError, match="Tenant not found"):
-        await create_checkout_session(session, uuid.uuid4(), price_id="price_test", settings=settings)
+        await create_checkout_session(
+            session,
+            uuid.uuid4(),
+            price_id="price_test",
+            settings=settings,
+        )
 
 
 @pytest.mark.asyncio
@@ -95,9 +104,13 @@ async def test_create_checkout_session_success() -> None:
 
     settings = BillingSettings(api_key="sk_test_123")
 
-    with patch("aeo_api.billing.service.stripe.checkout.Session.create", return_value=mock_checkout):
+    patch_path = "aeo_api.billing.service.stripe.checkout.Session.create"
+    with patch(patch_path, return_value=mock_checkout):
         result = await create_checkout_session(
-            session, tenant_id, price_id="price_pro", settings=settings
+            session,
+            tenant_id,
+            price_id="price_pro",
+            settings=settings,
         )
 
     assert result["checkout_url"] == "https://checkout.stripe.com/test"
@@ -122,8 +135,14 @@ async def test_create_checkout_session_no_customer() -> None:
 
     settings = BillingSettings(api_key="sk_test_123")
 
-    with patch("aeo_api.billing.service.stripe.checkout.Session.create", return_value=mock_checkout) as mock_create:
-        await create_checkout_session(session, tenant_id, price_id="price_pro", settings=settings)
+    patch_path = "aeo_api.billing.service.stripe.checkout.Session.create"
+    with patch(patch_path, return_value=mock_checkout) as mock_create:
+        await create_checkout_session(
+            session,
+            tenant_id,
+            price_id="price_pro",
+            settings=settings,
+        )
 
     call_kwargs = mock_create.call_args[1]
     assert "customer" not in call_kwargs

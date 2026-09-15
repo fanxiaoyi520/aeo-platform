@@ -113,16 +113,12 @@ def _make_mock_session(
     count_result.scalar_one.return_value = active_member_count
 
     email_result = MagicMock()
-    email_result.scalar_one_or_none.return_value = (
-        MagicMock() if existing_email else None
-    )
+    email_result.scalar_one_or_none.return_value = MagicMock() if existing_email else None
 
     tenant_result = MagicMock()
     tenant_result.scalar_one_or_none.return_value = tenant_mock
 
-    session.execute = AsyncMock(
-        side_effect=[email_result, tenant_result, count_result]
-    )
+    session.execute = AsyncMock(side_effect=[email_result, tenant_result, count_result])
     session.add = MagicMock()
     session.flush = AsyncMock()
     session.refresh = AsyncMock()
@@ -137,10 +133,9 @@ class TestInviteMemberQuotaEnforcement:
         tenant_id = uuid4()
         mock_quota = PlanQuota(plan="free", monthly_tasks=10, max_users=3, description="Free")
 
-        with patch("aeo_api.auth.tenant_service.get_plan_quota", new=AsyncMock(return_value=mock_quota)):
-            user = await invite_member(
-                session, tenant_id, email="new@test.com", display_name="New"
-            )
+        patch_path = "aeo_api.auth.tenant_service.get_plan_quota"
+        with patch(patch_path, new=AsyncMock(return_value=mock_quota)):
+            await invite_member(session, tenant_id, email="new@test.com", display_name="New")
 
         session.add.assert_called_once()
         session.flush.assert_called_once()
@@ -151,11 +146,12 @@ class TestInviteMemberQuotaEnforcement:
         tenant_id = uuid4()
         mock_quota = PlanQuota(plan="free", monthly_tasks=10, max_users=3, description="Free")
 
-        with patch("aeo_api.auth.tenant_service.get_plan_quota", new=AsyncMock(return_value=mock_quota)):
-            with pytest.raises(TenantServiceError) as exc_info:
-                await invite_member(
-                    session, tenant_id, email="new@test.com"
-                )
+        patch_path = "aeo_api.auth.tenant_service.get_plan_quota"
+        with (
+            patch(patch_path, new=AsyncMock(return_value=mock_quota)),
+            pytest.raises(TenantServiceError) as exc_info,
+        ):
+            await invite_member(session, tenant_id, email="new@test.com")
 
         assert exc_info.value.status_code == 403
         assert "Member limit reached" in exc_info.value.message
@@ -167,11 +163,12 @@ class TestInviteMemberQuotaEnforcement:
         tenant_id = uuid4()
         mock_quota = PlanQuota(plan="pro", monthly_tasks=100, max_users=10, description="Pro")
 
-        with patch("aeo_api.auth.tenant_service.get_plan_quota", new=AsyncMock(return_value=mock_quota)):
-            with pytest.raises(TenantServiceError) as exc_info:
-                await invite_member(
-                    session, tenant_id, email="new@test.com"
-                )
+        patch_path = "aeo_api.auth.tenant_service.get_plan_quota"
+        with (
+            patch(patch_path, new=AsyncMock(return_value=mock_quota)),
+            pytest.raises(TenantServiceError) as exc_info,
+        ):
+            await invite_member(session, tenant_id, email="new@test.com")
 
         assert exc_info.value.status_code == 403
         assert "10/10" in exc_info.value.message
@@ -197,10 +194,9 @@ class TestInviteMemberQuotaEnforcement:
             plan="enterprise", monthly_tasks=None, max_users=100, description="Enterprise"
         )
 
-        with patch("aeo_api.auth.tenant_service.get_plan_quota", new=AsyncMock(return_value=mock_quota)):
-            user = await invite_member(
-                session, tenant_id, email="new@test.com"
-            )
+        patch_path = "aeo_api.auth.tenant_service.get_plan_quota"
+        with patch(patch_path, new=AsyncMock(return_value=mock_quota)):
+            await invite_member(session, tenant_id, email="new@test.com")
 
         session.add.assert_called_once()
 
@@ -210,10 +206,11 @@ class TestInviteMemberQuotaEnforcement:
         tenant_id = uuid4()
         mock_quota = PlanQuota(plan="free", monthly_tasks=10, max_users=3, description="Free")
 
-        with patch("aeo_api.auth.tenant_service.get_plan_quota", new=AsyncMock(return_value=mock_quota)):
-            with pytest.raises(TenantServiceError) as exc_info:
-                await invite_member(
-                    session, tenant_id, email="new@test.com"
-                )
+        patch_path = "aeo_api.auth.tenant_service.get_plan_quota"
+        with (
+            patch(patch_path, new=AsyncMock(return_value=mock_quota)),
+            pytest.raises(TenantServiceError) as exc_info,
+        ):
+            await invite_member(session, tenant_id, email="new@test.com")
 
         assert "Upgrade your plan" in exc_info.value.message

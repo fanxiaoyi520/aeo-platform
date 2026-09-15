@@ -21,9 +21,7 @@ def upgrade() -> None:
         "tenants",
         sa.Column("stripe_customer_id", sa.String(128), nullable=True),
     )
-    op.create_index(
-        "ix_tenants_stripe_customer_id", "tenants", ["stripe_customer_id"], unique=True
-    )
+    op.create_index("ix_tenants_stripe_customer_id", "tenants", ["stripe_customer_id"], unique=True)
 
     op.add_column(
         "tenants",

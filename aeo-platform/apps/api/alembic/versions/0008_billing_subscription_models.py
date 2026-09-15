@@ -30,7 +30,12 @@ def upgrade() -> None:
         sa.Column("current_period_end", sa.DateTime(timezone=True), nullable=True),
         sa.Column("trial_start", sa.DateTime(timezone=True), nullable=True),
         sa.Column("trial_end", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("cancel_at_period_end", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "cancel_at_period_end",
+            sa.Boolean(),
+            nullable=False,
+            server_default=sa.text("false"),
+        ),
         sa.Column("canceled_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("metadata", sa.JSON(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
@@ -40,7 +45,12 @@ def upgrade() -> None:
     )
     op.create_index("ix_subscriptions_tenant_id", "subscriptions", ["tenant_id"])
     op.create_index("ix_subscriptions_stripe_customer_id", "subscriptions", ["stripe_customer_id"])
-    op.create_index("ix_subscriptions_stripe_subscription_id", "subscriptions", ["stripe_subscription_id"], unique=True)
+    op.create_index(
+        "ix_subscriptions_stripe_subscription_id",
+        "subscriptions",
+        ["stripe_subscription_id"],
+        unique=True,
+    )
     op.create_index("idx_subscriptions_tenant_status", "subscriptions", ["tenant_id", "status"])
 
     op.create_table(
@@ -79,8 +89,17 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_billing_events_stripe_event_id", "billing_events", ["stripe_event_id"], unique=True)
-    op.create_index("ix_billing_events_stripe_customer_id", "billing_events", ["stripe_customer_id"])
+    op.create_index(
+        "ix_billing_events_stripe_event_id",
+        "billing_events",
+        ["stripe_event_id"],
+        unique=True,
+    )
+    op.create_index(
+        "ix_billing_events_stripe_customer_id",
+        "billing_events",
+        ["stripe_customer_id"],
+    )
     op.create_index("idx_billing_events_type", "billing_events", ["event_type"])
 
 

@@ -68,9 +68,9 @@ async def invite_member(
     tenant = await get_tenant(session, tenant_id)
     quota = await get_plan_quota(session, tenant.plan)
     count_result = await session.execute(
-        select(func.count()).select_from(User).where(
-            User.tenant_id == tenant_id, User.is_active.is_(True)
-        )
+        select(func.count())
+        .select_from(User)
+        .where(User.tenant_id == tenant_id, User.is_active.is_(True))
     )
     active_members = count_result.scalar_one()
     if active_members >= quota.max_users:
