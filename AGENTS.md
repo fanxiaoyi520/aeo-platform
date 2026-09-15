@@ -92,6 +92,7 @@ docs: add task spec template
 | 开工契约 / TDD / 开源调研 | [`docs/06_TASK_SPEC.md`](docs/06_TASK_SPEC.md) |
 | 生产部署 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) |
 | 运维巡检 / 应急 | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) |
+| 文档导航 / 上手 | [`docs/README.md`](docs/README.md)、[`docs/how-to/getting-started.md`](docs/how-to/getting-started.md) |
 | 多窗口工人 | [`docs/SESSIONS.md`](docs/SESSIONS.md) |
 | 架构决策 | [`docs/adr/README.md`](docs/adr/README.md) |
 

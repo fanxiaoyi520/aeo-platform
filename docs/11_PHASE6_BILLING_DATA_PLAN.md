@@ -5,6 +5,20 @@
 > **创建日期：** 2026-09-14  
 > **性质：** 生产商业化交付；将 mock 数据层替换为真实 API，并接入 SaaS 计费系统。
 
+### 与 Phase 1 模块文档的映射
+
+> Phase 1 的 `docs/modules/M01–M07` **不强制改写**；Phase 6 能力以下表为锚点，避免「有代码无模块文档」。
+
+| Phase 6 能力 | 主要代码位置（示意） | 文档锚点 |
+|--------------|----------------------|----------|
+| Stripe 计费 / 订阅 / 发票 | `apps/api` 计费路由与模型、`apps/web` 定价/订阅页 | **本文** §P6-A |
+| Amazon SP-API 真实数据 | orchestrator / integrations 适配器 | **本文** §P6-B（Amazon） |
+| Shopify 真实数据与凭据 | API Shopify credentials、适配器 | **本文** §P6-B（Shopify） |
+| Ads 等其它真实源 | 对应 adapter | **本文** 范围表 |
+| 降级 mock | 无凭据时 fallback | **本文** §目标「向后兼容」 |
+
+进度与任务 ID 仍以 [`02_PROGRESS.md`](02_PROGRESS.md) 为准。
+
 ---
 
 ## 1. 背景与目标

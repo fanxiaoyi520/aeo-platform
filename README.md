@@ -37,6 +37,8 @@
 
 ## 文档索引
 
+按角色导航见 **[docs/README.md](docs/README.md)**。新人上手：[docs/how-to/getting-started.md](docs/how-to/getting-started.md)。
+
 | 文档 | 说明 |
 |------|------|
 | [总计划](docs/01_MASTER_PLAN.md) | 范围、架构、里程碑（锁定） |
