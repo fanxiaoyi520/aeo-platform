@@ -58,6 +58,10 @@ class SpApiListingsAdapter:
     def __init__(self, settings: AmazonSettings) -> None:
         self._settings = settings
 
+    @property
+    def data_source(self) -> str:
+        return "spapi"
+
     def _get_client(self) -> Any:
         from sp_api.api import CatalogItems  # type: ignore[import-untyped]
 
@@ -128,6 +132,10 @@ class SpApiOrdersAdapter:
     def __init__(self, settings: AmazonSettings) -> None:
         self._settings = settings
 
+    @property
+    def data_source(self) -> str:
+        return "spapi"
+
     def _get_client(self) -> Any:
         from sp_api.api import Orders
 
@@ -183,6 +191,10 @@ class SpApiOrdersAdapter:
 class SpApiAdvertisingAdapter:
     def __init__(self, settings: AmazonSettings) -> None:
         self._settings = settings
+
+    @property
+    def data_source(self) -> str:
+        return "spapi"
 
     def _get_base_url(self) -> str:
         region_map = {
@@ -275,6 +287,10 @@ class SpApiAdvertisingAdapter:
 class SpApiInventoryAdapter:
     def __init__(self, settings: AmazonSettings) -> None:
         self._settings = settings
+
+    @property
+    def data_source(self) -> str:
+        return "spapi"
 
     def _get_client(self) -> Any:
         from sp_api.api import Inventories

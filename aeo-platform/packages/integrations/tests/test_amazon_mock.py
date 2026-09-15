@@ -10,7 +10,6 @@ from aeo_integrations.amazon.auth import get_access_token
 from aeo_integrations.amazon.config import AmazonDataSource, AmazonSettings
 from aeo_integrations.amazon.listings import MockListingsAdapter, get_listings_client
 from aeo_integrations.amazon.orders import MockOrdersAdapter, get_orders_client
-from aeo_integrations.amazon.spapi_adapter import SpApiListingsAdapter
 
 _FIXTURE = (
     Path(__file__).resolve().parents[1]
@@ -61,9 +60,11 @@ def test_factory_defaults_to_mock(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
 
 
 def test_factory_spapi_returns_adapter() -> None:
+    from aeo_integrations.amazon.fallback import FallbackWrapper
+
     settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI)
     client = get_listings_client(settings=settings)
-    assert isinstance(client, SpApiListingsAdapter)
+    assert isinstance(client, FallbackWrapper)
 
 
 def test_mock_auth_returns_token() -> None:

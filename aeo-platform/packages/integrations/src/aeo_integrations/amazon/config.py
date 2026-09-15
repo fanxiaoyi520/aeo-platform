@@ -34,6 +34,7 @@ class AmazonSettings(BaseSettings):
     aws_secret_key: str = Field(alias="AWS_SECRET_ACCESS_KEY", default="")
     ad_api_region: str = Field(alias="AMAZON_AD_REGION", default="na")
     credential_encryption_key: str = Field(alias="CREDENTIAL_ENCRYPTION_KEY", default="")
+    fallback_enabled: bool = Field(alias="AMAZON_FALLBACK_ENABLED", default=True)
 
 
 @lru_cache
