@@ -28,12 +28,12 @@
 
 ## AI Agent 必读
 
-**任何 AI / Agent 开始工作前，必须先阅读：**
+**分层阅读**（详见 [AGENTS.md §分层阅读](AGENTS.md)）：
 
 1. [AGENTS.md](AGENTS.md)
-2. [docs/00_GOVERNANCE.md](docs/00_GOVERNANCE.md)
-3. [docs/01_MASTER_PLAN.md](docs/01_MASTER_PLAN.md)
-4. [docs/02_PROGRESS.md](docs/02_PROGRESS.md)
+2. [docs/02_PROGRESS.md](docs/02_PROGRESS.md)（顶部状态即可）
+3. 当前任务 Spec / 模块 / 扩展计划相关节  
+   — `00`–`05` 等规范按改动范围按需加载，勿默认全文通读
 
 ## 文档索引
 

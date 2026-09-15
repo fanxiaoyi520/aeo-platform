@@ -9,10 +9,12 @@ alwaysApply: true
 
 ## 强制步骤（每次会话开始）
 
+按 [`AGENTS.md`](../../AGENTS.md) **分层阅读**（勿默认通读 00–05）：
+
 1. 阅读 `AGENTS.md`（默认：**单总控 + Git 分支 + CI**）
-2. 阅读 `docs/01_MASTER_PLAN.md`，确认 `plan_status`
-3. 阅读 `docs/03_DEV_ENVIRONMENT.md`、`04_ARCHITECTURE_STANDARDS.md`、`05_PERFORMANCE_STANDARDS.md`
-4. 阅读 `docs/02_PROGRESS.md`，仅执行 `in_progress` 或用户点名任务
+2. 阅读 `docs/02_PROGRESS.md` **顶部状态**；仅执行 `in_progress` 或用户点名任务
+3. 阅读当前任务 Spec / 对应 `docs/modules/M*.md` / 扩展计划相关节（如 Phase 6 的 `docs/11_*.md`）
+4. **按需**：改环境读 `03`；改架构读 `04`；性能相关读 `05`；治理/CR 读 `00`；改范围读 `01`
 5. 功能开发使用 `feat/{任务ID}-*` 分支；合并前 `aeo-platform\scripts\test.ps1` 全绿
 6. 工程纪律：TDD（`06_TASK_SPEC.md` §TDD）、Bug 四阶段调试、完成须附证据；工人模式见 `SESSIONS.md` §两阶段审查与 worktree
 7. 开源优先：`.cursor/rules/oss-first-implementation.mdc` — L1/L2 分级调研（`06_TASK_SPEC.md` §开源优先）
@@ -36,7 +38,7 @@ alwaysApply: true
 
 ## 用户口令（免粘贴 — 新会话直接说即可）
 
-用户**无需粘贴任何提示词**。听到下列口令后，Agent **必须先读** `AGENTS.md` 与 `docs/02_PROGRESS.md` §任务认领登记簿，再按协议执行。
+用户**无需粘贴任何提示词**。听到下列口令后，Agent **必须先读** `AGENTS.md` 与 `docs/02_PROGRESS.md`（顶部状态；工人模式再读 §任务认领登记簿），再按协议执行。
 
 ### 「领取空闲任务」→ 工人模式
 
