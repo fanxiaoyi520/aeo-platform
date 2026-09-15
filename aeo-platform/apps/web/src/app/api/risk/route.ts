@@ -29,8 +29,7 @@ export async function POST(request: Request) {
     const body = (await request.json()) as RiskEvaluateRequest;
     const data = await backendFetch<RiskDecision>("/api/v1/risk/evaluate", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body,
     });
     return NextResponse.json({ data });
   } catch (error) {
