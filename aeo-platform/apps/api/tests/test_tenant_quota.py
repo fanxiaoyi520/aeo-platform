@@ -13,7 +13,7 @@ os.environ.setdefault("EMBED_API_KEY", "test-key")
 
 import pytest
 from aeo_api.auth.quota_service import (
-    PLAN_QUOTAS,
+    FALLBACK_QUOTAS,
     PlanQuota,
     check_task_quota,
     get_plan_quota,
@@ -23,33 +23,37 @@ from aeo_api.auth.quota_service import (
 
 
 class TestPlanQuotas:
-    def test_free_plan_quota(self) -> None:
-        quota = get_plan_quota("free")
+    @pytest.mark.asyncio
+    async def test_free_plan_quota(self) -> None:
+        quota = await get_plan_quota(None, "free")
         assert quota.plan == "free"
         assert quota.monthly_tasks == 10
         assert quota.max_users == 3
 
-    def test_pro_plan_quota(self) -> None:
-        quota = get_plan_quota("pro")
+    @pytest.mark.asyncio
+    async def test_pro_plan_quota(self) -> None:
+        quota = await get_plan_quota(None, "pro")
         assert quota.plan == "pro"
         assert quota.monthly_tasks == 100
         assert quota.max_users == 10
 
-    def test_enterprise_plan_quota(self) -> None:
-        quota = get_plan_quota("enterprise")
+    @pytest.mark.asyncio
+    async def test_enterprise_plan_quota(self) -> None:
+        quota = await get_plan_quota(None, "enterprise")
         assert quota.plan == "enterprise"
         assert quota.monthly_tasks is None
         assert quota.max_users == 100
 
-    def test_unknown_plan_defaults_to_free(self) -> None:
-        quota = get_plan_quota("unknown_plan")
+    @pytest.mark.asyncio
+    async def test_unknown_plan_defaults_to_free(self) -> None:
+        quota = await get_plan_quota(None, "unknown_plan")
         assert quota.plan == "free"
         assert quota.monthly_tasks == 10
 
     def test_all_plans_defined(self) -> None:
-        assert "free" in PLAN_QUOTAS
-        assert "pro" in PLAN_QUOTAS
-        assert "enterprise" in PLAN_QUOTAS
+        assert "free" in FALLBACK_QUOTAS
+        assert "pro" in FALLBACK_QUOTAS
+        assert "enterprise" in FALLBACK_QUOTAS
 
 
 class TestPlanQuotaDataclass:
@@ -70,7 +74,7 @@ class TestCheckTaskQuota:
     @pytest.mark.asyncio
     async def test_enterprise_always_allowed(self) -> None:
         with patch("aeo_api.auth.quota_service.get_task_usage", return_value=9999):
-            allowed, used, limit = await check_task_quota("tenant-1", "enterprise")
+            allowed, used, limit = await check_task_quota("tenant-1", "enterprise", None)
             assert allowed is True
             assert used == 9999
             assert limit is None
@@ -78,7 +82,7 @@ class TestCheckTaskQuota:
     @pytest.mark.asyncio
     async def test_free_under_limit(self) -> None:
         with patch("aeo_api.auth.quota_service.get_task_usage", return_value=5):
-            allowed, used, limit = await check_task_quota("tenant-1", "free")
+            allowed, used, limit = await check_task_quota("tenant-1", "free", None)
             assert allowed is True
             assert used == 5
             assert limit == 10
@@ -86,7 +90,7 @@ class TestCheckTaskQuota:
     @pytest.mark.asyncio
     async def test_free_at_limit(self) -> None:
         with patch("aeo_api.auth.quota_service.get_task_usage", return_value=10):
-            allowed, used, limit = await check_task_quota("tenant-1", "free")
+            allowed, used, limit = await check_task_quota("tenant-1", "free", None)
             assert allowed is False
             assert used == 10
             assert limit == 10
@@ -94,7 +98,7 @@ class TestCheckTaskQuota:
     @pytest.mark.asyncio
     async def test_free_over_limit(self) -> None:
         with patch("aeo_api.auth.quota_service.get_task_usage", return_value=15):
-            allowed, used, limit = await check_task_quota("tenant-1", "free")
+            allowed, used, limit = await check_task_quota("tenant-1", "free", None)
             assert allowed is False
             assert used == 15
             assert limit == 10
@@ -102,7 +106,7 @@ class TestCheckTaskQuota:
     @pytest.mark.asyncio
     async def test_pro_under_limit(self) -> None:
         with patch("aeo_api.auth.quota_service.get_task_usage", return_value=50):
-            allowed, used, limit = await check_task_quota("tenant-1", "pro")
+            allowed, used, limit = await check_task_quota("tenant-1", "pro", None)
             assert allowed is True
             assert used == 50
             assert limit == 100

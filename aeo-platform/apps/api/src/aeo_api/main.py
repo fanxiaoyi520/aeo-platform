@@ -22,6 +22,7 @@ from aeo_api.routers import (
     analytics,
     audit,
     auth,
+    billing,
     business_metrics,
     content_templates,
     dtc,
@@ -57,6 +58,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("starting", app=settings.app_name, env=settings.app_env, llm_model=llm.llm_model)
     py_ver = f"{sys.version_info.major}.{sys.version_info.minor}"
     SYSTEM_INFO.labels(version=app.version, python_version=py_ver).set(1)
+
+    from aeo_api.billing.client import init_stripe
+
+    init_stripe()
+
     yield
     await close_redis()
     logger.info("shutdown complete")
@@ -101,6 +107,7 @@ def create_app() -> FastAPI:
     app.include_router(business_metrics.router)
     app.include_router(dtc.router)
     app.include_router(tenants.router)
+    app.include_router(billing.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:

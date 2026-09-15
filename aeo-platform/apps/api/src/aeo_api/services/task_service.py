@@ -138,7 +138,7 @@ class TaskService:
 
         tenant_id = get_current_tenant()
         tenant = await get_tenant(session, UUID(tenant_id))
-        allowed, used, limit = await check_task_quota(tenant_id, tenant.plan)
+        allowed, used, limit = await check_task_quota(tenant_id, tenant.plan, session)
         if not allowed:
             raise QuotaExceededError(used, limit)
 

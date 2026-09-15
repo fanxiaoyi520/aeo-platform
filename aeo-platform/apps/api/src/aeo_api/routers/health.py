@@ -3,6 +3,7 @@ from typing import Any
 from aeo_shared.responses import success_response
 from fastapi import APIRouter, Request
 
+from aeo_api.billing.client import is_stripe_enabled
 from aeo_api.db.models import check_database
 from aeo_api.db.redis import check_redis
 
@@ -22,6 +23,11 @@ async def ready(request: Request) -> dict[str, Any]:
     redis_ok = await check_redis()
     status = "ready" if db_ok and redis_ok else "not_ready"
     return success_response(
-        {"status": status, "database": db_ok, "redis": redis_ok},
+        {
+            "status": status,
+            "database": db_ok,
+            "redis": redis_ok,
+            "billing": "enabled" if is_stripe_enabled() else "disabled",
+        },
         request.state.request_id,
     ).model_dump()
