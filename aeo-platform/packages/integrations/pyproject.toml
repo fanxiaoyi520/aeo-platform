@@ -4,8 +4,11 @@ version = "0.1.0"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "aeo-shared",
+    "cryptography>=50.0.1",
     "pydantic>=2.8.0",
     "pydantic-settings>=2.4.0",
+    "python-amazon-sp-api>=2.1.23",
+    "requests>=2.34.2",
 ]
 
 [tool.uv.sources]

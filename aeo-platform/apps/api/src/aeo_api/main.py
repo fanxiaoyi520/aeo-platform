@@ -19,6 +19,7 @@ from aeo_api.middleware.rate_limit import RateLimitMiddleware
 from aeo_api.middleware.request_id import RequestIdMiddleware
 from aeo_api.routers import (
     agents,
+    amazon_credentials,
     analytics,
     audit,
     auth,
@@ -108,6 +109,7 @@ def create_app() -> FastAPI:
     app.include_router(dtc.router)
     app.include_router(tenants.router)
     app.include_router(billing.router)
+    app.include_router(amazon_credentials.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
