@@ -21,10 +21,6 @@ from aeo_integrations.amazon.models import (
     AmazonAdSpendSnapshot,
     AmazonInventoryItem,
 )
-from aeo_integrations.amazon.spapi_adapter import (
-    SpApiAdvertisingAdapter,
-    SpApiInventoryAdapter,
-)
 
 _MOCK_DIR = Path(__file__).resolve().parents[1] / "src" / "aeo_integrations" / "amazon" / "mock"
 _AD_FIXTURE = _MOCK_DIR / "sample_advertising.json"
@@ -189,9 +185,11 @@ class TestAdvertisingFactory:
         assert isinstance(client, MockAdvertisingAdapter)
 
     def test_factory_spapi_returns_adapter(self) -> None:
+        from aeo_integrations.amazon.fallback import FallbackWrapper
+
         settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI)
         client = get_advertising_client(settings=settings)
-        assert isinstance(client, SpApiAdvertisingAdapter)
+        assert isinstance(client, FallbackWrapper)
 
 
 class TestInventoryFactory:
@@ -204,9 +202,11 @@ class TestInventoryFactory:
         assert isinstance(client, MockInventoryAdapter)
 
     def test_factory_spapi_returns_adapter(self) -> None:
+        from aeo_integrations.amazon.fallback import FallbackWrapper
+
         settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI)
         client = get_inventory_client(settings=settings)
-        assert isinstance(client, SpApiInventoryAdapter)
+        assert isinstance(client, FallbackWrapper)
 
 
 class TestFixtureCompleteness:

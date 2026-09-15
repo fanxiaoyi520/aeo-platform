@@ -26,6 +26,10 @@ class MockOrdersAdapter:
         self._fixture_path = fixture_path or _DEFAULT_FIXTURE
         self._cache: list[AmazonOrderItem] | None = None
 
+    @property
+    def data_source(self) -> str:
+        return "mock"
+
     def _load(self) -> list[AmazonOrderItem]:
         if self._cache is not None:
             return self._cache
@@ -50,4 +54,9 @@ def get_orders_client(settings: AmazonSettings | None = None) -> OrdersClient:
     resolved = settings or get_amazon_settings()
     if resolved.data_source == AmazonDataSource.MOCK:
         return MockOrdersAdapter()
-    return SpApiOrdersAdapter(settings=resolved)
+    spapi = SpApiOrdersAdapter(settings=resolved)
+    if resolved.fallback_enabled:
+        from aeo_integrations.amazon.fallback import FallbackWrapper
+
+        return FallbackWrapper(spapi, MockOrdersAdapter())
+    return spapi

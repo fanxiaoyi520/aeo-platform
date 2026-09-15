@@ -36,6 +36,10 @@ class MockAdvertisingAdapter:
         self._campaign_cache: dict[str, AmazonAdCampaign] | None = None
         self._snapshot_cache: list[AmazonAdSpendSnapshot] | None = None
 
+    @property
+    def data_source(self) -> str:
+        return "mock"
+
     def _load_campaigns(self) -> dict[str, AmazonAdCampaign]:
         if self._campaign_cache is not None:
             return self._campaign_cache
@@ -91,4 +95,9 @@ def get_advertising_client(
     resolved = settings or get_amazon_settings()
     if resolved.data_source == AmazonDataSource.MOCK:
         return MockAdvertisingAdapter()
-    return SpApiAdvertisingAdapter(settings=resolved)
+    spapi = SpApiAdvertisingAdapter(settings=resolved)
+    if resolved.fallback_enabled:
+        from aeo_integrations.amazon.fallback import FallbackWrapper
+
+        return FallbackWrapper(spapi, MockAdvertisingAdapter())
+    return spapi

@@ -28,6 +28,10 @@ class MockInventoryAdapter:
         self._fixture_path = fixture_path or _DEFAULT_FIXTURE
         self._cache: dict[str, AmazonInventoryItem] | None = None
 
+    @property
+    def data_source(self) -> str:
+        return "mock"
+
     def _load(self) -> dict[str, AmazonInventoryItem]:
         if self._cache is not None:
             return self._cache
@@ -62,4 +66,9 @@ def get_inventory_client(
     resolved = settings or get_amazon_settings()
     if resolved.data_source == AmazonDataSource.MOCK:
         return MockInventoryAdapter()
-    return SpApiInventoryAdapter(settings=resolved)
+    spapi = SpApiInventoryAdapter(settings=resolved)
+    if resolved.fallback_enabled:
+        from aeo_integrations.amazon.fallback import FallbackWrapper
+
+        return FallbackWrapper(spapi, MockInventoryAdapter())
+    return spapi

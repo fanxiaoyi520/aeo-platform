@@ -31,6 +31,10 @@ class MockListingsAdapter:
         self._settings = settings or get_amazon_settings()
         self._cache: dict[str, AmazonListing] | None = None
 
+    @property
+    def data_source(self) -> str:
+        return "mock"
+
     def _load(self) -> dict[str, AmazonListing]:
         if self._cache is not None:
             return self._cache
@@ -67,4 +71,9 @@ def get_listings_client(settings: AmazonSettings | None = None) -> ListingsClien
     resolved = settings or get_amazon_settings()
     if resolved.data_source == AmazonDataSource.MOCK:
         return MockListingsAdapter(settings=resolved)
-    return SpApiListingsAdapter(settings=resolved)
+    spapi = SpApiListingsAdapter(settings=resolved)
+    if resolved.fallback_enabled:
+        from aeo_integrations.amazon.fallback import FallbackWrapper
+
+        return FallbackWrapper(spapi, MockListingsAdapter(settings=resolved))
+    return spapi
