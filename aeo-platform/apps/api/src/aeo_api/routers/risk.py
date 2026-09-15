@@ -2,6 +2,7 @@
 
 from typing import Annotated, Any
 
+from aeo_shared.agent_registry import RiskLevel
 from aeo_shared.responses import success_response
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,6 +21,21 @@ router = APIRouter(prefix="/api/v1/risk", tags=["risk"])
 _engine = RiskEngine()
 _service = AuditService()
 DbSession = Annotated[AsyncSession, Depends(get_db_session)]
+
+
+@router.get("/rules")
+async def list_risk_rules(request: Request) -> dict[str, Any]:
+    """Return the current risk rule set."""
+    rule_set = _engine.rule_set
+    summary = {level.value: 0 for level in RiskLevel}
+    for rule in rule_set.rules:
+        summary[rule.risk_level.value] += 1
+    data = {
+        "version": rule_set.version,
+        "rules": [r.model_dump() for r in rule_set.rules],
+        "summary": summary,
+    }
+    return success_response(data, request.state.request_id).model_dump()
 
 
 @router.post("/evaluate")

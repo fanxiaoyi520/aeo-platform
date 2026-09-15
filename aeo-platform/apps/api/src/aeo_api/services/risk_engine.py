@@ -20,6 +20,10 @@ class RiskEngine:
     def __init__(self) -> None:
         self._rule_set = default_production_rule_set()
 
+    @property
+    def rule_set(self) -> Any:
+        return self._rule_set
+
     async def evaluate(
         self,
         session: AsyncSession,
