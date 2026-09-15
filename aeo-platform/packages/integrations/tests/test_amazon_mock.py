@@ -60,12 +60,10 @@ def test_factory_defaults_to_mock(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
     assert isinstance(client, MockListingsAdapter)
 
 
-def test_factory_spapi_returns_stub() -> None:
+def test_factory_spapi_returns_adapter() -> None:
     settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI)
     client = get_listings_client(settings=settings)
     assert isinstance(client, SpApiListingsAdapter)
-    with pytest.raises(NotImplementedError, match="not implemented"):
-        client.get_listing("HOMEBREW-KETTLE-1L")
 
 
 def test_mock_auth_returns_token() -> None:

@@ -188,12 +188,10 @@ class TestAdvertisingFactory:
         client = get_advertising_client()
         assert isinstance(client, MockAdvertisingAdapter)
 
-    def test_factory_spapi_returns_stub(self) -> None:
+    def test_factory_spapi_returns_adapter(self) -> None:
         settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI)
         client = get_advertising_client(settings=settings)
         assert isinstance(client, SpApiAdvertisingAdapter)
-        with pytest.raises(NotImplementedError, match="not implemented"):
-            client.get_campaign("camp-001")
 
 
 class TestInventoryFactory:
@@ -205,12 +203,10 @@ class TestInventoryFactory:
         client = get_inventory_client()
         assert isinstance(client, MockInventoryAdapter)
 
-    def test_factory_spapi_returns_stub(self) -> None:
+    def test_factory_spapi_returns_adapter(self) -> None:
         settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI)
         client = get_inventory_client(settings=settings)
         assert isinstance(client, SpApiInventoryAdapter)
-        with pytest.raises(NotImplementedError, match="not implemented"):
-            client.get_inventory("HOMEBREW-KETTLE-1L")
 
 
 class TestFixtureCompleteness:

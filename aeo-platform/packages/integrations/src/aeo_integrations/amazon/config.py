@@ -30,6 +30,10 @@ class AmazonSettings(BaseSettings):
     sp_api_client_id: str = Field(alias="SP_API_CLIENT_ID", default="")
     sp_api_client_secret: str = Field(alias="SP_API_CLIENT_SECRET", default="")
     sp_api_refresh_token: str = Field(alias="SP_API_REFRESH_TOKEN", default="")
+    aws_access_key: str = Field(alias="AWS_ACCESS_KEY_ID", default="")
+    aws_secret_key: str = Field(alias="AWS_SECRET_ACCESS_KEY", default="")
+    ad_api_region: str = Field(alias="AMAZON_AD_REGION", default="na")
+    credential_encryption_key: str = Field(alias="CREDENTIAL_ENCRYPTION_KEY", default="")
 
 
 @lru_cache
