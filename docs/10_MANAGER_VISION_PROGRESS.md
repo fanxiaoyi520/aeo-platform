@@ -216,3 +216,4 @@
 | 2026-09-08 | **MV5-05** 生产部署验证 + 7×24 试运行；`trial_monitor.py`（可用性/P95/恢复时间）+ `mv5_05_trial_run.py`（--dry-run）+ `mv5_05_trial_report.py`；test **724/724**，coverage **88.85%** |
 | 2026-09-08 | **MV5-06** 商业终验；`final_acceptance.py`（六项 KPI）+ `mv5_06_final_report.py`；12 项测试；**MV5 里程碑全部完成** |
 | 2026-09-10 | **MV3-09** MV3 生产验收；7 项验收测试（ads/ops/budget/linkage/registry）+ `batch_mv3_pilot.py` 批跑 + `mv3_acceptance_report.py`（4 套件 overall_accepted: true）；test **908/908**，coverage **89.64%**；**MV3 里程碑全部完成** |
+| 2026-09-15 | **MV1-08 风控前端恢复** — 从旧分支适配缺失文件到 main：`risk/page.tsx`（规则展示+模拟评估+审计日志）+ `api/risk/route.ts`（BFF）+ Risk 类型 + `GET /api/v1/risk/rules` 端点 + 侧边栏导航；test **1120/1120**，coverage **87.63%**；PR #64 merged；**MV1-08 完成状态确认** |
