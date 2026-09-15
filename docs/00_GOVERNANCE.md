@@ -17,6 +17,7 @@ docs/03_DEV_ENVIRONMENT.md    ← 统一开发环境规范（锁定级）
 docs/04_ARCHITECTURE_STANDARDS.md ← 统一架构规范（锁定级）
 docs/05_PERFORMANCE_STANDARDS.md  ← 统一性能规范（锁定级）
 docs/modules/M*.md        ← 模块详细计划（从属总计划）
+docs/adr/                 ← 架构决策记录（见 adr/README.md）
 ```
 
 **优先级：** `01_MASTER_PLAN` = `03/04/05` 规范 > `modules` > `02_PROGRESS` > 其他

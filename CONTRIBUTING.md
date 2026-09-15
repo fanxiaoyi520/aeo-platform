@@ -74,7 +74,7 @@ cd aeo-platform
 ## 问题与讨论
 
 - Bug / 功能请求：GitHub Issue（可用 [任务模板](.github/ISSUE_TEMPLATE/task.yml)）
-- 架构变更：先写 ADR（`docs/adr/`），经维护者批准后再实现
+- 架构变更：先写 [ADR](docs/adr/README.md)（`docs/adr/`），经维护者批准后再实现
 
 ## License
 
