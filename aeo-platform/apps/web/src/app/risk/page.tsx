@@ -7,7 +7,6 @@ import type {
   RiskAuditItem,
   RiskDecision,
   RiskLevel,
-  RiskRule,
   RiskRuleSet,
 } from "@/lib/types";
 
