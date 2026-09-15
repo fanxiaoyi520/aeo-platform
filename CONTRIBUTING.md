@@ -4,25 +4,16 @@
 
 ## 开始前必读
 
-1. [AGENTS.md](AGENTS.md) — AI / 开发者统一入口
+1. [AGENTS.md](AGENTS.md) — 工作流、口令、合并清单（**单一真相源**）
 2. [docs/02_PROGRESS.md](docs/02_PROGRESS.md) — 当前任务与里程碑
-3. [docs/06_TASK_SPEC.md](docs/06_TASK_SPEC.md) — 开工前 Task Spec 模板
+3. [docs/06_TASK_SPEC.md](docs/06_TASK_SPEC.md) — Spec / TDD / 开源优先模板
 
-## 工作流（默认）
+## 工作流与 PR
 
-```
-认领任务 → 输出 Spec（含 L1/L2 开源说明）→ 用户「开始」→ feat 分支开发 → test.ps1 全绿 → PR → CI 绿 → merge
-```
+默认流程、分支命名、Commit 格式、合并前检查与证据要求 → **只维护在** [AGENTS.md](AGENTS.md)。  
+PR 请使用 [.github/pull_request_template.md](.github/pull_request_template.md)。
 
-| 步骤 | 要求 |
-|------|------|
-| 分支 | `feat/{任务ID}-{简述}`，如 `feat/p1-02-sku-ingest` |
-| Commit | `类型(范围): 任务ID 简述`，类型：`feat` `fix` `test` `docs` `chore` |
-| 本地验收 | `cd aeo-platform; .\scripts\test.ps1` 全绿 |
-| PR | 使用 [PR 模板](.github/pull_request_template.md)，附 `test.ps1` 输出或 CI 链接 |
-| 合并 | CI 绿 + 维护者看过 diff → merge `main` |
-
-## Lane 目录锁定（并行开发）
+## Lane 目录锁定（并行开发）— 本文件为权威
 
 多人同时开发时，**每人只改自己 Lane 的目录**，避免合并冲突。
 
@@ -40,7 +31,7 @@
 - `aeo-platform/apps/api/alembic/` — 数据库迁移
 - `docs/01_MASTER_PLAN.md`、`docs/04_ARCHITECTURE_STANDARDS.md` — 架构变更须走 CR
 
-认领规则详见 [docs/02_PROGRESS.md §任务认领登记簿](docs/02_PROGRESS.md)。
+认领状态见 [docs/02_PROGRESS.md §任务认领登记簿](docs/02_PROGRESS.md)；占用状态见同文件 §Lane。
 
 ## 开发环境
 
@@ -56,25 +47,14 @@ cd aeo-platform
 
 **Docker 数据目录（Windows）：** 默认 `%LOCALAPPDATA%\aeo-platform\docker`，可通过 `AEO_DOCKER_ROOT` 覆盖。
 
-## PR 检查清单
-
-合并前确认：
-
-- [ ] 仅修改任务 Spec 允许的目录（对照「不做什么」）
-- [ ] `cd aeo-platform; .\scripts\test.ps1` 全绿
-- [ ] 无计划外文件（`git diff main --stat`）
-- [ ] 功能开发遵循 TDD：先 RED 再 GREEN（见 `06_TASK_SPEC.md`）
-- [ ] L2 PR：填写开源调研表（见 `06_TASK_SPEC.md` §开源优先）
-- [ ] 完成声明附证据（pytest 输出、curl 结果或截图），禁止只说「应该好了」
-
 ## 并行隔离（可选）
 
-赶工期时可用 **git worktree** 为每个 Lane 建独立工作区，详见 [docs/SESSIONS.md](docs/SESSIONS.md)。
+赶工期时可用 **git worktree**；多窗口角色与登记 → [docs/SESSIONS.md](docs/SESSIONS.md)（默认单总控，不必用）。
 
 ## 问题与讨论
 
 - Bug / 功能请求：GitHub Issue（可用 [任务模板](.github/ISSUE_TEMPLATE/task.yml)）
-- 架构变更：先写 ADR（`docs/adr/`），经维护者批准后再实现
+- 架构变更：先写 [ADR](docs/adr/README.md)（`docs/adr/`），经维护者批准后再实现
 
 ## License
 

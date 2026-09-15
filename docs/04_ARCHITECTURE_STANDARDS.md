@@ -302,7 +302,7 @@ Request → API Key 校验 → 限流 → 路由 → 业务 → 审计日志
 
 ## 11. ADR（架构决策记录）流程
 
-重大决策须写 `docs/adr/NNNN-title.md`：
+重大决策须写 `docs/adr/NNNN-title.md`（索引与说明见 [`docs/adr/README.md`](adr/README.md)）：
 
 | 必须写 ADR 的情况 |
 |-------------------|
@@ -311,7 +311,7 @@ Request → API Key 校验 → 限流 → 路由 → 业务 → 审计日志
 | 更改 API 版本或响应格式 |
 | 更改数据库 Schema 破坏性迁移 |
 
-模板：
+模板：复制 [`docs/adr/0000-template.md`](adr/0000-template.md)，或按下表填写：
 
 ```markdown
 # ADR-0001: 标题

@@ -34,7 +34,7 @@
 ### 1.3 范围外（Out of Scope）— 首期不做
 
 - 全自动开户、全自动大规模投流（仅建议 + 人工确认）
-- 多租户 SaaS 计费系统
+- 多租户 SaaS 计费系统 — **首期 Out of Scope**；商业化计费与真实店铺数据见已批准扩展计划 [`11_PHASE6_BILLING_DATA_PLAN.md`](11_PHASE6_BILLING_DATA_PLAN.md)（不修改本表范围，仅消歧义）
 - 模型微调（LoRA/QLoRA）— 列为 Phase 3 可选
 - 国内天猫/京东全自动改价（风控高，Phase 2 评估）
 - 直接对接公司内部未授权的生产店铺 API

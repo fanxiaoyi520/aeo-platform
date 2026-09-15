@@ -17,6 +17,7 @@ docs/03_DEV_ENVIRONMENT.md    ← 统一开发环境规范（锁定级）
 docs/04_ARCHITECTURE_STANDARDS.md ← 统一架构规范（锁定级）
 docs/05_PERFORMANCE_STANDARDS.md  ← 统一性能规范（锁定级）
 docs/modules/M*.md        ← 模块详细计划（从属总计划）
+docs/adr/                 ← 架构决策记录（见 adr/README.md）
 ```
 
 **优先级：** `01_MASTER_PLAN` = `03/04/05` 规范 > `modules` > `02_PROGRESS` > 其他
@@ -61,13 +62,16 @@ docs/modules/M*.md        ← 模块详细计划（从属总计划）
 
 ## 3. AI Agent 工作协议
 
-### 3.1 会话启动
+### 3.1 会话启动（分层阅读，与 `AGENTS.md` 一致）
+
+**每次会话必读：**
 
 1. 读取 `AGENTS.md`
-2. 读取 `01_MASTER_PLAN.md`，确认 `plan_status`
-3. 读取 `03_DEV_ENVIRONMENT.md`、`04_ARCHITECTURE_STANDARDS.md`、`05_PERFORMANCE_STANDARDS.md`
-4. 读取 `02_PROGRESS.md`，仅执行其中 `status: in_progress` 或用户点名任务
-5. 读取对应 `docs/modules/M*.md`
+2. 读取 `02_PROGRESS.md` **顶部状态**；仅执行其中 `in_progress` 或用户点名任务
+3. 读取当前任务 Spec / 对应 `docs/modules/M*.md` / 扩展计划相关节
+
+**按需加载（改到才读）：** 治理→`00`；范围→`01`；环境→`03`；架构→`04`；性能→`05`；Spec/TDD→`06`；运维→`RUNBOOK`/`DEPLOYMENT`。  
+`plan_status` 以 `02` 顶部为准；非 `APPROVED` 时再打开 `01` 核对。
 
 ### 3.2 会话结束
 
@@ -76,7 +80,7 @@ docs/modules/M*.md        ← 模块详细计划（从属总计划）
 
 ### 3.3 切换 Agent / 模型
 
-新 Agent 视为零上下文，**必须重新执行 3.1**，不得假设记得上次对话。
+新 Agent 视为零上下文，**必须重新执行 3.1（必读三步）**，不得假设记得上次对话。
 
 ---
 

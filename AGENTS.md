@@ -1,6 +1,7 @@
 # AI Agent 必读入口
 
-> **任何 AI Agent、新会话、切换模型前，必须先完整阅读本文件及下方链接文档，否则禁止编写代码或修改计划。**
+> **任何 AI Agent、新会话、切换模型前，必须先阅读本文件，并按下方「分层阅读」加载上下文，否则禁止编写代码或修改计划。**  
+> 目标：默认必读约 **200 行量级**；完整通读 00–05 仅在改治理/范围/规范时按需进行。
 
 ## 推荐工作流（默认，CR-20260829-002）
 
@@ -14,7 +15,7 @@
 | **Pull Request** | push 后开 PR → 看 diff → CI 绿 → merge `main`（不直接合 main） |
 | **CI** | push / PR 到 `main` 时 GitHub Actions 自动跑与本地相同的检查 |
 
-多 Cursor 窗口、SESSIONS 登记簿为**可选**，默认不用。多人协作详见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
+多 Cursor 窗口、SESSIONS 登记簿为**可选**，默认不用。口令/合并清单以**本文件**为准；Lane 目录表以 [`CONTRIBUTING.md`](CONTRIBUTING.md) 为准；Spec/TDD/开源以 [`docs/06_TASK_SPEC.md`](docs/06_TASK_SPEC.md) 为准；任务状态以 [`docs/02_PROGRESS.md`](docs/02_PROGRESS.md) 为准。
 
 ### Git 分支命名
 
@@ -69,15 +70,33 @@ docs: add task spec template
 
 ---
 
-## 强制阅读顺序
+## 分层阅读（P1 — 替代「每次完整通读 00–05」）
 
-1. [`docs/00_GOVERNANCE.md`](docs/00_GOVERNANCE.md)
-2. [`docs/01_MASTER_PLAN.md`](docs/01_MASTER_PLAN.md)
-3. [`docs/03_DEV_ENVIRONMENT.md`](docs/03_DEV_ENVIRONMENT.md)
-4. [`docs/04_ARCHITECTURE_STANDARDS.md`](docs/04_ARCHITECTURE_STANDARDS.md)
-5. [`docs/05_PERFORMANCE_STANDARDS.md`](docs/05_PERFORMANCE_STANDARDS.md)
-6. [`docs/02_PROGRESS.md`](docs/02_PROGRESS.md) — 任务与里程碑
-7. 当前任务对应 `docs/modules/M*.md`
+### 每次会话（必读）
+
+1. **本文件** `AGENTS.md`（工作流、口令、合并清单）
+2. [`docs/02_PROGRESS.md`](docs/02_PROGRESS.md) **仅顶部状态**（当前阶段 / 下一任务 / `in_progress`）；仅执行其中 `in_progress` 或用户点名任务
+3. **当前任务上下文**（按任务选一）：对应 Spec（[`docs/specs/`](docs/specs/) 或对话中的 Spec）、[`docs/modules/M*.md`](docs/modules/)、或扩展计划相关节（如 [`docs/11_PHASE6_BILLING_DATA_PLAN.md`](docs/11_PHASE6_BILLING_DATA_PLAN.md)）
+
+确认 `plan_status`：读 `02` 顶部「总计划状态」即可；若标注非 `APPROVED`，再打开 [`docs/01_MASTER_PLAN.md`](docs/01_MASTER_PLAN.md) 核对。
+
+### 按需加载（改到才读）
+
+| 你在改… | 再读 |
+|---------|------|
+| 治理 / CR / 变更控制 | [`docs/00_GOVERNANCE.md`](docs/00_GOVERNANCE.md) |
+| 范围 / 技术栈 / 里程碑 | [`docs/01_MASTER_PLAN.md`](docs/01_MASTER_PLAN.md) |
+| 环境 / 版本 / 脚本 / 端口 | [`docs/03_DEV_ENVIRONMENT.md`](docs/03_DEV_ENVIRONMENT.md) |
+| 分层 / API 契约 / 包职责 | [`docs/04_ARCHITECTURE_STANDARDS.md`](docs/04_ARCHITECTURE_STANDARDS.md) |
+| SLA / 超时 / 并发 / 压测 | [`docs/05_PERFORMANCE_STANDARDS.md`](docs/05_PERFORMANCE_STANDARDS.md) |
+| 开工契约 / TDD / 开源调研 | [`docs/06_TASK_SPEC.md`](docs/06_TASK_SPEC.md) |
+| 生产部署 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) |
+| 运维巡检 / 应急 | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) |
+| 文档导航 / 上手 | [`docs/README.md`](docs/README.md)、[`docs/how-to/getting-started.md`](docs/how-to/getting-started.md) |
+| 多窗口工人 | [`docs/SESSIONS.md`](docs/SESSIONS.md) |
+| 架构决策 | [`docs/adr/README.md`](docs/adr/README.md) |
+
+**新 Agent / 换模型：** 视为零上下文，重新执行「每次会话」三步；不要假设记得上次对话。
 
 ## 工作状态检查
 

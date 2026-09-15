@@ -8,19 +8,15 @@
 
 ## 使用流程（进阶档）
 
-```
-1. 用户：「做 S3-05」
-2. Agent：读进度表 + 模块文档 → 输出 Spec
-3. 用户：「开始」
-4. Agent：git checkout -b feat/s3-05-compliance-agent → 开发 → commit
-5. 用户：「合并检查」→ test.ps1 全绿
-6. 用户：「开 PR」→ push + gh pr create → CI 绿
-7. 用户看过 diff → merge PR → 更新 02_PROGRESS.md
-```
+口令、分支、PR、合并清单 → 见 [`../AGENTS.md`](../AGENTS.md)。与 Spec 相关的步骤：
 
-可选：在 GitHub 用 **Issue 模板**（`.github/ISSUE_TEMPLATE/task.yml`）建任务跟踪，PR 描述里填 `关联 Issue: #N`。
+1. 用户点名任务 → Agent 读 `02_PROGRESS` + 模块文档 → **输出本文件模板中的 Spec**
+2. 用户「开始」→ 在 `feat/*` 分支开发（遵守下方 §TDD / §开源优先）
+3. 合并与证据 → 仍按 `AGENTS.md`
 
-大任务（估时 > 2h 或跨模块）：用户说 **「探索 {任务ID}」** 时，先走下方「设计探索」，确认后再出标准 Spec。
+可选：GitHub **Issue 模板**（`.github/ISSUE_TEMPLATE/task.yml`），PR 填 `关联 Issue: #N`。
+
+大任务（估时 > 2h 或跨模块）：用户说 **「探索 {任务ID}」** → 先走下方「设计探索」，确认后再出标准 Spec。
 
 ---
 
@@ -199,12 +195,7 @@
 
 ## 目录锁定（Lane 速查）
 
-| Lane | 典型任务 | 可改目录 | 禁止（除非总控点名） |
-|------|----------|----------|----------------------|
-| A | S2-xx、S1-xx 基础设施 | `aeo-platform/infra/`、`aeo-platform/scripts/dev-up*` | `apps/*` |
-| B | S3-xx Agent | `aeo-platform/apps/orchestrator/` | `apps/web/`、`packages/shared` 改动 |
-| D | S5-xx 前端 | `aeo-platform/apps/web/` | `apps/orchestrator/` |
-| E | Docker 安装脚本 | `aeo-platform/scripts/install-docker*` | — |
+> **权威表**见 [`../CONTRIBUTING.md`](../CONTRIBUTING.md) §Lane。Spec「不做什么」须写出本次允许的目录边界。
 
 **总控专属：** `packages/shared`、DB migration、`docs/02_PROGRESS.md` 里程碑状态。
 
@@ -257,36 +248,9 @@
 
 ---
 
-## 总控口令
+## 总控口令 / Commit 格式
 
-| 说 | 效果 |
-|----|------|
-| **做 S3-05** | Agent 读进度表 + 模块文档，输出 Spec，**不写代码** |
-| **探索 S3-05** | 大任务先输出「设计探索」，确认后再出 Spec |
-| **开始** | 在 `feat/*` 分支按 Spec 开发（功能任务遵守 §TDD 纪律） |
-| **合并检查** | 跑 `test.ps1`，列改动文件，报是否可开 PR |
-| **开 PR** | push 分支，`gh pr create` 填模板，等 CI |
-| **合 PR** | CI 绿 + diff 确认后 merge，更新进度表 |
-
----
-
-## Commit 格式
-
-```
-feat(orchestrator): S3-05 compliance_agent + retry loop
-fix(web): S5-02 task list loading state
-docs: add 06_TASK_SPEC PR workflow
-```
-
-格式：`类型(范围): 任务ID 简述`
-
-| 类型 | 用途 |
-|------|------|
-| `feat` | 新功能 |
-| `fix` | Bug 修复 |
-| `test` | 仅测试 |
-| `docs` | 仅文档 |
-| `chore` | 工具链、依赖、杂项 |
+见 [`../AGENTS.md`](../AGENTS.md)（日常口令、Commit 格式）。本文件不重复维护。
 
 ---
 
@@ -295,10 +259,7 @@ docs: add 06_TASK_SPEC PR workflow
 - [ ] Spec 已确认，改动未超出「不做什么」
 - [ ] **开源调研已填写**（L1 一行参考 / L2 对比表）— 无则打回
 - [ ] 功能开发已走 TDD（RED → GREEN → REFACTOR，有失败测试证据）
-- [ ] `test.ps1` 全绿，且已贴完整输出作为证据
-- [ ] commit message 符合格式
-- [ ] 已开 PR，CI 绿
-- [ ] 看过 `git diff main` 无计划外文件
+- [ ] 合并清单与证据要求满足（见 `AGENTS.md`）
 - [ ] 工人模式：已完成 `SESSIONS.md` §两阶段审查
 - [ ] merge 后 `02_PROGRESS.md` 已更新
 
@@ -308,7 +269,7 @@ docs: add 06_TASK_SPEC PR workflow
 
 1. 用户未说「开始」→ **禁止写代码**，只输出 Spec、设计探索或答疑  
 2. Spec 必须引用 `02_PROGRESS.md` 中对应任务 ID 与模块文档  
-3. 「不做什么」须包含 Lane 目录边界（见上表）  
+3. 「不做什么」须包含 Lane 目录边界（见 [`CONTRIBUTING.md`](../CONTRIBUTING.md) §Lane）  
 4. 验收标准至少一条业务可测 + **test.ps1 全绿** + **完成证据**（输出/日志）  
 5. 功能开发默认遵守 §TDD 纪律；Bug 修复遵守 §修 Bug 版四阶段
 6. 大任务用户说「探索」→ 先设计探索，确认后再出 Spec

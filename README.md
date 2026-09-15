@@ -19,6 +19,7 @@
 | Phase 2（MV1–MV5） | **已完成**（mock 路径，MV0-02 NO-GO） |
 | Phase 3（DTC 独立站） | **已完成**（P3-01~09，PR #52） |
 | Phase 4（生产部署加固） | **已完成**（PR #53） |
+| Phase 6（计费与真实数据） | **进行中** — 见 [进度表](docs/02_PROGRESS.md) 与 [Phase 6 计划](docs/11_PHASE6_BILLING_DATA_PLAN.md) |
 | 代码目录 | `aeo-platform/` |
 
 ## 参与贡献
@@ -27,14 +28,16 @@
 
 ## AI Agent 必读
 
-**任何 AI / Agent 开始工作前，必须先阅读：**
+**分层阅读**（详见 [AGENTS.md §分层阅读](AGENTS.md)）：
 
 1. [AGENTS.md](AGENTS.md)
-2. [docs/00_GOVERNANCE.md](docs/00_GOVERNANCE.md)
-3. [docs/01_MASTER_PLAN.md](docs/01_MASTER_PLAN.md)
-4. [docs/02_PROGRESS.md](docs/02_PROGRESS.md)
+2. [docs/02_PROGRESS.md](docs/02_PROGRESS.md)（顶部状态即可）
+3. 当前任务 Spec / 模块 / 扩展计划相关节  
+   — `00`–`05` 等规范按改动范围按需加载，勿默认全文通读
 
 ## 文档索引
+
+按角色导航见 **[docs/README.md](docs/README.md)**。新人上手：[docs/how-to/getting-started.md](docs/how-to/getting-started.md)。
 
 | 文档 | 说明 |
 |------|------|
@@ -45,6 +48,14 @@
 | [性能规范](docs/05_PERFORMANCE_STANDARDS.md) | SLA、超时、并发、压测（锁定） |
 | [进度表](docs/02_PROGRESS.md) | Sprint 任务与状态 |
 | [任务 Spec 模板](docs/06_TASK_SPEC.md) | 开工前 Spec + PR 流程 + 口令 |
+| [ADR 索引](docs/adr/README.md) | 架构决策记录 |
+| [L2 Spec 存档](docs/specs/README.md) | 开源调研 Spec |
+| [管理岗愿景计划](docs/10_MANAGER_VISION_PLAN.md) | Phase 2 生产扩展 |
+| [管理岗愿景进度](docs/10_MANAGER_VISION_PROGRESS.md) | MV 进度 |
+| [Phase 6 计费与数据](docs/11_PHASE6_BILLING_DATA_PLAN.md) | Stripe / 真实店铺 API |
+| [生产部署](docs/DEPLOYMENT.md) | 生产环境部署 |
+| [运维手册](docs/RUNBOOK.md) | 日常巡检与应急 |
+| [验收报告](docs/reports/) | MS/MV 验收证据 |
 | [贡献指南](CONTRIBUTING.md) | 多人协作、Lane 认领、PR 检查清单 |
 | [M01 基础设施](docs/modules/M01-infrastructure.md) | |
 | [M02 RAG 知识库](docs/modules/M02-rag-knowledge.md) | |

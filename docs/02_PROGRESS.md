@@ -13,29 +13,12 @@
 
 ---
 
-## 推荐工作流（默认）
+## 工作流（单一真相源）
 
-```
-用户 ──► 单总控对话（本对话）
-           │
-           ├─► 输出任务 Spec（06_TASK_SPEC.md）→ 用户「开始」
-           ├─► git checkout -b feat/s3-05-compliance-agent
-           ├─► 开发 + commit + 本地 test.ps1
-           ├─► push → 开 PR → CI 绿 → 看 diff
-           ├─► merge PR → main
-           └─► 更新 02_PROGRESS.md = 任务 completed
-```
+口令、分支、合并清单、证据要求 → 见 [`../AGENTS.md`](../AGENTS.md)。  
+本文件只保留：**任务状态、里程碑、认领登记**。
 
-| 步骤 | 命令 / 动作 |
-|------|-------------|
-| 初始化（一次性） | `git init` ✅ 已完成 |
-| 首次提交 | `git add . && git commit` ✅ `b3e5a78` on `main` |
-| 任务 Spec | 见 [`06_TASK_SPEC.md`](06_TASK_SPEC.md)；用户「开始」后再编码 |
-| 开功能分支 | `git checkout -b feat/s6-01-prod-compose`（下一任务） |
-| 本地验收 | `cd aeo-platform; .\scripts\test.ps1` |
-| 开 PR | `git push -u origin HEAD` → `gh pr create`（见 PR 模板） |
-| 云端 CI | PR / push to `main` → GitHub Actions |
-| 合并 | CI 绿 + 看 diff → merge PR → 更新进度表 |
+一次性历史：Git 已初始化；首次提交 `b3e5a78` on `main`；CI：`.github/workflows/ci.yml`。
 
 ---
 
@@ -70,20 +53,23 @@
 
 ## 多泳道并行（Lane）
 
-| 泳道 | 当前任务 | 包/目录所有权 | 状态 |
-|------|----------|---------------|------|
-| **Lane A** | MS2 已批准 | `infra/`、`scripts/dev-up*` | `idle` |
-| **Lane B** | MS3 已批准，Lane 空闲 | `apps/orchestrator/`、`apps/api/` | `idle` |
-| **Lane D** | MS5 已批准，Lane 空闲 | `apps/web/` | `idle` |
-| **Lane E** | Docker 已安装（WSL） | `scripts/install-docker*` | `done` |
+> **目录所有权定义**见 [`../CONTRIBUTING.md`](../CONTRIBUTING.md) §Lane。下表只跟踪**当前占用状态**。
 
-### Agent 认领规则
+| 泳道 | 当前任务 | 状态 |
+|------|----------|------|
+| **Lane A** | — | `idle` |
+| **Lane B** | — | `idle` |
+| **Lane C** | — | `idle` |
+| **Lane D** | — | `idle` |
+| **Lane E** | — | `idle` |
+
+### Agent 认领规则（工人模式）
 
 1. **先登记、后编码**：开工前更新下方 **§任务认领登记簿**；未登记不得改代码。
 2. **一次一 Lane**：每个工人会话只认领一个 Lane + 一组任务 ID。
 3. **禁止抢单**：`claimed` 且非本人 → 停止并通知总控；总控负责改派（改登记簿）。
-4. **文件所有权**：禁止跨 Lane 修改对方目录；`packages/shared`、DB migration **仅总控**可改。
-5. **集成检查**：合并前必须 `.\scripts\test.ps1` 全绿。
+4. **文件所有权**：禁止跨 Lane 修改对方目录（目录表见 CONTRIBUTING）；`packages/shared`、DB migration **仅总控**可改。
+5. **集成检查 / 证据**：见 [`AGENTS.md`](../AGENTS.md) 合并前检查清单。
 6. **会话结束**：认领改为 `done` 或 `released`；里程碑 `completed` **仅总控**可写。
 
 ---
