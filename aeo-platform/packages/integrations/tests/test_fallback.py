@@ -8,14 +8,14 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 from aeo_integrations.amazon.auth import AmazonCredentialError
-from aeo_integrations.amazon.config import AmazonSettings
+from aeo_integrations.amazon.config import AmazonDataSource, AmazonSettings
 from aeo_integrations.amazon.fallback import FallbackWrapper, _is_fallback_error
 
 
 @pytest.fixture
 def settings() -> AmazonSettings:
     return AmazonSettings(
-        AMAZON_DATA_SOURCE="spapi",
+        AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI,
         AMAZON_MARKETPLACE_ID="ATVPDKIKX0DER",
         SP_API_CLIENT_ID="test-id",
         SP_API_CLIENT_SECRET="test-secret",
@@ -27,7 +27,7 @@ def settings() -> AmazonSettings:
 @pytest.fixture
 def settings_no_fallback() -> AmazonSettings:
     return AmazonSettings(
-        AMAZON_DATA_SOURCE="spapi",
+        AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI,
         AMAZON_MARKETPLACE_ID="ATVPDKIKX0DER",
         SP_API_CLIENT_ID="test-id",
         SP_API_CLIENT_SECRET="test-secret",
@@ -185,7 +185,8 @@ class TestFactoryWithFallback:
         assert client.data_source == "spapi"
 
     def test_listings_factory_no_fallback(self, settings_no_fallback: AmazonSettings) -> None:
-        from aeo_integrations.amazon.listings import SpApiListingsAdapter, get_listings_client
+        from aeo_integrations.amazon.listings import get_listings_client
+        from aeo_integrations.amazon.spapi_adapter import SpApiListingsAdapter
 
         with patch.object(SpApiListingsAdapter, "__init__", return_value=None):
             client = get_listings_client(settings_no_fallback)
@@ -213,10 +214,9 @@ class TestFactoryWithFallback:
         assert isinstance(client, FallbackWrapper)
 
     def test_mock_mode_no_wrapper(self) -> None:
-        from aeo_integrations.amazon.config import AmazonSettings
         from aeo_integrations.amazon.listings import MockListingsAdapter, get_listings_client
 
-        mock_settings = AmazonSettings(AMAZON_DATA_SOURCE="mock")
+        mock_settings = AmazonSettings(AMAZON_DATA_SOURCE=AmazonDataSource.MOCK)
         client = get_listings_client(mock_settings)
         assert isinstance(client, MockListingsAdapter)
         assert client.data_source == "mock"
@@ -227,7 +227,7 @@ class TestDataSourceProperty:
         from aeo_integrations.amazon.spapi_adapter import SpApiListingsAdapter
 
         settings = AmazonSettings(
-            AMAZON_DATA_SOURCE="spapi",
+            AMAZON_DATA_SOURCE=AmazonDataSource.SPAPI,
             SP_API_CLIENT_ID="id",
             SP_API_CLIENT_SECRET="secret",
             SP_API_REFRESH_TOKEN="token",
