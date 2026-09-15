@@ -100,7 +100,7 @@ Phase 1~5 建立了完整的多租户 SaaS 平台，但存在两个关键缺口�
 |----|------|------|------|------|
 | P6-24 ✅ | Shopify 工厂切换：get_store_client() 支持 mock/shopify 模式（env SHOPIFY_DATA_SOURCE） | MV-M10 | — | 与 Amazon 模式一致；默认 mock |
 | P6-25 ✅ | ShopifyApiAdapter 实现：7 个 Protocol 方法（products/orders/inventory/carts/customers/discounts/metrics） | MV-M10 | P6-24 | 满足 StoreClient Protocol；GraphQL Admin API |
-| P6-26 | Shopify 凭据管理：store_url + access_token 加密存储 + 设置 UI | M05/M06 | P6-25 | 连接测试；scope 验证 |
+| P6-26 ✅ | Shopify 凭据管理：store_url + access_token 加密存储 + 设置 UI | M05/M06 | P6-25 | 连接测试；scope 验证 |
 | P6-27 ✅ | 降级策略：Shopify API 错误时 fallback mock + 告警 | MV-M10 | P6-25 | 与 P6-22 模式一致 |
 | P6-28 | P6-MS4 验收：SHOPIFY_DATA_SOURCE=shopify 端到端跑通 DTC dashboard/content/ops/support | ALL | P6-24~27 | 真实数据流入；test.ps1 全绿 |
 
