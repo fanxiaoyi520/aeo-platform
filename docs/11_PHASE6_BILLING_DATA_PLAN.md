@@ -91,7 +91,7 @@ Phase 1~5 建立了完整的多租户 SaaS 平台，但存在两个关键缺口�
 | P6-19 ✅ | SpApiAdvertisingAdapter 实现：list_campaigns、list_spend_snapshots（Advertising API via requests） | MV-M10 | P6-16 | 满足 AdvertisingClient Protocol |
 | P6-20 ✅ | SpApiInventoryAdapter 实现：get_inventory、list_inventory（Inventories API） | MV-M10 | P6-16 | 满足 InventoryClient Protocol |
 | P6-21 ✅ | 凭据管理：Amazon 设置加密存储（AES-256-GCM + DB + API）+ 连接测试 | M05/M06 | P6-16 | 凭据不明文落盘；连接测试按钮 |
-| P6-22 | 降级策略：SP-API 限流/错误时 fallback 到 mock + 告警日志 | MV-M10 | P6-17~20 | 429/5xx 触发降级；data_source 标记为 "spapi-degraded" |
+| P6-22 ✅ | 降级策略：SP-API 限流/错误时 fallback 到 mock + 告警日志 | MV-M10 | P6-17~20 | FallbackWrapper + 指数退避重试 + data_source="spapi-degraded" 标记 |
 | P6-23 | P6-MS3 验收：AMAZON_DATA_SOURCE=spapi 端到端跑通 research/ads/ops/support 节点 | ALL | P6-16~22 | 真实数据流入；test.ps1 全绿（mock 测试不受影响） |
 
 ### P6-MS4 — Shopify 真实数据

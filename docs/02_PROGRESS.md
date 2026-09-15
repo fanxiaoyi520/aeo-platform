@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-15
-**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 in_progress（P6-16~21 ✅）
-**下一任务：** P6-22 降级策略 → P6-23 P6-MS3 验收
+**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 in_progress（P6-16~22 ✅）
+**下一任务：** P6-23 P6-MS3 验收
 **Git：** `feat/p6-01-stripe-integration`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
@@ -402,3 +402,4 @@
 | 2026-09-15 | **P6-19** SpApiAdvertisingAdapter；`requests` + LWA token 直调 Advertising API + 3 项测试 |
 | 2026-09-15 | **P6-21** 凭据加密存储；AES-256-GCM + DB 模型 + API 路由（CRUD + 连接测试）+ 18 项测试 |
 | 2026-09-15 | **P6-MS3 核心完成** — PR #65 merged；test **1119/1119**，mypy 0 errors，ruff clean；CI ✅ |
+| 2026-09-15 | **P6-22** 降级策略；`FallbackWrapper`（重试+指数退避+mock fallback）+ `data_source` 标记 + `AMAZON_FALLBACK_ENABLED` 配置；22 项测试；PR #66 |
