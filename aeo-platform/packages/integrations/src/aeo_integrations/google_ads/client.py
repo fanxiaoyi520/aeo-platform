@@ -3,10 +3,19 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Protocol
 
+from aeo_integrations.amazon.fallback import FallbackWrapper
+from aeo_integrations.google_ads.config import (
+    GoogleAdsDataSource,
+    GoogleAdsSettings,
+    get_google_ads_settings,
+)
 from aeo_integrations.google_ads.models import GoogleAdCampaign, GoogleAdSpendSnapshot
+
+logger = logging.getLogger(__name__)
 
 _MOCK_DIR = Path(__file__).resolve().parent / "mock"
 _DEFAULT_FIXTURE = _MOCK_DIR / "sample_google_ads.json"
@@ -33,6 +42,10 @@ class MockGoogleAdsAdapter:
         self._fixture_path = fixture_path or _DEFAULT_FIXTURE
         self._campaign_cache: dict[str, GoogleAdCampaign] | None = None
         self._snapshot_cache: list[GoogleAdSpendSnapshot] | None = None
+
+    @property
+    def data_source(self) -> str:
+        return "mock"
 
     def _load_campaigns(self) -> dict[str, GoogleAdCampaign]:
         if self._campaign_cache is not None:
@@ -77,12 +90,31 @@ class MockGoogleAdsAdapter:
         return items[:limit]
 
 
-_client: MockGoogleAdsAdapter | None = None
+_client: GoogleAdsClient | None = None
 
 
-def get_google_ads_client() -> MockGoogleAdsAdapter:
-    """Return the singleton mock Google Ads client."""
+def get_google_ads_client(settings: GoogleAdsSettings | None = None) -> GoogleAdsClient:
+    """Return the singleton Google Ads client based on configuration."""
     global _client
-    if _client is None:
+    if _client is not None:
+        return _client
+
+    if settings is None:
+        settings = get_google_ads_settings()
+
+    if settings.data_source == GoogleAdsDataSource.MOCK:
         _client = MockGoogleAdsAdapter()
+        logger.info("Google Ads client: using mock adapter")
+    else:
+        from aeo_integrations.google_ads.adapter import GoogleAdsApiAdapter
+
+        primary = GoogleAdsApiAdapter(settings)
+        if settings.fallback_enabled:
+            fallback = MockGoogleAdsAdapter()
+            _client = FallbackWrapper(primary, fallback, primary_name="google")
+            logger.info("Google Ads client: using API with mock fallback")
+        else:
+            _client = primary
+            logger.info("Google Ads client: using API (no fallback)")
+
     return _client

@@ -62,16 +62,8 @@ def upgrade() -> None:
     op.create_index("idx_users_tenant_email", "users", ["tenant_id", "email"], unique=True)
 
     op.execute(
-        sa.text(
-            "INSERT INTO tenants (id, name, slug, plan, is_active) "
-            "VALUES (:id, :name, :slug, :plan, :is_active)"
-        ).bindparams(
-            id=SYSTEM_TENANT_ID,
-            name="System",
-            slug="system",
-            plan="enterprise",
-            is_active=True,
-        )
+        f"INSERT INTO tenants (id, name, slug, plan, is_active) "
+        f"VALUES ('{SYSTEM_TENANT_ID}'::uuid, 'System', 'system', 'enterprise', true)"
     )
 
 

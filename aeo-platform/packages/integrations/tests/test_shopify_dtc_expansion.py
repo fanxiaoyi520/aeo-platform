@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
+from unittest.mock import MagicMock
+
+if TYPE_CHECKING:
+    from aeo_integrations.shopify.shopify_adapter import ShopifyApiAdapter
+
 from decimal import Decimal
 
 
@@ -186,37 +192,75 @@ class TestStoreClientDTCMethods:
 
 
 class TestShopifyApiAdapterDTC:
-    def test_list_abandoned_carts_raises(self) -> None:
-        import pytest
+    def _make_adapter(self) -> ShopifyApiAdapter:
+        from aeo_integrations.shopify.config import ShopifySettings
         from aeo_integrations.shopify.shopify_adapter import ShopifyApiAdapter
 
-        adapter = ShopifyApiAdapter(store_url="test.myshopify.com", access_token="tok")
-        with pytest.raises(NotImplementedError):
-            adapter.list_abandoned_carts()
+        return ShopifyApiAdapter(
+            ShopifySettings(
+                SHOPIFY_STORE_URL="https://test.myshopify.com",
+                SHOPIFY_ACCESS_TOKEN="tok",
+            )
+        )
 
-    def test_list_customers_raises(self) -> None:
-        import pytest
-        from aeo_integrations.shopify.shopify_adapter import ShopifyApiAdapter
+    def _mock_response(self, json_data: dict[str, Any]) -> MagicMock:
+        from unittest.mock import MagicMock
 
-        adapter = ShopifyApiAdapter(store_url="test.myshopify.com", access_token="tok")
-        with pytest.raises(NotImplementedError):
-            adapter.list_customers()
+        resp = MagicMock()
+        resp.json.return_value = json_data
+        resp.raise_for_status.return_value = None
+        return resp
 
-    def test_list_discount_codes_raises(self) -> None:
-        import pytest
-        from aeo_integrations.shopify.shopify_adapter import ShopifyApiAdapter
+    def test_list_abandoned_carts_calls_api(self) -> None:
+        from unittest.mock import patch
 
-        adapter = ShopifyApiAdapter(store_url="test.myshopify.com", access_token="tok")
-        with pytest.raises(NotImplementedError):
-            adapter.list_discount_codes()
+        adapter = self._make_adapter()
+        mock_resp = self._mock_response(
+            {
+                "checkouts": [
+                    {"id": "1", "email": "a@b.com"},
+                ]
+            }
+        )
+        with patch("aeo_integrations.shopify.shopify_adapter.requests.get", return_value=mock_resp):
+            carts = adapter.list_abandoned_carts()
+        assert len(carts) == 1
+        assert carts[0].customer_email == "a@b.com"
 
-    def test_get_store_metrics_raises(self) -> None:
-        import pytest
-        from aeo_integrations.shopify.shopify_adapter import ShopifyApiAdapter
+    def test_list_customers_calls_api(self) -> None:
+        from unittest.mock import patch
 
-        adapter = ShopifyApiAdapter(store_url="test.myshopify.com", access_token="tok")
-        with pytest.raises(NotImplementedError):
-            adapter.get_store_metrics()
+        adapter = self._make_adapter()
+        mock_resp = self._mock_response(
+            {
+                "customers": [
+                    {"id": 42, "email": "c@d.com", "first_name": "A"},
+                ]
+            }
+        )
+        with patch("aeo_integrations.shopify.shopify_adapter.requests.get", return_value=mock_resp):
+            customers = adapter.list_customers()
+        assert len(customers) == 1
+
+    def test_list_discount_codes_calls_api(self) -> None:
+        from unittest.mock import patch
+
+        adapter = self._make_adapter()
+        mock_resp = self._mock_response(
+            {
+                "price_rules": [
+                    {"id": 1, "title": "SAVE10", "target_type": "percentage", "value": "10"},
+                ]
+            }
+        )
+        with patch("aeo_integrations.shopify.shopify_adapter.requests.get", return_value=mock_resp):
+            codes = adapter.list_discount_codes()
+        assert len(codes) == 1
+
+    def test_get_store_metrics_returns_empty(self) -> None:
+        adapter = self._make_adapter()
+        metrics = adapter.get_store_metrics()
+        assert metrics == []
 
 
 class TestDTCMockDataIntegrity:
