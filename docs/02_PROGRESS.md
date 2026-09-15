@@ -5,9 +5,9 @@
 > **执行模式：** **单总控 + Spec + Git 分支 + PR + CI**（进阶档，2026-08-29）  
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
-**最后更新：** 2026-09-14
-**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅
-**下一任务：** P6-MS3 Amazon 真实数据（待用户提供卖家号凭据）
+**最后更新：** 2026-09-15
+**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 in_progress（P6-16~21 ✅）
+**下一任务：** P6-22 降级策略 → P6-23 P6-MS3 验收
 **Git：** `feat/p6-01-stripe-integration`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
@@ -395,3 +395,10 @@
 | 2026-09-14 | **P6-09** P6-MS1 验收；16 项集成测试 + webhook 模拟 + plan 同步验证；test **439/439**，coverage **79%**；**P6-MS1 ✅** |
 | 2026-09-14 | **P6-10~13** 计费前端完整实现；定价页 + 订阅管理 + 发票历史 + 配额超限 UX；**P6-MS2 ✅** |
 | 2026-09-15 | **MV1-08 风控页面恢复** — 从旧分支适配缺失文件到 main：`risk/page.tsx` + `api/risk/route.ts` + Risk 类型 + `/rules` 端点 + 侧边栏导航；test **1120/1120**，coverage **87.63%**；PR #64 merged |
+| 2026-09-15 | **P6-16** SP-API OAuth（LWA token 刷新 + 缓存）；`AccessTokenClient` + 内存 TTL 缓存 + 7 项测试 |
+| 2026-09-15 | **P6-17** SpApiListingsAdapter；`CatalogItems` API + 字段映射 + 3 项测试 |
+| 2026-09-15 | **P6-18** SpApiOrdersAdapter；`Orders` API + `get_order_items` + 物流字段 + 3 项测试 |
+| 2026-09-15 | **P6-20** SpApiInventoryAdapter；`Inventories` API + 库存汇总映射 + 4 项测试 |
+| 2026-09-15 | **P6-19** SpApiAdvertisingAdapter；`requests` + LWA token 直调 Advertising API + 3 项测试 |
+| 2026-09-15 | **P6-21** 凭据加密存储；AES-256-GCM + DB 模型 + API 路由（CRUD + 连接测试）+ 18 项测试 |
+| 2026-09-15 | **P6-MS3 核心完成** — PR #65 merged；test **1119/1119**，mypy 0 errors，ruff clean；CI ✅ |

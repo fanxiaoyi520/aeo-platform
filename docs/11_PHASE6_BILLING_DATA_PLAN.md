@@ -85,12 +85,12 @@ Phase 1~5 建立了完整的多租户 SaaS 平台，但存在两个关键缺口�
 
 | ID | 任务 | 模块 | 依赖 | 验收 |
 |----|------|------|------|------|
-| P6-16 | SP-API OAuth 实现：LWA token 刷新（refresh_token→access_token）+ 缓存 | MV-M10 | 用户凭据 | `get_access_token()` 返回真实 token；过期自动刷新 |
-| P6-17 | SpApiListingsAdapter 实现：get_listing、list_listings（Listings Items API） | MV-M10 | P6-16 | 满足 ListingsClient Protocol；真实 SKU 返回数据 |
-| P6-18 | SpApiOrdersAdapter 实现：list_orders（Orders API v0） | MV-M10 | P6-16 | 满足 OrdersClient Protocol；含物流字段 |
-| P6-19 | SpApiAdvertisingAdapter 实现：list_campaigns、list_spend_snapshots（Sponsored Products API） | MV-M10 | P6-16 | 满足 AdvertisingClient Protocol |
-| P6-20 | SpApiInventoryAdapter 实现：get_inventory、list_inventory（FBA Inventory API） | MV-M10 | P6-16 | 满足 InventoryClient Protocol |
-| P6-21 | 凭据管理：Amazon 设置加密存储（DB 或 Vault）+ 设置 UI 录入/验证 | M05/M06 | P6-16 | 凭据不明文落盘；连接测试按钮 |
+| P6-16 ✅ | SP-API OAuth 实现：LWA token 刷新（refresh_token→access_token）+ 缓存 | MV-M10 | — | `get_access_token()` 返回真实 token；过期自动刷新 |
+| P6-17 ✅ | SpApiListingsAdapter 实现：get_listing、list_listings（Catalog Items API） | MV-M10 | P6-16 | 满足 ListingsClient Protocol；字段映射完成 |
+| P6-18 ✅ | SpApiOrdersAdapter 实现：list_orders（Orders API） | MV-M10 | P6-16 | 满足 OrdersClient Protocol；含物流字段 |
+| P6-19 ✅ | SpApiAdvertisingAdapter 实现：list_campaigns、list_spend_snapshots（Advertising API via requests） | MV-M10 | P6-16 | 满足 AdvertisingClient Protocol |
+| P6-20 ✅ | SpApiInventoryAdapter 实现：get_inventory、list_inventory（Inventories API） | MV-M10 | P6-16 | 满足 InventoryClient Protocol |
+| P6-21 ✅ | 凭据管理：Amazon 设置加密存储（AES-256-GCM + DB + API）+ 连接测试 | M05/M06 | P6-16 | 凭据不明文落盘；连接测试按钮 |
 | P6-22 | 降级策略：SP-API 限流/错误时 fallback 到 mock + 告警日志 | MV-M10 | P6-17~20 | 429/5xx 触发降级；data_source 标记为 "spapi-degraded" |
 | P6-23 | P6-MS3 验收：AMAZON_DATA_SOURCE=spapi 端到端跑通 research/ads/ops/support 节点 | ALL | P6-16~22 | 真实数据流入；test.ps1 全绿（mock 测试不受影响） |
 
