@@ -3,10 +3,19 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Protocol
 
+from aeo_integrations.amazon.fallback import FallbackWrapper
+from aeo_integrations.facebook_ads.config import (
+    FacebookAdsDataSource,
+    FacebookAdsSettings,
+    get_facebook_ads_settings,
+)
 from aeo_integrations.facebook_ads.models import FacebookAdCampaign, FacebookAdSpendSnapshot
+
+logger = logging.getLogger(__name__)
 
 _MOCK_DIR = Path(__file__).resolve().parent / "mock"
 _DEFAULT_FIXTURE = _MOCK_DIR / "sample_facebook_ads.json"
@@ -33,6 +42,10 @@ class MockFacebookAdsAdapter:
         self._fixture_path = fixture_path or _DEFAULT_FIXTURE
         self._campaign_cache: dict[str, FacebookAdCampaign] | None = None
         self._snapshot_cache: list[FacebookAdSpendSnapshot] | None = None
+
+    @property
+    def data_source(self) -> str:
+        return "mock"
 
     def _load_campaigns(self) -> dict[str, FacebookAdCampaign]:
         if self._campaign_cache is not None:
@@ -77,12 +90,31 @@ class MockFacebookAdsAdapter:
         return items[:limit]
 
 
-_client: MockFacebookAdsAdapter | None = None
+_client: FacebookAdsClient | None = None
 
 
-def get_facebook_ads_client() -> MockFacebookAdsAdapter:
-    """Return the singleton mock Facebook Ads client."""
+def get_facebook_ads_client(settings: FacebookAdsSettings | None = None) -> FacebookAdsClient:
+    """Return the singleton Facebook Ads client based on configuration."""
     global _client
-    if _client is None:
+    if _client is not None:
+        return _client
+
+    if settings is None:
+        settings = get_facebook_ads_settings()
+
+    if settings.data_source == FacebookAdsDataSource.MOCK:
         _client = MockFacebookAdsAdapter()
+        logger.info("Facebook Ads client: using mock adapter")
+    else:
+        from aeo_integrations.facebook_ads.adapter import FacebookAdsApiAdapter
+
+        primary = FacebookAdsApiAdapter(settings)
+        if settings.fallback_enabled:
+            fallback = MockFacebookAdsAdapter()
+            _client = FallbackWrapper(primary, fallback, primary_name="facebook")
+            logger.info("Facebook Ads client: using API with mock fallback")
+        else:
+            _client = primary
+            logger.info("Facebook Ads client: using API (no fallback)")
+
     return _client

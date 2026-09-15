@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+from aeo_integrations.amazon.fallback import FallbackWrapper
+from aeo_integrations.shopify.config import ShopifyDataSource, ShopifySettings, get_shopify_settings
 from aeo_integrations.shopify.models import (
     ShopifyAbandonedCart,
     ShopifyCustomer,
@@ -15,6 +18,8 @@ from aeo_integrations.shopify.models import (
     ShopifyProduct,
     ShopifyStoreMetrics,
 )
+
+logger = logging.getLogger(__name__)
 
 _MOCK_DIR = Path(__file__).resolve().parent / "mock"
 
@@ -57,6 +62,10 @@ class MockStoreAdapter:
         self._customers = self._load_customers()
         self._discount_codes = self._load_discount_codes()
         self._store_metrics = self._load_store_metrics()
+
+    @property
+    def data_source(self) -> str:
+        return "mock"
 
     def _load_products(self) -> list[ShopifyProduct]:
         path = _MOCK_DIR / "sample_products.json"
@@ -133,12 +142,31 @@ class MockStoreAdapter:
         return self._store_metrics[:limit]
 
 
-_client: MockStoreAdapter | None = None
+_client: StoreClient | None = None
 
 
-def get_store_client() -> MockStoreAdapter:
-    """Return the singleton mock store client."""
+def get_store_client(settings: ShopifySettings | None = None) -> StoreClient:
+    """Return the singleton store client based on configuration."""
     global _client
-    if _client is None:
+    if _client is not None:
+        return _client
+
+    if settings is None:
+        settings = get_shopify_settings()
+
+    if settings.data_source == ShopifyDataSource.MOCK:
         _client = MockStoreAdapter()
+        logger.info("Shopify store client: using mock adapter")
+    else:
+        from aeo_integrations.shopify.shopify_adapter import ShopifyApiAdapter
+
+        primary = ShopifyApiAdapter(settings)
+        if settings.fallback_enabled:
+            fallback = MockStoreAdapter()
+            _client = FallbackWrapper(primary, fallback, primary_name="shopify")
+            logger.info("Shopify store client: using SP-API with mock fallback")
+        else:
+            _client = primary
+            logger.info("Shopify store client: using SP-API (no fallback)")
+
     return _client
