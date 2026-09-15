@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-15
-**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 in_progress（P6-16~22 ✅）
-**下一任务：** P6-23 P6-MS3 验收
+**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 ✅（P6-16~23 全部完成）
+**下一任务：** P6-MS4（待定）
 **Git：** `feat/p6-01-stripe-integration`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
