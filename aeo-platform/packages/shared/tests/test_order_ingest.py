@@ -71,6 +71,42 @@ class FakeShopifyOrders:
         return items[:limit]
 
 
+class FakeTikTokOrders:
+    def list_orders(
+        self, *, sku: str | None = None, status: str | None = None, limit: int = 20
+    ) -> list[Any]:
+        from aeo_integrations.tiktok.models import TikTokOrderItem
+
+        items = [
+            TikTokOrderItem(
+                order_id="TT-001",
+                sku="TK-SKU-A",
+                quantity=2,
+                unit_price="29.99",
+                order_status="AwaitingShipment",
+                create_time="2026-09-15T10:00:00Z",
+                currency="USD",
+            ),
+            TikTokOrderItem(
+                order_id="TT-002",
+                sku="TK-SKU-B",
+                quantity=1,
+                unit_price="49.99",
+                order_status="Shipped",
+                create_time="2026-09-16T14:30:00Z",
+                tracking_number="TT123456789",
+                shipping_provider="USPS",
+                currency="USD",
+            ),
+        ]
+        if sku:
+            key = sku.strip().upper()
+            items = [i for i in items if i.sku.upper() == key]
+        if status:
+            items = [i for i in items if i.order_status == status]
+        return items[:limit]
+
+
 class TestOrderIngestService:
     def test_ingest_amazon_orders(self) -> None:
         service = OrderIngestService()
@@ -154,3 +190,32 @@ class TestOrderIngestService:
         records = service.ingest_amazon(NoDataSourceClient())
         assert len(records) == 1
         assert records[0].data_source == "mock"
+
+    def test_ingest_tiktok_orders(self) -> None:
+        service = OrderIngestService()
+        records = service.ingest_tiktok(FakeTikTokOrders())
+        assert len(records) == 2
+        assert records[0].platform == "tiktok"
+        assert records[0].external_order_id == "TT-001"
+        assert records[0].sku == "TK-SKU-A"
+        assert records[0].quantity == 2
+        assert records[0].item_price == "29.99"
+        assert records[1].tracking_number == "TT123456789"
+        assert records[1].carrier == "USPS"
+
+    def test_ingest_tiktok_with_sku_filter(self) -> None:
+        service = OrderIngestService()
+        records = service.ingest_tiktok(FakeTikTokOrders(), sku="TK-SKU-A")
+        assert len(records) == 1
+        assert records[0].sku == "TK-SKU-A"
+
+    def test_ingest_all_with_tiktok(self) -> None:
+        service = OrderIngestService()
+        records = service.ingest_all(
+            amazon_client=FakeAmazonOrders(),
+            shopify_client=FakeShopifyOrders(),
+            tiktok_client=FakeTikTokOrders(),
+        )
+        assert len(records) == 5
+        platforms = {r.platform for r in records}
+        assert platforms == {"amazon", "shopify", "tiktok"}
