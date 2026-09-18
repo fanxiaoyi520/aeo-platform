@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import json
-from datetime import date, timedelta
+import os
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
@@ -11,7 +12,10 @@ from aeo_llm.openai_compatible import get_llm_provider
 from aeo_llm.provider import Message
 from aeo_shared.agent_catalog import get_default_registry
 from aeo_shared.metrics_sdk import (
+    AdSpendMetricRecord,
     BusinessMetricsSnapshot,
+    OrderMetricRecord,
+    build_daily_snapshot,
 )
 from aeo_shared.strategy_task_creator import StrategyTaskCreator, get_action_mapping
 from aeo_shared.task_scheduler import AgentTaskScheduler
@@ -20,12 +24,111 @@ from aeo_orchestrator.nodes._helpers import with_started_trace
 from aeo_orchestrator.state import AgentTraceStatus, TaskState, make_trace_event
 
 
+async def _fetch_live_metrics_from_db(
+    *,
+    platform: str,
+    marketplace: str,
+    days: int = 7,
+) -> list[BusinessMetricsSnapshot] | None:
+    """Fetch live metrics from DB using psycopg. Returns None if DB unavailable."""
+    try:
+        import psycopg
+
+        db_url = os.environ.get("DB_URL_SYNC") or os.environ.get("DB_URL")
+        if not db_url:
+            return None
+
+        today = date.today()
+        start_date = today - timedelta(days=days - 1)
+        start_dt = datetime(start_date.year, start_date.month, start_date.day, tzinfo=UTC)
+
+        orders: list[OrderMetricRecord] = []
+        ad_spends: list[AdSpendMetricRecord] = []
+
+        with psycopg.connect(db_url) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT sku, quantity, item_price, platform, marketplace,
+                       purchase_date, data_source
+                FROM order_records
+                WHERE platform = %s AND marketplace = %s AND purchase_date >= %s
+                """,
+                (platform, marketplace, start_dt),
+            )
+            for row in cur.fetchall():
+                orders.append(
+                    OrderMetricRecord(
+                        sku=row[0],
+                        quantity=row[1],
+                        item_price=row[2],
+                        platform=row[3],
+                        marketplace=row[4],
+                        purchase_date=row[5],
+                        data_source=row[6],
+                    )
+                )
+
+            cur.execute(
+                """
+                SELECT s.spend, s.attributed_gmv, s.snapshot_date, %s as platform,
+                       s.data_source
+                FROM ad_spend_snapshots s
+                JOIN ad_campaigns c ON s.campaign_id = c.id
+                WHERE c.platform = %s AND s.snapshot_date >= %s
+                """,
+                (platform, platform, start_dt),
+            )
+            for row in cur.fetchall():
+                ad_spends.append(
+                    AdSpendMetricRecord(
+                        spend=row[0],
+                        attributed_gmv=row[1],
+                        snapshot_date=row[2],
+                        platform=row[3],
+                        data_source=row[4],
+                    )
+                )
+
+        if not orders and not ad_spends:
+            return None
+
+        snapshots = []
+        for i in range(days):
+            day = start_date + timedelta(days=i)
+            snapshot = build_daily_snapshot(
+                orders=orders,
+                ad_spends=ad_spends,
+                snapshot_date=day,
+                platform=platform,
+                marketplace=marketplace,
+            )
+            snapshots.append(
+                BusinessMetricsSnapshot(
+                    snapshot_date=snapshot.snapshot_date,
+                    platform=snapshot.platform,
+                    marketplace=snapshot.marketplace,
+                    gmv=snapshot.gmv,
+                    ad_spend=snapshot.ad_spend,
+                    roi=snapshot.roi,
+                    order_count=snapshot.order_count,
+                    unique_skus=snapshot.unique_skus,
+                    automation_rate=snapshot.automation_rate,
+                    data_source="live",
+                )
+            )
+
+        return snapshots
+    except Exception:
+        return None
+
+
 def _generate_mock_metrics(
     *,
     platform: str,
     marketplace: str,
     days: int = 7,
 ) -> list[BusinessMetricsSnapshot]:
+    """Fallback mock metrics when live data is unavailable."""
     today = date.today()
     snapshots = []
     for i in range(days):
@@ -114,8 +217,14 @@ async def analytics_node(state: TaskState) -> dict[str, object]:
         platform = state.get("platform", "amazon")
         market = state.get("market", "US")
 
-        snapshots = _generate_mock_metrics(platform=platform, marketplace=market, days=7)
+        snapshots = await _fetch_live_metrics_from_db(platform=platform, marketplace=market, days=7)
+        data_source = "live"
+        if not snapshots or not any(s.gmv > 0 or s.order_count > 0 for s in snapshots):
+            snapshots = _generate_mock_metrics(platform=platform, marketplace=market, days=7)
+            data_source = "mock"
+
         metrics_summary = _build_metrics_summary(snapshots)
+        metrics_summary["data_source"] = data_source
 
         dtc_kpis: dict[str, Any] = {}
         if platform == "shopify":
