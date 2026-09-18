@@ -2,22 +2,29 @@
 
 from __future__ import annotations
 
-from datetime import date
-from typing import Any
+from datetime import date, timedelta
+from decimal import Decimal
+from typing import Annotated, Any
 
 from aeo_shared.agent_catalog import get_default_registry
 from aeo_shared.metrics_sdk import BusinessMetricsSnapshot
 from aeo_shared.responses import success_response
 from aeo_shared.strategy_task_creator import StrategyTaskCreator, get_action_mapping
 from aeo_shared.task_scheduler import AgentTaskScheduler
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from aeo_api.db.models import get_db_session
+from aeo_api.services.metrics_aggregation import MetricsAggregationService, has_live_data
 
 router = APIRouter(prefix="/api/v1/analytics", tags=["analytics"])
 
+DbSession = Annotated[AsyncSession, Depends(get_db_session)]
+
 
 def _ok(request: Request, data: dict[str, Any]) -> dict[str, Any]:
-    return success_response(data, request.state.request_id).model_dump()
+    return success_response(data, request.state.request_id).model_dump()  # type: ignore[no-any-return]
 
 
 class SuggestionInput(BaseModel):
@@ -32,12 +39,10 @@ class CreateTasksRequest(BaseModel):
 
 
 def _build_mock_report() -> dict[str, Any]:
+    """Fallback mock report when no live data is available."""
     today = date.today()
     snapshots = []
     for i in range(7):
-        from datetime import timedelta
-        from decimal import Decimal
-
         day = today - timedelta(days=i)
         gmv = Decimal(str(800 + (i * 50)))
         ad_spend = Decimal(str(200 + (i * 10)))
@@ -63,6 +68,7 @@ def _build_mock_report() -> dict[str, Any]:
     return {
         "generated_at": today.isoformat(),
         "report": "Business review report (mock data)",
+        "data_source": "mock",
         "metrics_summary": {
             "total_gmv": str(total_gmv),
             "total_ad_spend": str(total_ad_spend),
@@ -72,10 +78,47 @@ def _build_mock_report() -> dict[str, Any]:
     }
 
 
+def _build_live_report(snapshots: list[BusinessMetricsSnapshot]) -> dict[str, Any]:
+    """Build report from live metrics snapshots."""
+    today = date.today()
+    total_gmv = sum(s.gmv for s in snapshots)
+    total_ad_spend = sum(s.ad_spend for s in snapshots)
+    total_orders = sum(s.order_count for s in snapshots)
+
+    return {
+        "generated_at": today.isoformat(),
+        "report": "Business review report (live data)",
+        "data_source": "live",
+        "metrics_summary": {
+            "total_gmv": str(total_gmv),
+            "total_ad_spend": str(total_ad_spend),
+            "total_orders": total_orders,
+            "period_days": len(snapshots),
+        },
+    }
+
+
 @router.get("/report")
-async def get_analytics_report(request: Request) -> dict[str, Any]:
-    """Return a business review report with metrics summary."""
-    report = _build_mock_report()
+async def get_analytics_report(
+    request: Request,
+    db: DbSession,
+) -> dict[str, Any]:
+    """Return a business review report with metrics summary.
+
+    Uses live data from DB when available, falls back to mock otherwise.
+    """
+    snapshots: list[BusinessMetricsSnapshot] | None = None
+    try:
+        service = MetricsAggregationService(db)
+        snapshots = await service.build_live_snapshots(days=7)
+    except Exception:
+        snapshots = None
+
+    if snapshots and has_live_data(snapshots):
+        report = _build_live_report(snapshots)
+    else:
+        report = _build_mock_report()
+
     return _ok(request, report)
 
 
