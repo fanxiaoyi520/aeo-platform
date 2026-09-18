@@ -6,9 +6,9 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-18
-**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 ✅，P6-MS4 Shopify 真实数据 ✅
-**下一任务：** P6-29 真实指标聚合服务（P6-MS5 指标真实化）
-**Git：** `feat/p6-26-shopify-credentials`
+**当前阶段：** **Phase 6 计费与数据迁移** → P6-MS1 计费基础 ✅，P6-MS2 计费前端 ✅，P6-MS3 Amazon 真实数据 ✅，P6-MS4 Shopify 真实数据 ✅，P6-MS5 指标真实化 in_progress（P6-29 ✅）
+**下一任务：** P6-30 分析报告真实化
+**Git：** `feat/p6-29-metrics-aggregation`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
 ---
