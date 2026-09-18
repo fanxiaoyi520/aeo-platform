@@ -8,6 +8,13 @@ from aeo_shared.order_ingest import OrderIngestService, UnifiedOrderRecord
 
 
 class FakeAmazonOrders:
+    def __init__(self, data_source: str = "mock") -> None:
+        self._data_source = data_source
+
+    @property
+    def data_source(self) -> str:
+        return self._data_source
+
     def list_orders(self, *, sku: str | None = None, limit: int = 20) -> list[Any]:
         from aeo_integrations.amazon.models import AmazonOrderItem
 
@@ -38,6 +45,13 @@ class FakeAmazonOrders:
 
 
 class FakeShopifyOrders:
+    def __init__(self, data_source: str = "mock") -> None:
+        self._data_source = data_source
+
+    @property
+    def data_source(self) -> str:
+        return self._data_source
+
     def list_orders(self, *, financial_status: str | None = None, limit: int = 20) -> list[Any]:
         from aeo_integrations.shopify.models import ShopifyOrder
 
@@ -106,3 +120,37 @@ class TestOrderIngestService:
         records = service.ingest_amazon(FakeAmazonOrders(), sku="SKU-A")
         assert len(records) == 1
         assert records[0].sku == "SKU-A"
+
+    def test_ingest_amazon_propagates_data_source(self) -> None:
+        service = OrderIngestService()
+        records = service.ingest_amazon(FakeAmazonOrders(data_source="spapi"))
+        assert len(records) == 2
+        assert all(r.data_source == "spapi" for r in records)
+
+    def test_ingest_shopify_propagates_data_source(self) -> None:
+        service = OrderIngestService()
+        records = service.ingest_shopify(FakeShopifyOrders(data_source="shopify"))
+        assert len(records) == 1
+        assert records[0].data_source == "shopify"
+
+    def test_ingest_defaults_to_mock_when_no_data_source(self) -> None:
+        """When client has no data_source attribute, defaults to 'mock'."""
+
+        class NoDataSourceClient:
+            def list_orders(self, *, sku: str | None = None, limit: int = 20) -> list[Any]:
+                from aeo_integrations.amazon.models import AmazonOrderItem
+
+                return [
+                    AmazonOrderItem(
+                        order_id="AMZ-NO-DS",
+                        sku="SKU-X",
+                        quantity=1,
+                        order_status="Shipped",
+                        purchase_date="2026-09-01T10:00:00Z",
+                    )
+                ]
+
+        service = OrderIngestService()
+        records = service.ingest_amazon(NoDataSourceClient())
+        assert len(records) == 1
+        assert records[0].data_source == "mock"
