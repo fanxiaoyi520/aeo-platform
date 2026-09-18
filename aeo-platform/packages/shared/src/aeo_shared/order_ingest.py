@@ -35,6 +35,12 @@ class ShopifyOrdersClient(Protocol):
     def list_orders(self, *, financial_status: str | None = None, limit: int = 50) -> list[Any]: ...
 
 
+class TikTokOrdersClient(Protocol):
+    def list_orders(
+        self, *, sku: str | None = None, status: str | None = None, limit: int = 20
+    ) -> list[Any]: ...
+
+
 @dataclass
 class OrderIngestService:
     """Ingests orders from multiple platforms into unified records."""
@@ -66,17 +72,32 @@ class OrderIngestService:
             records.extend(self._map_shopify_order(order, data_source=data_source))
         return records
 
+    def ingest_tiktok(
+        self,
+        client: TikTokOrdersClient,
+        *,
+        sku: str | None = None,
+        status: str | None = None,
+        limit: int = 50,
+    ) -> list[UnifiedOrderRecord]:
+        items = client.list_orders(sku=sku, status=status, limit=limit)
+        data_source = getattr(client, "data_source", "mock")
+        return [self._map_tiktok(item, data_source=data_source) for item in items]
+
     def ingest_all(
         self,
         *,
         amazon_client: AmazonOrdersClient | None = None,
         shopify_client: ShopifyOrdersClient | None = None,
+        tiktok_client: TikTokOrdersClient | None = None,
     ) -> list[UnifiedOrderRecord]:
         records: list[UnifiedOrderRecord] = []
         if amazon_client is not None:
             records.extend(self.ingest_amazon(amazon_client))
         if shopify_client is not None:
             records.extend(self.ingest_shopify(shopify_client))
+        if tiktok_client is not None:
+            records.extend(self.ingest_tiktok(tiktok_client))
         return records
 
     def _map_amazon(self, item: Any, *, data_source: str = "mock") -> UnifiedOrderRecord:
@@ -129,3 +150,18 @@ class OrderIngestService:
             "unfulfilled": "Unshipped",
         }
         return mapping.get(fulfillment_status, "Unshipped")
+
+    def _map_tiktok(self, item: Any, *, data_source: str = "mock") -> UnifiedOrderRecord:
+        return UnifiedOrderRecord(
+            external_order_id=item.order_id,
+            sku=item.sku,
+            platform="tiktok",
+            quantity=item.quantity,
+            item_price=str(item.unit_price) if item.unit_price else "",
+            currency=item.currency,
+            order_status=item.order_status,
+            purchase_date=item.create_time or "",
+            tracking_number=item.tracking_number,
+            carrier=item.shipping_provider,
+            data_source=data_source,
+        )
