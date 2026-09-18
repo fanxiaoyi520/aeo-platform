@@ -79,6 +79,40 @@ class OrderIngestService:
             records.extend(self.ingest_shopify(shopify_client))
         return records
 
+    def ingest_platform(
+        self,
+        adapter: Any,
+        *,
+        limit: int = 50,
+        **kwargs: Any,
+    ) -> list[UnifiedOrderRecord]:
+        """Generic ingest from a PlatformAdapter (P7-14).
+
+        Dispatches to the platform-specific ingest method based on
+        ``adapter.platform_name``. Backward compatible with existing
+        ``ingest_amazon`` / ``ingest_shopify`` flows.
+        """
+        platform_name = getattr(adapter, "platform_name", None)
+        if not platform_name:
+            msg = "adapter must expose platform_name"
+            raise ValueError(msg)
+        orders_client = getattr(adapter, "orders", None)
+        if orders_client is None:
+            return []
+        dispatch = {
+            "amazon": lambda: self.ingest_amazon(
+                orders_client, limit=limit, **kwargs
+            ),
+            "shopify": lambda: self.ingest_shopify(
+                orders_client, limit=limit, **kwargs
+            ),
+        }
+        handler = dispatch.get(platform_name)
+        if handler is None:
+            msg = f"Unsupported platform for order ingest: {platform_name}"
+            raise ValueError(msg)
+        return handler()
+
     def _map_amazon(self, item: Any, *, data_source: str = "mock") -> UnifiedOrderRecord:
         return UnifiedOrderRecord(
             external_order_id=item.order_id,
