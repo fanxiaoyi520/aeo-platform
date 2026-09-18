@@ -109,7 +109,7 @@ Phase 1~5 建立了完整的多租户 SaaS 平台，但存在两个关键缺口�
 | ID | 任务 | 模块 | 依赖 | 验收 |
 |----|------|------|------|------|
 | P6-29 ✅ | 真实指标聚合服务：从 UnifiedOrderRecord + AdSpendSnapshot 计算 GMV/ROI/转化率，替换 _generate_mock_snapshots | MV-M09 | P6-MS3/MS4 | dashboard API 返回 data_source="live" 数据 |
-| P6-30 | 分析报告真实化：替换 _build_mock_report + orchestrator _generate_mock_metrics | MV-M09 | P6-29 | analytics API 返回真实聚合 |
+| P6-30 ✅ | 分析报告真实化：替换 _build_mock_report + orchestrator _generate_mock_metrics | MV-M09 | P6-29 | analytics API 返回真实聚合 |
 | P6-31 | data_source 标记全量翻转：UnifiedOrderRecord、BusinessMetricsSnapshot、OrderMetricRecord 默认值改为动态 | MV-M10 | P6-29/30 | mock 环境仍为 "mock"；真实环境为 "spapi"/"shopify"/"live" |
 | P6-32 | Phase 6 终验：计费全流程 + 双平台真实数据 + 指标看板 + 降级策略 端到端验收 | ALL | P6-01~31 | 验收报告；test.ps1 全绿；覆盖率 ≥ 70% |
 
