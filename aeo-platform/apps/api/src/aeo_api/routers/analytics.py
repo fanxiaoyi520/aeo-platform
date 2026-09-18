@@ -24,7 +24,7 @@ DbSession = Annotated[AsyncSession, Depends(get_db_session)]
 
 
 def _ok(request: Request, data: dict[str, Any]) -> dict[str, Any]:
-    return success_response(data, request.state.request_id).model_dump()  # type: ignore[no-any-return]
+    return success_response(data, request.state.request_id).model_dump()
 
 
 class SuggestionInput(BaseModel):
