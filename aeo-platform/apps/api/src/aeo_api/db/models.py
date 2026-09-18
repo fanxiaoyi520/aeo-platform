@@ -44,6 +44,8 @@ class Task(TenantMixin, Base):
     __table_args__ = (
         Index("idx_tasks_status", "status"),
         Index("idx_tasks_created_at", "created_at"),
+        Index("idx_tasks_tenant_status", "tenant_id", "status"),
+        Index("idx_tasks_platform_market", "platform", "market"),
     )
 
 
@@ -78,7 +80,11 @@ class AuditLog(TenantMixin, Base):
     detail: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (Index("idx_audit_logs_task_id", "task_id"),)
+    __table_args__ = (
+        Index("idx_audit_logs_task_id", "task_id"),
+        Index("idx_audit_logs_created_at", "created_at"),
+        Index("idx_audit_logs_action", "action"),
+    )
 
 
 class KnowledgeDocument(TenantMixin, Base):
@@ -113,7 +119,11 @@ class OrderRecord(Base):
     data_source: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (Index("idx_order_records_platform_sku", "platform", "sku"),)
+    __table_args__ = (
+        Index("idx_order_records_platform_sku", "platform", "sku"),
+        Index("idx_order_records_purchase_date", "purchase_date"),
+        Index("idx_order_records_marketplace", "marketplace"),
+    )
 
 
 class AdCampaign(Base):
@@ -151,7 +161,10 @@ class AdSpendSnapshot(Base):
     data_source: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (Index("idx_ad_spend_campaign_date", "campaign_id", "snapshot_date"),)
+    __table_args__ = (
+        Index("idx_ad_spend_campaign_date", "campaign_id", "snapshot_date"),
+        Index("idx_ad_spend_snapshot_date", "snapshot_date"),
+    )
 
 
 class CompetitorListing(TenantMixin, Base):
@@ -181,6 +194,8 @@ class CompetitorListing(TenantMixin, Base):
     __table_args__ = (
         Index("idx_competitor_platform_asin", "platform", "asin"),
         Index("idx_competitor_sku", "sku"),
+        Index("idx_competitor_marketplace", "marketplace"),
+        Index("idx_competitor_category", "category"),
     )
 
 
@@ -206,6 +221,8 @@ class SelectionScore(TenantMixin, Base):
     __table_args__ = (
         Index("idx_selection_sku", "sku"),
         Index("idx_selection_score", "total_score"),
+        Index("idx_selection_platform_market", "platform", "marketplace"),
+        Index("idx_selection_scored_at", "scored_at"),
     )
 
 
