@@ -14,6 +14,7 @@ from aeo_api.config import get_settings, validate_production_settings
 from aeo_api.db.redis import close_redis
 from aeo_api.logging_setup import setup_logging
 from aeo_api.middleware.auth import AuthMiddleware
+from aeo_api.middleware.performance import PerformanceMiddleware
 from aeo_api.middleware.prometheus import PrometheusMiddleware
 from aeo_api.middleware.rate_limit import RateLimitMiddleware
 from aeo_api.middleware.request_id import RequestIdMiddleware
@@ -80,6 +81,7 @@ def create_app() -> FastAPI:
 
     app.add_middleware(RateLimitMiddleware, limit_per_minute=settings.rate_limit_per_minute)
     app.add_middleware(PrometheusMiddleware)
+    app.add_middleware(PerformanceMiddleware)
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(AuthMiddleware, api_key=settings.auth_api_key)
     app.add_middleware(
