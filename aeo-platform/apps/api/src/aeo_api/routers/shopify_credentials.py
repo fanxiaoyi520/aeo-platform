@@ -7,7 +7,7 @@ from typing import Annotated, Any
 
 import requests
 import structlog
-from aeo_shared.responses import success_response  # type: ignore[import-untyped]
+from aeo_shared.responses import success_response
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -76,7 +76,9 @@ async def list_credentials(
 
     items = []
     for cred in credentials:
-        from aeo_integrations.amazon.credentials import decrypt_credential  # type: ignore[import-untyped]
+        from aeo_integrations.amazon.credentials import (
+            decrypt_credential,
+        )
 
         items.append(
             CredentialMaskedResponse(
@@ -91,7 +93,7 @@ async def list_credentials(
         )
 
     data = {"credentials": items, "total": len(items)}
-    return success_response(data, request.state.request_id).model_dump()  # type: ignore[no-any-return]
+    return success_response(data, request.state.request_id).model_dump()
 
 
 @router.post("")
@@ -137,7 +139,7 @@ async def create_credential(
     await db.commit()
 
     data = {"id": str(credential_id), "status": "created"}
-    return success_response(data, request.state.request_id).model_dump()  # type: ignore[no-any-return]
+    return success_response(data, request.state.request_id).model_dump()
 
 
 @router.post("/test")
@@ -181,18 +183,37 @@ async def test_connection(
         if not normalized_url.startswith("https://"):
             normalized_url = f"https://{normalized_url}"
 
-        response = requests.get(
-            f"{normalized_url}/admin/api/2024-01/shop.json",
-            headers={"X-Shopify-Access-Token": access_token},
+        headers = {"X-Shopify-Access-Token": access_token}
+        api_base = f"{normalized_url}/admin/api/2024-01"
+
+        shop_response = requests.get(
+            f"{api_base}/shop.json",
+            headers=headers,
             timeout=10,
         )
-        response.raise_for_status()
-        shop_data = response.json().get("shop", {})
+        shop_response.raise_for_status()
+        shop_data = shop_response.json().get("shop", {})
+
+        scopes_response = requests.get(
+            f"{api_base}/access_scopes.json",
+            headers=headers,
+            timeout=10,
+        )
+        scopes_response.raise_for_status()
+        granted_scopes = [
+            s.get("handle", "") for s in scopes_response.json().get("access_scopes", [])
+        ]
+
+        required_scopes = {"read_products", "read_orders", "read_customers"}
+        missing_scopes = required_scopes - set(granted_scopes)
 
         data = {
             "success": True,
             "shop_name": shop_data.get("name", ""),
             "myshopify_domain": shop_data.get("myshopify_domain", ""),
+            "granted_scopes": granted_scopes,
+            "missing_required_scopes": sorted(missing_scopes),
+            "all_required_present": len(missing_scopes) == 0,
         }
     except requests.exceptions.RequestException as exc:
         logger.warning("Shopify credential test failed", error=str(exc))
@@ -201,4 +222,4 @@ async def test_connection(
         logger.warning("Shopify credential test failed", error=str(exc))
         data = {"success": False, "error": str(exc)}
 
-    return success_response(data, request.state.request_id).model_dump()  # type: ignore[no-any-return]
+    return success_response(data, request.state.request_id).model_dump()

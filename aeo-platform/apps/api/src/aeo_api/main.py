@@ -36,6 +36,7 @@ from aeo_api.routers import (
     risk,
     root,
     selection,
+    shopify_credentials,
     support,
     tasks,
     tenants,
@@ -110,6 +111,7 @@ def create_app() -> FastAPI:
     app.include_router(tenants.router)
     app.include_router(billing.router)
     app.include_router(amazon_credentials.router)
+    app.include_router(shopify_credentials.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:

@@ -27,6 +27,29 @@ export default function SettingsPage() {
   const [error, setError] = useState("");
   const [portalLoading, setPortalLoading] = useState(false);
 
+  const [shopifyCreds, setShopifyCreds] = useState<Array<{
+    id: string;
+    shop_name: string;
+    store_url_masked: string;
+    access_token_masked: string;
+    is_active: boolean;
+  }>>([]);
+  const [showShopifyForm, setShowShopifyForm] = useState(false);
+  const [shopifyStoreUrl, setShopifyStoreUrl] = useState("");
+  const [shopifyAccessToken, setShopifyAccessToken] = useState("");
+  const [shopifyShopName, setShopifyShopName] = useState("");
+  const [shopifySaving, setShopifySaving] = useState(false);
+  const [shopifyError, setShopifyError] = useState("");
+  const [shopifySuccess, setShopifySuccess] = useState("");
+  const [shopifyTesting, setShopifyTesting] = useState(false);
+  const [shopifyTestResult, setShopifyTestResult] = useState<{
+    success: boolean;
+    shop_name?: string;
+    granted_scopes?: string[];
+    missing_required_scopes?: string[];
+    error?: string;
+  } | null>(null);
+
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
   const [saving, setSaving] = useState(false);
@@ -36,11 +59,12 @@ export default function SettingsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [tenantRes, quotaRes, membersRes, subRes] = await Promise.all([
+        const [tenantRes, quotaRes, membersRes, subRes, shopifyRes] = await Promise.all([
           fetch("/api/tenant"),
           fetch("/api/tenant/quota"),
           fetch("/api/tenant/members"),
           fetch("/api/billing/subscription"),
+          fetch("/api/v1/shopify/credentials"),
         ]);
 
         if (tenantRes.ok) {
@@ -61,6 +85,10 @@ export default function SettingsPage() {
           if (data.has_subscription && data.subscription) {
             setSubscription(data.subscription);
           }
+        }
+        if (shopifyRes.ok) {
+          const json = await shopifyRes.json();
+          setShopifyCreds(json.data?.credentials ?? []);
         }
       } catch {
         setError("加载设置失败");
@@ -238,6 +266,80 @@ export default function SettingsPage() {
       setMemberError("网络错误，请重试");
     } finally {
       setActingId("");
+    }
+  }
+
+  async function loadShopifyCreds() {
+    try {
+      const res = await fetch("/api/v1/shopify/credentials");
+      if (res.ok) {
+        const json = await res.json();
+        setShopifyCreds(json.data?.credentials ?? []);
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function handleShopifySave(e: React.FormEvent) {
+    e.preventDefault();
+    if (!shopifyStoreUrl.trim() || !shopifyAccessToken.trim()) {
+      setShopifyError("Store URL 和 Access Token 不能为空");
+      return;
+    }
+    setShopifySaving(true);
+    setShopifyError("");
+    setShopifySuccess("");
+    setShopifyTestResult(null);
+    try {
+      const res = await fetch("/api/v1/shopify/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          store_url: shopifyStoreUrl.trim(),
+          access_token: shopifyAccessToken.trim(),
+          shop_name: shopifyShopName.trim(),
+        }),
+      });
+      if (!res.ok) {
+        const json = await res.json();
+        setShopifyError(json.error || "保存失败");
+        return;
+      }
+      setShopifySuccess("凭据已保存");
+      setShowShopifyForm(false);
+      setShopifyStoreUrl("");
+      setShopifyAccessToken("");
+      setShopifyShopName("");
+      setTimeout(() => setShopifySuccess(""), 3000);
+      await loadShopifyCreds();
+    } catch {
+      setShopifyError("网络错误，请重试");
+    } finally {
+      setShopifySaving(false);
+    }
+  }
+
+  async function handleShopifyTest(credId?: string) {
+    setShopifyTesting(true);
+    setShopifyTestResult(null);
+    setShopifyError("");
+    try {
+      const body = credId ? { credential_id: credId } : {
+        store_url: shopifyStoreUrl.trim(),
+        access_token: shopifyAccessToken.trim(),
+      };
+      const res = await fetch("/api/v1/shopify/credentials/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const json = await res.json();
+      setShopifyTestResult(json.data);
+    } catch {
+      setShopifyError("测试请求失败");
+    } finally {
+      setShopifyTesting(false);
     }
   }
 
@@ -448,6 +550,163 @@ export default function SettingsPage() {
                 升级方案
               </Link>
             </div>
+          )}
+        </section>
+
+        <section className="card space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Shopify 店铺连接</h3>
+            {!showShopifyForm && (
+              <button
+                type="button"
+                onClick={() => { setShowShopifyForm(true); setShopifyError(""); setShopifyTestResult(null); }}
+                className="rounded-md px-3 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-900/20 transition"
+              >
+                {shopifyCreds.length > 0 ? "更新凭据" : "添加店铺"}
+              </button>
+            )}
+          </div>
+
+          {shopifySuccess && (
+            <p className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-xs text-green-700 dark:text-green-400">
+              {shopifySuccess}
+            </p>
+          )}
+          {shopifyError && (
+            <p className="rounded-md bg-red-50 dark:bg-red-900/20 px-3 py-2 text-xs text-red-700 dark:text-red-400">
+              {shopifyError}
+            </p>
+          )}
+
+          {showShopifyForm && (
+            <form onSubmit={handleShopifySave} className="space-y-3 rounded-md border border-slate-200 dark:border-slate-700 p-3">
+              <div>
+                <label htmlFor="shopify-store-url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Store URL
+                </label>
+                <input
+                  id="shopify-store-url"
+                  type="text"
+                  value={shopifyStoreUrl}
+                  onChange={(e) => setShopifyStoreUrl(e.target.value)}
+                  placeholder="your-store.myshopify.com"
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="shopify-access-token" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Admin API Access Token
+                </label>
+                <input
+                  id="shopify-access-token"
+                  type="password"
+                  value={shopifyAccessToken}
+                  onChange={(e) => setShopifyAccessToken(e.target.value)}
+                  placeholder="shpat_xxxxxxxxxxxx"
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="shopify-shop-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  店铺名称（可选）
+                </label>
+                <input
+                  id="shopify-shop-name"
+                  type="text"
+                  value={shopifyShopName}
+                  onChange={(e) => setShopifyShopName(e.target.value)}
+                  placeholder="My Shopify Store"
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={shopifySaving}
+                  className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700 disabled:opacity-50 transition"
+                >
+                  {shopifySaving ? "保存中..." : "保存凭据"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowShopifyForm(false); setShopifyError(""); }}
+                  disabled={shopifySaving}
+                  className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 transition"
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleShopifyTest()}
+                  disabled={shopifyTesting || !shopifyStoreUrl.trim() || !shopifyAccessToken.trim()}
+                  className="rounded-md px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 disabled:opacity-50 transition"
+                >
+                  {shopifyTesting ? "测试中..." : "测试连接"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {shopifyTestResult && (
+            <div className={`rounded-md p-3 text-xs ${shopifyTestResult.success ? "bg-green-50 dark:bg-green-900/20" : "bg-red-50 dark:bg-red-900/20"}`}>
+              {shopifyTestResult.success ? (
+                <div className="space-y-2">
+                  <p className="font-medium text-green-700 dark:text-green-400">连接成功</p>
+                  {shopifyTestResult.shop_name && (
+                    <p className="text-green-600 dark:text-green-300">店铺: {shopifyTestResult.shop_name}</p>
+                  )}
+                  {shopifyTestResult.granted_scopes && (
+                    <div>
+                      <p className="text-green-600 dark:text-green-300">已授权 scopes: {shopifyTestResult.granted_scopes.join(", ") || "无"}</p>
+                    </div>
+                  )}
+                  {shopifyTestResult.missing_required_scopes && shopifyTestResult.missing_required_scopes.length > 0 && (
+                    <p className="text-yellow-600 dark:text-yellow-400">
+                      缺少必需 scopes: {shopifyTestResult.missing_required_scopes.join(", ")}
+                    </p>
+                  )}
+                  {shopifyTestResult.all_required_present && (
+                    <p className="text-green-600 dark:text-green-300">所有必需 scopes 已授权</p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-red-700 dark:text-red-400">连接失败: {shopifyTestResult.error}</p>
+              )}
+            </div>
+          )}
+
+          {!showShopifyForm && shopifyCreds.length > 0 && (
+            <div className="divide-y">
+              {shopifyCreds.map((cred) => (
+                <div key={cred.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{cred.shop_name || "未命名店铺"}</p>
+                    <p className="truncate text-xs text-[var(--muted)]">
+                      {cred.store_url_masked} · Token: {cred.access_token_masked}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`rounded px-2 py-0.5 text-xs ${cred.is_active ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}>
+                      {cred.is_active ? "活跃" : "停用"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => void handleShopifyTest(cred.id)}
+                      disabled={shopifyTesting}
+                      className="rounded-md px-2 py-1 text-xs text-brand-600 hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-900/20 disabled:opacity-50 transition"
+                    >
+                      测试
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!showShopifyForm && shopifyCreds.length === 0 && (
+            <p className="text-sm text-[var(--muted)]">
+              未配置 Shopify 店铺凭据。添加凭据以连接真实店铺数据。
+            </p>
           )}
         </section>
 

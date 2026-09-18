@@ -97,3 +97,18 @@ def test_credential_masked_response_schema() -> None:
     assert resp.id == cred_id
     assert resp.shop_name == "Test Store"
     assert resp.is_active is True
+
+
+def test_required_scopes_logic() -> None:
+    required_scopes = {"read_products", "read_orders", "read_customers"}
+    granted = ["read_products", "read_orders", "read_customers", "read_inventory"]
+    missing = required_scopes - set(granted)
+    assert len(missing) == 0
+
+
+def test_missing_scopes_logic() -> None:
+    required_scopes = {"read_products", "read_orders", "read_customers"}
+    granted = ["read_products"]
+    missing = required_scopes - set(granted)
+    assert missing == {"read_orders", "read_customers"}
+    assert sorted(missing) == ["read_customers", "read_orders"]
