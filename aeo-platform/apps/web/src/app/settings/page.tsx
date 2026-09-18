@@ -47,6 +47,7 @@ export default function SettingsPage() {
     shop_name?: string;
     granted_scopes?: string[];
     missing_required_scopes?: string[];
+    all_required_present?: boolean;
     error?: string;
   } | null>(null);
 
