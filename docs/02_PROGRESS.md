@@ -6,8 +6,8 @@
 > 多窗口工人模式见 §任务认领登记簿（**可选**，默认不用）。
 
 **最后更新：** 2026-09-18
-**当前阶段：** **Phase 7 生产加固与规模化扩展** → P7-MS1 生产加固 in_progress（P7-01 ✅）
-**下一任务：** P7-02 Redis 缓存层
+**当前阶段：** **Phase 7 完成** — 生产加固与规模化扩展（P7-MS1~MS4 全部 ✅）
+**下一任务：** 待定（Phase 8 规划中）
 **Git：** `main`
 **CI：** `.github/workflows/ci.yml`（push / PR 到 `main` 自动跑）
 
@@ -403,3 +403,20 @@
 | 2026-09-15 | **P6-21** 凭据加密存储；AES-256-GCM + DB 模型 + API 路由（CRUD + 连接测试）+ 18 项测试 |
 | 2026-09-15 | **P6-MS3 核心完成** — PR #65 merged；test **1119/1119**，mypy 0 errors，ruff clean；CI ✅ |
 | 2026-09-15 | **P6-22** 降级策略；`FallbackWrapper`（重试+指数退避+mock fallback）+ `data_source` 标记 + `AMAZON_FALLBACK_ENABLED` 配置；22 项测试；PR #66 |
+| 2026-09-18 | **Phase 7 启动** — 生产加固与规模化扩展 |
+| 2026-09-18 | **P7-12** Walmart Marketplace API 集成；`WalmartClient` + 3 模型（Product/Order/Inventory）+ Protocol + Mock + Factory；12 项测试；PR #81 |
+| 2026-09-18 | **P7-13** Walmart 订单摄取；`ingest_walmart` + `_map_walmart_order` + `WalmartOrdersClient` Protocol；9 项测试；PR #82 |
+| 2026-09-18 | **P7-14** 统一平台适配器；`PlatformAdapter` + `PlatformRegistry` + `ingest_platform` + 2 构建器；14 项测试；PR #83 |
+| 2026-09-18 | **P7-15** P7-MS2 多平台验收；7 项验收测试（lazy import + fallback）；PR #84 |
+| 2026-09-18 | **P7-16/17** 自动定价算法；`PricingInputs` + `suggest_price`（竞争0.5+库存0.3+ROI0.2）+ `PricingService`；21 项测试；PR #85 |
+| 2026-09-18 | **P7-18** 库存告警服务；`AlertSeverity`/`AlertKind` StrEnum + `InventoryAlertService` + 4 种告警类型；15 项测试；PR #86 |
+| 2026-09-18 | **P7-19** 广告优化服务；`OptimizationAction` + `AdOptimizer` + `PortfolioOptimization`（预算重分配）；23 项测试；PR #87 |
+| 2026-09-18 | **P7-20** 多语言 Listing 生成器；`Locale`（en/de/ja/es）+ CJK 双宽度计算 + 模板截断；17 项测试；PR #88 |
+| 2026-09-18 | **P7-21** P7-MS3 高级功能验收；5 项验收测试（lazy import）；PR #89 |
+| 2026-09-18 | **P7-22** 多租户隔离审计；综合审计报告（识别 3 个 gap）；PR #90 |
+| 2026-09-18 | **P7-23** 资源配额管理；`QuotaKind`/`PlanTier` StrEnum + `ResourceQuotas`（FREE/STARTER/PRO/ENTERPRISE）；16 项测试；PR #91 |
+| 2026-09-18 | **P7-24** 租户监控 + 对账；`TenantMonitoringService` + `BillingReconciler` + `ReconciliationReport`；15 项测试；PR #92 |
+| 2026-09-18 | **P7-25** 数据导出工具；`ExportFormat`/`ExportKind` + CSV/JSON 导出 + dataclass 列推导；12 项测试；PR #93 |
+| 2026-09-18 | **P7-26** SaaS 部署文档；799 行综合指南（架构/扩展/监控/备份/安全/运维）；PR #94 |
+| 2026-09-18 | **P7-27** P7-MS4 SaaS 准备验收；10 项验收测试；PR #95 |
+| 2026-09-18 | **Phase 7 完成** — P7-MS1 生产加固 ✅ · P7-MS2 多平台扩展 ✅ · P7-MS3 高级功能 ✅ · P7-MS4 SaaS 准备 ✅ |
